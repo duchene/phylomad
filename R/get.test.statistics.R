@@ -15,9 +15,9 @@ get.test.statistics <- function(sdata, format = "phyllip", geneName = "empirical
 	phymlres <- runPhyML(sdata, format = format, temp_name = geneName, phymlPath = phymlPath, model = model)
 	
 	# Get test statistics.
-	chisq <- getchisqs(data)
+	chisq <- get.chisqstat(data)
 	
-	biochem <- biochemdiv.stat(data)
+	biochem <- get.biodivstat(data)
 
 	# Return test statistics, tree, and parameter estimates.
 	

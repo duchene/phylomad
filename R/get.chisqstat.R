@@ -1,4 +1,4 @@
-getchisqs <- function(al){
+get.chisqstat <- function(al){
 
 	if(class(al) != "DNAbin"){ al <- as.character(as.DNAbin(al)) } else { al <- as.character(al) }
         

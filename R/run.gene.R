@@ -20,6 +20,8 @@ run.gene <- function(sdata, format = "phyllip", model = "GTR+G", phymlPath, Nsim
                	      rates <- rates + 0.0001
                	      sim_dat_all <- lapply(rates, function(r) simSeq(empstats$outputTree, l = round(l/4, 0), Q = empstats$gtrMatrix, bf = empstats$piParams, rate = r))
                	      sim[[i]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+	       } else if(model == "GTR"){
+	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l, Q = empstats$gtrMatrix, bf = empstats$piParams))
 	       } else if(model == "JC"){
 	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l))
 	       }
