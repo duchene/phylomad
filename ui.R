@@ -13,16 +13,14 @@ shinyUI(fluidPage(
 
     ),
     mainPanel(
-	fluidRow(
-		column(3),
-		column(3,
-      selectInput("Select your test", label = h3("Select your test"), 
-        choices = list("Choice 1" = 1, "Choice 2" = 2,
-                       "Choice 3" = 3), selected = 1)),
-		column(3)
-
-
-	)
+	tabsetPanel(
+		tabPanel(
+			fluidRow("Test type",
+  	        		selectInput("modeltotest", label = h3("What model would you like to test, and in what statistical framework?"),
+        			choices = as.list(dir("tests")), selected = 1)
+			)
+		),
+		uiOutput("modeltestcode")
     )
   )
-))
+)))
