@@ -37,13 +37,12 @@ if(!paragenome){
 	 for(i in 1:length(genes)){
 	   	 print(genes[i])
 		 genes[i]
-		 if(as.logical(args[3])) model <- get.model(genes[i], format)
+		 if(as.logical(args[3])) model <- get.model(genes[i])
 	   	 geneStats[[i]] <- run.gene(genes[i], format = format, model = model, phymlPath = phymlPath, Nsims = Nsims, para = paragene, ncore = ncore)
 	 }
 }else{
 	 ## START PARALLEL GENOME COMPUTING
 	 runGene <- function(i){
-	 	 if(as.logical(args[3])) model <- get.model(genes[i], format)
 	       	 return(run.gene(genes[i], format = format, model = model, phymlPath = phymlPath, Nsims = Nsims))
 	 }
 	     
@@ -62,7 +61,7 @@ for(i in 1:14){
 }
 geneTrees <- lapply(geneStats, function(x) x[[15]])
 names(geneTrees) <- genes
-
+	   
 if(model == "GTR+G"){
 	 geneInferences <- list()
 	 for(i in 1:length(geneStats)){

@@ -1,0 +1,9 @@
+get.model <- function(al, format = "phyllip"){
+
+	 if(format == "phyllip"){
+                  data <- read.dna(sdata)
+         } else if(format == "fasta"){
+                  data <- read.dna(sdata, format = "fasta")
+         }	  
+
+}
