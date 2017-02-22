@@ -46,7 +46,7 @@ tabsetPanel(
 		       numericInput("Ncores", label = h4("Number of computer cores to be used for assessment", align = "center"),
                        value = 1),
 		       br(),
-		       radioButtons("machine", label = h4("Choose the statistical framework to use for assessment", align = "center"),
+		       radioButtons("framework", label = h4("Choose the statistical framework to use for assessment", align = "center"),
                        choices = list("Likelihood" = "likelihood", "Bayesian" = "bayesian"), selected = "likelihood"),
 		       br(),
 		       actionButton("startAnalysis", label = "START ASSESSMENT"),

@@ -1,0 +1,1 @@
+writeLines(getwd(), con = "banana")

@@ -51,7 +51,7 @@ tabsetPanel(
 		       br(),
 		       actionButton("startAnalysis", label = "START ASSESSMENT"),
 		       br(),
-		       p("After the analysis has started, there will be two messages below to indicate progress, and a final message to indicate completion"),
+		       p("After the analysis has started, there will be two messages below to indicate progress, and a final message to indicate completion. You can also look at your R console to observe some of the progress."),
 		       br(),
 		       uiOutput("progressMessage1"),
 		       uiOutput("progressMessage2"),
