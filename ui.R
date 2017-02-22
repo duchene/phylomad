@@ -4,23 +4,27 @@ library(shiny)
 shinyUI(fluidPage(
 
   # Application title
-  titlePanel("PhyAdequacy"),
-
+  titlePanel(
+	h1("PhyAdequacy", align = "center"),
+	windowTitle = "PhyAdequacy"
+  ),
   sidebarLayout(
     sidebarPanel(
-	h4("Welcome to PhyAdequacy"),
-	p("This software assesses the adequacy of models used in phylogenetics.")
-
+	h3("BEGIN HERE", align = "center"),
+	br(),
+	h4("Software for assessment of phylogenetic model adequacy", align = "center"),
+	br(),
+	radioButtons("modeltotest", label = h4("Select the model and statistical framework"), 
+	choices = as.list(dir("testBackbones"))),
+	br(),
+	p("Note that several R packages other than shiny are needed to run model assessment."),
+	p("Press the following button if you would like to install these packages. This might take a couple of minutes, and will complete with a new message below."),
+	br(),
+	actionButton("installPackages", label = "Install required packages"),
+	br(),
+	uiOutput("installationConfirmation")
     ),
     mainPanel(
-	tabsetPanel(
-		tabPanel(
-			fluidRow("Test type",
-  	        		selectInput("modeltotest", label = h3("What model would you like to test, and in what statistical framework?"),
-        			choices = as.list(dir("tests")), selected = 1)
-			)
-		),
-		uiOutput("modeltestcode")
-    )
+	uiOutput("modeltestcode")
   )
 )))
