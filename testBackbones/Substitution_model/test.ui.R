@@ -3,7 +3,7 @@ tabsetPanel(
                        fluidRow(
                        column(3),
                        column(6,
-                       textInput("dataPath", label = h4("Type the path to the alignment or folder with alignments for which the model will be assessed", align = "center"), value = getwd()),
+                       fileInput("dataPath", label = h4("Type the path to the alignment or folder with alignments for which the model will be assessed", align = "center")),
 		       radioButtons("locusOrGenome", label = h4("Select whether your data are a single or multiple alignments", align = "center"),
                        choices = list("Single" = "single", "Multiple" = "multiple"), selected = "single")
 		       ),
@@ -14,7 +14,9 @@ tabsetPanel(
 		       column(3),
 		       column(6,
 		       selectInput("model", label = h4("Select the substitution model that will be assessed", align = "center"),
-		       choices = list("GTR+G" = "GTR+G", "GTR" = "GTR", "HKY+G" = "HKY+G", "HKY" = "HKY", "JC+G" = "JC+G", "JC" = "JC"))
+		       choices = list("GTR+G" = "GTR+G", "GTR" = "GTR", "HKY+G" = "HKY+G", "HKY" = "HKY", "JC+G" = "JC+G", "JC" = "JC")),
+		       numericInput("Nsims", label = h4("Select the number of simulations to be made", align = "center"),
+                       value = 100)
 		       ),
 		       column(3))
 	),
@@ -41,9 +43,9 @@ tabsetPanel(
 		       fluidRow(
                        column(3),
                        column(6,
-		       radioButtons("machine", label = h4("Choose the kind of machine that you are using", align = "center"),
+		       radioButtons("machine", label = h4("Select the kind of machine that you are using", align = "center"),
         	       choices = list("Linux" = "linux", "Mac" = "mac", "Windows" = "windows"), selected = "mac"),
-		       numericInput("Ncores", label = h4("Number of computer cores to be used for assessment", align = "center"),
+		       numericInput("Ncores", label = h4("Select the number of computer cores to be used for assessment", align = "center"),
                        value = 1),
 		       br(),
 		       radioButtons("framework", label = h4("Choose the statistical framework to use for assessment", align = "center"),
