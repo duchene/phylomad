@@ -5,8 +5,8 @@ shinyUI(fluidPage(
 
   # Application title
   titlePanel(
-	h1("PhyAdequacy", align = "center"),
-	windowTitle = "PhyAdequacy"
+	h1("PhyloMAd", align = "center"),
+	windowTitle = "PhyloMAd"
   ),
   sidebarLayout(
     sidebarPanel(

@@ -3,10 +3,9 @@ tabsetPanel(
                        fluidRow(
                        column(3),
                        column(6,
-                       textInput("dataPath", label = h4("Type the path to the alignment or folder with alignments for which the model will be assessed", align = "center"), value = getwd()),
-		       radioButtons("locusOrGenome", label = h4("Select whether your data are a single or multiple alignments", align = "center"),
-                       choices = list("Single" = "single", "Multiple" = "multiple"), selected = "single")
-		       ),
+                       fileInput("dataPath", label = h4("Select the data for which the model will be assessed", align = "center"), multiple = T),
+		       h5("You can select a single or multiple data alignments in the same folder.")
+                       ),
                        column(3))
         ),
 	tabPanel("Model",
@@ -33,25 +32,25 @@ tabsetPanel(
                        column(6,
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired", align = "center"),
                        choices = list("P-values" = 1, "Simulated data" = 2, "Test plots" = 3), selected = 1),
-		       textInput("outputFolder", label = h4("Full path of folder where output should be saved", align = "center"), 
-	               value = getwd()),
-		       column(3)))
+		       textInput("outputFolder", label = h4("Type in the path to folder in which to save the output. You can use the PhyloMAd default"), value = paste0(getwd(), "/outputFolder/"))
+		       ),
+		       column(3))
 	),
 	tabPanel("Other options and START",
 		       fluidRow(
                        column(3),
                        column(6,
-		       radioButtons("machine", label = h4("Choose the kind of machine that you are using", align = "center"),
-        	       choices = list("Linux" = "linux", "Mac" = "mac", "Windows" = "windows"), selected = "mac"),
-		       numericInput("Ncores", label = h4("Number of computer cores to be used for assessment", align = "center"),
+		       numericInput("Nsims", label = h4("Select the number of simulations to be made", align = "center"),
+                       value = 100),
+		       numericInput("Ncores", label = h4("Select the number of computer cores to be used for assessment", align = "center"),
                        value = 1),
 		       br(),
-		       radioButtons("machine", label = h4("Choose the statistical framework to use for assessment", align = "center"),
+		       radioButtons("framework", label = h4("Choose the statistical framework to use for assessment", align = "center"),
                        choices = list("Likelihood" = "likelihood", "Bayesian" = "bayesian"), selected = "likelihood"),
 		       br(),
 		       actionButton("startAnalysis", label = "START ASSESSMENT"),
 		       br(),
-		       p("After the analysis has started, there will be two messages below to indicate progress, and a final message to indicate completion"),
+		       p("After the analysis has started, there will be two messages below to indicate progress, and a final message to indicate completion. You can also look at your R console to observe some of the progress."),
 		       br(),
 		       uiOutput("progressMessage1"),
 		       uiOutput("progressMessage2"),
