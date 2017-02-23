@@ -1,7 +1,7 @@
-get.test.statistics <- function(sdata, format = "phyllip", geneName = "empirical", phymlPath, model = "GTR+G"){
+get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical", phymlPath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha")){
 
 	# Read DNAbin or file of gene.
-	if(format == "phyllip"){
+	if(format == "phylip"){
 		  data <- read.dna(sdata)
 	} else if(format == "fasta"){
 	       	  data <- read.dna(sdata, format = "fasta")
@@ -15,13 +15,42 @@ get.test.statistics <- function(sdata, format = "phyllip", geneName = "empirical
 	phymlres <- runPhyML(sdata, format = format, temp_name = geneName, phymlPath = phymlPath, model = model)
 	
 	# Get test statistics.
-	chisq <- get.chisqstat(data)
 	
-	biochem <- get.biodivstat(data)
+	if("chisq" %in% stats){
+         results$chisq <- get.chisqstat(data)
+	}
+
+    if("multlik" %in% stats){
+         results$multlik <- phymlres$uncLikelihood
+    }
+
+    if("delta" %in% stats){
+         results$delta <- phymlres$delta
+    }
+
+    if("biochemdiv" %in% stats){
+         results$biocp <- get.biodivstat(data)
+    }
+
+    if("consind" %in% stats){
+         results$consind <- CI(phymlres$tree, phyDat(data))
+    }
+
+    if("brsup" %in% stats){
+         results$brsup <- phymlres$meanNodeSupport
+    }
+
+    if("CIbrsup" %in% stats){
+         results$CIbrsup <- phymlres$nodeSupport95
+    }
+
+    if("trlen" %in% stats){
+         results$trlen <- phymlres$treeLength
+    }
 
 	# Return test statistics, tree, and parameter estimates.
 	
-	results <- list(multinomial.lik = phymlres$uncLikelihood, chisq.stat = chisq, biochemdiv = biochem, mean.branch.sup = phymlres$meanNodeSupport, CI.branch.sup = phymlres$nodeSupport95, delta = phymlres$delta, tree.length = phymlres$treeLength, outputTree = phymlres$tree)
+	results$outputTree <- outputTree = phymlres$tree
 	
 	if(model == "GTR+G"){
 		 results$gtrMatrix <- phymlres$gtrMatrix
