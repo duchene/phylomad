@@ -35,8 +35,16 @@ if("pvals" %in% unlist(input$whatToOutput)){
 	write.csv(out, file = "output.pvals.PhyloMAd.csv")
 }
 
+if("phyloempres" %in% unlist(input$whatToOutput)){
+	
+}
+
 if("simdat" %in% unlist(input$whatToOutput)){
         
+}
+
+if("phylosimres" %in% unlist(input$whatToOutput)){
+      
 }
 
 if("testPlots" %in% unlist(input$whatToOutput)){

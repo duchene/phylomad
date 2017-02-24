@@ -34,7 +34,7 @@ tabsetPanel(
                        column(3),
                        column(6,
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired", align = "center"),
-                       choices = list("P-values" = "pvals", "Simulated data" = "simdat", "Test plots" = "testPlots"), selected = c("pvals")),
+                       choices = list("P-values" = "pvals", "Results for empirical data" = "phyloempres", "Simulated data" = "simdat", "Results for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
 		       textInput("outputFolder", label = h4("Type in the path to folder in which to save the output. You can use the PhyloMAd default"), value = paste0(getwd(), "/outputFolder/"))
 		       ),
 		       column(3))
