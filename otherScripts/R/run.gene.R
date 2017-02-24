@@ -79,56 +79,59 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 
 	 if("chisq" %in% testStats){
 	 results$emp.chisq <- empstats$chisq
-	 results$chisqs <- sapply(sim.stats, function(x) x$chisq)
+	 results$sim.chisqs <- sapply(sim.stats, function(x) x$chisq)
 	 results$chisq.sdpd <- length(which(chisqs < empstats$chisq)) / length(sim)
 	 }
 
 	 if("multlik" %in% testStats){
 	 results$emp.multlik <- empstats$multlik
-	 results$multinoms <- sapply(sim.stats, function(x) x$multlik)
+	 results$sim.multinoms <- sapply(sim.stats, function(x) x$multlik)
 	 results$multinom.sdpd <- length(which(multinoms < empstats$multlik)) / length(sim)
 	 }
 	 
 	 if("delta" %in% testStats){
 	 results$emp.delta <- empstats$delta
-	 results$deltas <- sapply(sim.stats, function(x) x$delta)
+	 results$sim.deltas <- sapply(sim.stats, function(x) x$delta)
 	 results$delta.sdpd <- length(which(deltas < empstats$delta)) / length(sim)
 	 }
 	 
 	 if("biochemdiv" %in% testStats){
 	 results$emp.biocp <- empstats$biochemdiv
-	 results$biocp <- sapply(sim.stats, function(x) x$biochemdiv)
+	 results$sim.biocp <- sapply(sim.stats, function(x) x$biochemdiv)
 	 results$bioc.sdpd <- length(which(biocp < empstats$biochemdiv)) / length(sim)
 	 }
 	 
 	 if("consind" %in% testStats){
 	 results$emp.consind <- empstats$consind
-	 results$consind <- sapply(sim.stats, function(x) x$consind)
+	 results$sim.consind <- sapply(sim.stats, function(x) x$consind)
          results$consind.sdpd <- length(which(consind < empstats$consind)) / length(sim)
 	 }
 	 
 	 if("brsup" %in% testStats){
 	 results$emp.brsup <- empstats$brsup
-	 results$meanbrsup <- sapply(sim.stats, function(x) x$brsup)
+	 results$sim.meanbrsup <- sapply(sim.stats, function(x) x$brsup)
 	 results$meanbrsu.sdpd <- length(which(meanbrsup < empstats$brsup)) / length(sim)
 	 }
 	 
 	 if("CIbrsup" %in% testStats){
 	 results$emp.CIbrsup <- empstats$CIbrsup
-	 results$CIbrsup <- sapply(sim.stats, function(x) xCIbrsup)
+	 results$sim.CIbrsup <- sapply(sim.stats, function(x) xCIbrsup)
 	 results$CIbrsu.sdpd <- length(which(CIbrsup < empstatsCIbrsup)) / length(sim)
 	 }
 	 
 	 if("trlen" %in% testStats){
 	 results$emp.trlen <- empstats$trlen
-	 results$trlens <- sapply(sim.stats, function(x) x$trlen)
+	 results$sim.trlens <- sapply(sim.stats, function(x) x$trlen)
 	 results$trlen.sdpd <- length(which(trlens < empstats$trlen)) / length(sim)
 	 }
 	 
 	 if("maha" %in% testStats){
-	 results$emp.maha <- empstats$maha
-	 results$maha <- sapply(sim.stats, function(x) x$maha)
-	 results$maha.sdpd <- length(which(maha < empstats$maha)) / length(sim)
+	 all.emp.stats <- unlist(results[grep("emp[.]", names(results))])
+	 all.sim.stats <- do.call(cbind, results[grep("sim[.]", names(results))])
+	 all.stats.mat <- rbind(all.sim.stats, all.emp.stats)
+	 mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
+	 results$maha <- mahavector[1:Nsims]
+	 results$maha.sdpd <- tail(mahavector, 1)
 	 }
 	 
 	 results$empirical.tree <- empstats$outputTree

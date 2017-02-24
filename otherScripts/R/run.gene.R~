@@ -102,7 +102,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 }
 	 
 	 if("consind" %in% testStats){
-	 results$emp.consind <- 
+	 results$emp.consind <- empstats$consind
 	 results$consind <- sapply(sim.stats, function(x) x$consind)
          results$consind.sdpd <- length(which(consind < empstats$consind)) / length(sim)
 	 }

@@ -24,7 +24,7 @@ tabsetPanel(
 		       column(3),
 		       column(6,
 		       checkboxGroupInput("testStats", label = h4("Select test statistics for assessment", align = "center"),
-		       choices = list("Chi-Squared statistic" = "chisq", "Multinomial statistic" = "multlik", "Delta" = "delta", "Biochemical diversity" = "biochemdiv", "Consistency index" = "consind", "Branch support" = "brsup", "Branch support interval" = "CIbrsup", "Tree length" = "trlen", "Mahalanobis" = "maha"), selected = "chisq"),
+		       choices = list("Chi-Squared statistic" = "chisq", "Multinomial statistic" = "multlik", "Delta statistic" = "delta", "Biochemical diversity" = "biochemdiv", "Consistency index" = "consind", "Branch support" = "brsup", "Branch support 95% interval" = "CIbrsup", "Tree length" = "trlen", "Squared Mahalanobis distance" = "maha"), selected = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha")),
 		       p("Note that the Mahalanobis statistic should only be selected if more than one other statistic is selected.")
 		       ),
 		       column(3))
