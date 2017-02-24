@@ -4,6 +4,8 @@ machine <- Sys.info()[["sysname"]]
 
 ngene <- nrow(input$dataPath)
 
+print(paste("Number of loci and kind of machine have been identified as", ngene))
+
 if(input$framework == "likelihood"){
 	if(machine == "Darwin"){
 		   phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_macOS-MountainLion")
@@ -12,10 +14,13 @@ if(input$framework == "likelihood"){
 	} else if(machine == "Linux"){
 	           phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_linux64")
 	}
+
+	print(paste("Path for PhyML has been identified as", input$framework, "and machine as", machine))
+	
 	if(ngene == 1){
-		source("test.likelihood.gene.R")
+		source("testBackbones/Substitution_model/test.likelihood.gene.R", local = T)
 	} else if(ngene > 1){
-	       	source("test.likelihood.multigene.R")
+	       	source("testBackbones/Substitution_model/test.likelihood.multigene.R", local = T)
 	}
 } else if(input$framework == "bayesian"){
         if(machine == "Darwin"){
@@ -25,9 +30,12 @@ if(input$framework == "likelihood"){
 	} else if(machine == "Linux"){
 	       	   mbPath <-	paste0()
 	}
+
+	print("Path for PhyML has been identified")
+	
 	if(ngene == 1){
-	      	source("test.bayesian.gene.R")
+	      	source("testBackbones/Substitution_model/test.bayesian.gene.R", local = T)
 	} else if(ngene > 1){
-	        source("test.bayesian.multigene.R")
+	        source("testBackbones/Substitution_model/test.bayesian.multigene.R", local = T)
 	}
 }

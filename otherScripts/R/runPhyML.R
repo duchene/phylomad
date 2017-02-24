@@ -1,4 +1,4 @@
-runPhyML <- function(sdata, format = 'phyllip', temp_name, phymlPath = '~/Downloads/PhyML-3.1/PhyML-3.1_macOS-MountainLion', model = 'JC'){
+runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloads/PhyML-3.1/PhyML-3.1_macOS-MountainLion', model = 'JC'){
     require(phangorn)
 
     if(format == 'fasta'){

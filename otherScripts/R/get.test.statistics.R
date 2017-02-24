@@ -16,6 +16,8 @@ get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical"
 	
 	# Get test statistics.
 	
+	results <- list()
+	
 	if("chisq" %in% stats){
          results$chisq <- get.chisqstat(data)
 	}
@@ -50,7 +52,7 @@ get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical"
 
 	# Return test statistics, tree, and parameter estimates.
 	
-	results$outputTree <- outputTree = phymlres$tree
+	results$outputTree <- phymlres$tree
 	
 	if(model == "GTR+G"){
 		 results$gtrMatrix <- phymlres$gtrMatrix

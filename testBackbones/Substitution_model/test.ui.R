@@ -6,7 +6,7 @@ tabsetPanel(
                        fileInput("dataPath", label = h4("Select the data for which the model will be assessed", align = "center"), multiple = T),
 		       h5("You can select a single or multiple data alignments in the same folder."),
 		       radioButtons("dataFormat", label = h4("Select the format of your data", align = "center"),
-                       choices = list("Phylip" = "phylip", "FASTA" = "fasta"), selected = "likelihood")
+                       choices = list("Phylip" = "phylip", "FASTA" = "fasta"), selected = "phylip")
                        ),
                        column(3))
         ),
@@ -15,7 +15,7 @@ tabsetPanel(
 		       column(3),
 		       column(6,
 		       selectInput("model", label = h4("Select the substitution model that will be assessed", align = "center"),
-		       choices = list("GTR+G" = "GTR+G", "GTR" = "GTR", "HKY+G" = "HKY+G", "HKY" = "HKY", "JC+G" = "JC+G", "JC" = "JC"))
+		       choices = list("GTR+G" = "GTR+G", "GTR" = "GTR", "HKY+G" = "HKY+G", "HKY" = "HKY", "JC+G" = "JC+G", "JC" = "JC", "Automatic BIC model selection" = "autoModel"))
 		       ),
 		       column(3))
 	),
@@ -34,7 +34,7 @@ tabsetPanel(
                        column(3),
                        column(6,
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired", align = "center"),
-                       choices = list("P-values" = 1, "Simulated data" = 2, "Test plots" = 3), selected = 1),
+                       choices = list("P-values" = "pvals", "Simulated data" = "simdat", "Test plots" = "testPlots"), selected = c("pvals")),
 		       textInput("outputFolder", label = h4("Type in the path to folder in which to save the output. You can use the PhyloMAd default"), value = paste0(getwd(), "/outputFolder/"))
 		       ),
 		       column(3))
