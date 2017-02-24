@@ -101,9 +101,9 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 }
 	 
 	 if("biochemdiv" %in% testStats){
-	 results$emp.biocp <- empstats$biochemdiv
+	 results$emp.biocp <- empstats$biocp
 	 results$sim.biocp <- sapply(sim.stats, function(x) x$biocp)
-	 results$bioc.tailp <- length(which(results$sim.biocp < empstats$biochemdiv)) / Nsims
+	 results$bioc.tailp <- length(which(results$sim.biocp < empstats$biocp)) / Nsims
 	 results$bioc.sdpd <- (results$emp.biocp - mean(results$sim.biocp)) / sd(results$sim.biocp)
 	 }
 	 
@@ -132,7 +132,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 results$emp.trlen <- empstats$trlen
 	 results$sim.trlens <- sapply(sim.stats, function(x) x$trlen)
 	 results$trlen.tailp <- length(which(results$sim.trlens < empstats$trlen)) / Nsims
-	 results$chisq.sdpd <- (results$emp.trlen - mean(results$sim.trlens)) /	sd(results$sim.trlens)
+	 results$trlen.sdpd <- (results$emp.trlen - mean(results$sim.trlens)) /	sd(results$sim.trlens)
 	 }
 	 
 	 if("maha" %in% testStats){
