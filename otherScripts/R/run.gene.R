@@ -8,7 +8,9 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
                   data <- read.dna(sdata, format = "fasta")
          } else if(format == "DNAbin"){
                   data <- sdata
-         }
+         } else if(format == "nexus"){
+	   	  data <- as.DNAbin(read.nexus.data(sdata))
+	 }
 	 
 	 empstats <- get.test.statistics(data, format = format, geneName = "empirical", phymlPath = phymlPath, model = model, stats = testStats)
 

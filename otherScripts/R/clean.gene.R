@@ -3,7 +3,9 @@ clean.gene <- function(sdata, format = "phylip"){
                   data <- read.dna(sdata)
            } else if(format == "fasta"){
                   data <- read.dna(sdata, format = "fasta")
-           }
+           } else if(format == "nexus"){
+		  data <- as.DNAbin(read.nexus.data(sdata))
+	   }
 	   gene <- as.character(data)
 	   goodcols <- vector()
 	   for(i in 1:ncol(gene)){

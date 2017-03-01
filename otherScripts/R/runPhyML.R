@@ -5,10 +5,14 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
         d <- read.dna(sdata, format = 'fasta')
         fileName = gsub('fasta', 'phy', sdata)
         write.dna(d, file = fileName)
-    }else if(format == 'DNAbin'){
+    } else if(format == 'DNAbin'){
         write.dna(sdata, temp_name)
         fileName = temp_name
-    }else{
+    } else if(format == "nexus"){
+        d <- as.DNAbin(read.nexus.data(sdata))
+	fileName = gsub('nexus', 'phy', sdata)
+	write.dna(d, file = fileName)
+    } else {
         fileName = sdata
     }
     print(fileName)

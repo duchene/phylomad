@@ -6,7 +6,7 @@ tabsetPanel(
                        fileInput("dataPath", label = h4("Select the data for which the model will be assessed", align = "center"), multiple = T),
 		       h5("You can select a single or multiple data alignments in the same folder."),
 		       radioButtons("dataFormat", label = h4("Select the format of your data", align = "center"),
-                       choices = list("Phylip" = "phylip", "FASTA" = "fasta"), selected = "phylip")
+                       choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip")
                        ),
                        column(3))
         ),
@@ -35,7 +35,9 @@ tabsetPanel(
                        column(6,
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired", align = "center"),
                        choices = list("P-values" = "pvals", "Results for empirical data" = "phyloempres", "Simulated data" = "simdat", "Results for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
-		       textInput("outputFolder", label = h4("Type in the path to folder in which to save the output. You can use the PhyloMAd default"), value = paste0(getwd(), "/outputFolder/"))
+		       checkboxGroupInput("outputFormat", label = h4("Select the format of the output data", align = "center"),
+                       choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip"),
+		       textInput("outputFolder", label = h4("Type in the path to folder in which to save the output. PhyloMAd offers a default outputFolder, in the main sofware folder"), value = paste0(getwd(), "/outputFolder/"))
 		       ),
 		       column(3))
 	),
