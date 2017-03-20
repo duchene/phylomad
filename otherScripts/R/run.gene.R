@@ -1,4 +1,4 @@
-run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha")){
+run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha")){
 	 
 	 # Get test statistics
 	 
@@ -12,7 +12,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   	  data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = format, geneName = "empirical", phymlPath = phymlPath, model = model, stats = testStats)
+	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical", phymlPath = phymlPath, model = model, stats = testStats)
 
 	 # Simulate data sets.
 
@@ -141,10 +141,17 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 all.emp.stats <- unlist(results[grep("emp[.]", names(results))])
 	 all.sim.stats <- do.call(cbind, results[grep("sim[.]", names(results))])
 	 all.stats.mat <- rbind(all.sim.stats, all.emp.stats)
+	 if(length(unique(all.sim.stats[,which(colnames(all.sim.stats) == "sim.multinoms")])) == 1){
+	 	all.sim.stats <- all.sim.stats[,-which(colnames(all.sim.stats) == "sim.multinoms")]
+		all.stats.mat <- all.stats.mat[,-which(colnames(all.stats.mat) == "sim.multinoms")]
+		print("The multinomial likelihood will not been included in the mahalanobis calculation and is unlikely to be reliable. This is possbibly because all the sites have different patterns, or the same.")
+	 }
+	 print(all.stats.mat)
 	 mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
+	 results$emp.maha <- tail(mahavector, 1)
 	 results$sim.maha <- mahavector[1:Nsims]
-	 results$emp.maha.sdpd <- tail(mahavector, 1)
-	 results$maha.tailp <- length(which(mahavector[1:Nsims] > results$emp.maha.sdpd)) / Nsims
+	 results$maha.tailp <- length(which(mahavector[1:Nsims] > results$emp.maha)) / Nsims
+	 results$maha.sdpd <- (results$emp.maha - mean(results$sim.maha)) / sd(results$sim.maha)
 	 }
 	 
 	 results$empirical.tree <- empstats$outputTree
