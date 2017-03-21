@@ -71,7 +71,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   }	  
 	   cl <- makeCluster(ncore)
 	   registerDoParallel(cl)
-	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runPhyML', 'getchisqs')) %dopar% runSim(x)
+	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runPhyML', 'get.chisqstat', 'get.biodivstat')) %dopar% runSim(x)
 	   sim.stats <- simReps 
 	   stopCluster(cl)
 	  }
@@ -141,12 +141,14 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 all.emp.stats <- unlist(results[grep("emp[.]", names(results))])
 	 all.sim.stats <- do.call(cbind, results[grep("sim[.]", names(results))])
 	 all.stats.mat <- rbind(all.sim.stats, all.emp.stats)
-	 if(length(unique(all.sim.stats[,which(colnames(all.sim.stats) == "sim.multinoms")])) == 1){
-	 	all.sim.stats <- all.sim.stats[,-which(colnames(all.sim.stats) == "sim.multinoms")]
-		all.stats.mat <- all.stats.mat[,-which(colnames(all.stats.mat) == "sim.multinoms")]
-		print("The multinomial likelihood will not been included in the mahalanobis calculation and is unlikely to be reliable. This is possbibly because all the sites have different patterns, or the same.")
+	 for(i in 1:ncol(all.stats.mat)){
+	        if(length(unique(all.sim.stats[,i])) == 1){
+			print(paste(colnames(all.stats.mat)[i], "will not be included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
+	 		all.sim.stats <- all.sim.stats[,-i]
+			all.stats.mat <- all.stats.mat[,-i]
+	 	}
 	 }
-	 print(all.stats.mat)
+	 #print(all.stats.mat)
 	 mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
 	 results$emp.maha <- tail(mahavector, 1)
 	 results$sim.maha <- mahavector[1:Nsims]
