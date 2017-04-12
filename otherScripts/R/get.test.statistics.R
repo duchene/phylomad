@@ -58,6 +58,12 @@ get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical"
 		 results$gtrMatrix <- phymlres$gtrMatrix
 		 results$piParams <- phymlres$piParams
 		 results$alphaParam <- phymlres$alphaParam 
+	} else if(model == "HKY+G"){
+	       	 results$
+		 results$piParams <- phymlres$piParams
+                 results$alphaParam <- phymlres$alphaParam
+	} else if(model == "JC+G"){
+	       	 results$alphaParam <- phymlres$alphaParam
 	}
 	
 	return(results)

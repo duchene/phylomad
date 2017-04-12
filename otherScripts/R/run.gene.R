@@ -1,4 +1,4 @@
-run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha")){
+run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F){
 	 
 	 # Get test statistics
 	 
@@ -141,12 +141,16 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 all.emp.stats <- unlist(results[grep("emp[.]", names(results))])
 	 all.sim.stats <- do.call(cbind, results[grep("sim[.]", names(results))])
 	 all.stats.mat <- rbind(all.sim.stats, all.emp.stats)
+	 failstats <- vector()
 	 for(i in 1:ncol(all.stats.mat)){
 	        if(length(unique(all.sim.stats[,i])) == 1){
 			print(paste(colnames(all.stats.mat)[i], "will not be included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
-	 		all.sim.stats <- all.sim.stats[,-i]
-			all.stats.mat <- all.stats.mat[,-i]
+	 		failstats <- c(failstats, i)
 	 	}
+	 }
+	 if(length(failstats) > 0){
+	 	all.sim.stats <- all.sim.stats[,-failstats]
+           	all.stats.mat <- all.stats.mat[,-failstats]
 	 }
 	 #print(all.stats.mat)
 	 mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
@@ -162,7 +166,16 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
                  results$gtrMatrix <- empstats$gtrMatrix
                  results$piParams <- empstats$piParams
                  results$alphaParam <- empstats$alphaParam
-         }
+         } else if(model == HKY+G){
+	   	 results$ <- empstats$
+	   	 results$piParams <- empstats$piParams
+                 results$alphaParam <- empstats$alphaParam
+	 } else if(model == "JC+G"){
+                 results$alphaParam <- empstats$alphaParam
+	 }
+	 
+	 if(returnSimPhylo) results$simPhylos <- 
+	 if(returnSimDat) results$simDat <- 
 
 	 return(results)
 

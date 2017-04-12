@@ -22,7 +22,7 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
     else if(model == 'GTR+G'){
         phymlOptions = ' -m gtr -a e --q -i '
     }
-    else if(model == 'GTR+G'){
+    else if(model == 'GTR'){
     	phymlOptions = ' -m gtr -c 1 --q -i '
     }
 
