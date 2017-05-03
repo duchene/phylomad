@@ -153,11 +153,15 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
            	all.stats.mat <- all.stats.mat[,-failstats]
 	 }
 	 #print(all.stats.mat)
-	 mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
-	 results$emp.maha <- tail(mahavector, 1)
-	 results$sim.maha <- mahavector[1:Nsims]
-	 results$maha.tailp <- length(which(mahavector[1:Nsims] > results$emp.maha)) / Nsims
-	 results$maha.sdpd <- (results$emp.maha - mean(results$sim.maha)) / sd(results$sim.maha)
+	 if(length(all.stats.mat) >= 2*Nsims){
+	 	mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
+	 	results$emp.maha <- tail(mahavector, 1)
+	 	results$sim.maha <- mahavector[1:Nsims]
+	 	results$maha.tailp <- length(which(mahavector[1:Nsims] > results$emp.maha)) / Nsims
+	 	results$maha.sdpd <- (results$emp.maha - mean(results$sim.maha)) / sd(results$sim.maha)
+	 } else {
+	   	print("Mahalanobis cannot be calculated. This is possibly because all the statistics produced results that cannot be used.")
+	 }
 	 }
 	 
 	 results$empirical.tree <- empstats$outputTree
@@ -167,15 +171,15 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
                  results$piParams <- empstats$piParams
                  results$alphaParam <- empstats$alphaParam
          } else if(model == HKY+G){
-	   	 results$ <- empstats$
+	   	 #results$ <- empstats$
 	   	 results$piParams <- empstats$piParams
                  results$alphaParam <- empstats$alphaParam
 	 } else if(model == "JC+G"){
                  results$alphaParam <- empstats$alphaParam
 	 }
 	 
-	 if(returnSimPhylo) results$simPhylos <- 
-	 if(returnSimDat) results$simDat <- 
+	 #if(returnSimPhylo) results$simPhylos <- 
+	 #if(returnSimDat) results$simDat <- 
 
 	 return(results)
 
