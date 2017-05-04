@@ -27,15 +27,12 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	       } else if(model == "GTR"){
 	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l, Q = empstats$gtrMatrix, bf = empstats$piParams))
 	       } else if(model == "HKY+G"){
-	       	      
-	       	      ### HKY MODELS NEED TO BE FINISHED
 	       	      rates = phangorn:::discrete.gamma(empstats$alphaParam, k = 4)
                       rates <- rates + 0.0001
-                      sim_dat_all <- lapply(rates, function(r) simSeq(empstats$outputTree, l = round(l/4, 0), Q = empstats$gtrMatrix, bf = empstats$piParams, rate = r))
+                      sim_dat_all <- lapply(rates, function(r) simSeq(empstats$outputTree, l = round(l/4, 0), Q = c(1, empstats$trtvRatio, 1, 1, empstats$trtvRatio, 1), bf = empstats$piParams, rate = r))
                       sim[[i]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
 	       } else if(model == "HKY"){
-	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l, Q = empstats$gtrMatrix, bf = empstats$piParams))
-		      
+	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l, Q = c(1, empstats$trtvRatio, 1, 1, empstats$trtvRatio, 1), bf = empstats$piParams))
 	       } else if(model == "JC+G"){
 	       	      rates = phangorn:::discrete.gamma(empstats$alphaParam, k = 4)
                       rates <- rates + 0.0001
@@ -166,17 +163,13 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 
 	 results$empirical.tree <- empstats$outputTree
 
-	 if(model == "GTR+G"){
-                 results$gtrMatrix <- empstats$gtrMatrix
-                 results$piParams <- empstats$piParams
-                 results$alphaParam <- empstats$alphaParam
-         } else if(model == HKY+G){
-	   	 #results$ <- empstats$
-	   	 results$piParams <- empstats$piParams
-                 results$alphaParam <- empstats$alphaParam
-	 } else if(model == "JC+G"){
-                 results$alphaParam <- empstats$alphaParam
-	 }
+	 if(length(grep("HKY|GTR", model)) == 1) results$piParams <- empstats$piParams
+	 
+	 if(length(grep("[+]G", model)) == 1) results$alphaParam <- empstats$alphaParam
+	 
+	 if(length(grep("GTR", model)) == 1) results$gtrMatrix <- empstats$gtrMatrix
+	 
+         if(length(grep("HKY", model)) == 1) results$trtvRatio <- empstats$trtvRatio
 	 
 	 #if(returnSimPhylo) results$simPhylos <- 
 	 #if(returnSimDat) results$simDat <- 

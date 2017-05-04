@@ -24,4 +24,9 @@ shinyServer(function(input, output, session) {
 	output$analysisConfirmation <- renderText("The analysis has been completed")
   })
 
+  session$onSessionEnded(function() { 
+     stopApp()
+     q("no") 
+  })
+
   })

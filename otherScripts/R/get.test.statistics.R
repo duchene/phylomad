@@ -54,17 +54,13 @@ get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical"
 	
 	results$outputTree <- phymlres$tree
 	
-	if(model == "GTR+G"){
-		 results$gtrMatrix <- phymlres$gtrMatrix
-		 results$piParams <- phymlres$piParams
-		 results$alphaParam <- phymlres$alphaParam 
-	} else if(model == "HKY+G"){
-	       	 results$
-		 results$piParams <- phymlres$piParams
-                 results$alphaParam <- phymlres$alphaParam
-	} else if(model == "JC+G"){
-	       	 results$alphaParam <- phymlres$alphaParam
-	}
+	if(length(grep("HKY|GTR", model)) == 1) results$piParams <- phymlres$piParams
+	
+	if(length(grep("[+]G", model)) == 1) results$alphaParam <- phymlres$alphaParam
+	
+	if(length(grep("GTR", model)) == 1) results$gtrMatrix <- phymlres$gtrMatrix
+
+	if(length(grep("HKY", model)) == 1) results$trtvRatio <- phymlres$trtvRatio
 	
 	return(results)
 

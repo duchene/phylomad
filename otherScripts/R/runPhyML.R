@@ -18,12 +18,16 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
     print(fileName)
     if(model == 'JC'){
         phymlOptions = ' -m jc69 -c 1 --q -i '
-    }
-    else if(model == 'GTR+G'){
-        phymlOptions = ' -m gtr -a e --q -i '
-    }
-    else if(model == 'GTR'){
-    	phymlOptions = ' -m gtr -c 1 --q -i '
+    } else if(model == 'JC+G'){
+        phymlOptions = ' -m jc69 -a e --q -i '
+    } else if(model == 'HKY'){
+        phymlOptions = ' -m hky85 -c 1 --q -i '
+    } else if(model == 'HKY+G'){
+      	phymlOptions = ' -m hky85 -a e --q -i '
+    } else if(model == 'GTR'){
+        phymlOptions = ' -m gtr -c 1 --q -i '
+    } else if(model == 'GTR+G'){
+    	phymlOptions = ' -m gtr -a e --q -i '
     }
 
     phymlCommand = paste0(phymlPath, phymlOptions, fileName)
@@ -44,20 +48,29 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
     testStats$nodeSupport95 <-  nodeSupport95
     testStats$treeLength <- treeLength
 
-    if(model == 'GTR+G'){
-        gtrLocation <- grep('GTR relative rate parameters', outputStats)
-        gtrMatrix <- as.numeric(gsub('[A-Z]| |[-]|>|<', '',  outputStats[(gtrLocation+1):(gtrLocation+6)]))
-
-        piLocation <- grep('Nucleotides frequencies', outputStats)
+    if(length(grep("HKY|GTR", model))==1){
+    	piLocation <- grep('Nucleotides frequencies', outputStats)
         piParams <- as.numeric(gsub('[A-Z]|[a-z]| |[-]|>|<|[(]|[)]|=', '', outputStats[(piLocation+1):(piLocation+4)]))
-
-        alphaLocation <- grep('Gamma shape parameter', outputStats)
-        alphaParam <- as.numeric(gsub('[A-Z]|[a-z]| |:|[-]|\t', '', outputStats[alphaLocation]))
-
-        testStats$gtrMatrix <-  gtrMatrix
-        testStats$piParams <-  piParams
-        testStats$alphaParam <- alphaParam
+	testStats$piParams <-  piParams
     }
+    
+    if(length(grep("[+]G", model))==1){
+    	alphaLocation <- grep('Gamma shape parameter', outputStats)
+        alphaParam <- as.numeric(gsub('[A-Z]|[a-z]| |:|[-]|\t', '', outputStats[alphaLocation]))
+	testStats$alphaParam <- alphaParam
+    }
+    
+    if(length(grep("GTR", model))==1){
+    	gtrLocation <- grep('GTR relative rate parameters', outputStats)
+        gtrMatrix <- as.numeric(gsub('[A-Z]| |[-]|>|<', '',  outputStats[(gtrLocation+1):(gtrLocation+6)]))
+	testStats$gtrMatrix <-  gtrMatrix
+    }
+
+    if(length(grep("HKY", model))==1){
+        trtvLocation <- grep('Transition', outputStats)
+	trtvRatio <- as.numeric(gsub('[A-Z]|[a-z]| |:|[-]|\t|[/]|^[.]', '',  outputStats[trtvLocation]))
+        testStats$trtvRatio <-  trtvRatio
+    }    
 
     likelihoodLocation <- grep('Log-likelihood', outputStats)
     likelihood <- as.numeric(gsub('[A-Z]|[a-z]| |:|\t|[/]|[.] |[a-z][-][a-z]', '', outputStats[likelihoodLocation]))
