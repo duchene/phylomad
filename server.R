@@ -20,13 +20,13 @@ shinyServer(function(input, output, session) {
   })
 
   observeEvent(input$startAnalysis, { 
-  	source(paste0("testBackbones/", input$modeltotest, "/test.server.R"), local = T)
+  	output$analysisProgress <- renderPrint(source(paste0("testBackbones/", input$modeltotest, "/test.server.R"), local = T))
 	output$analysisConfirmation <- renderText("The analysis has been completed")
   })
 
   session$onSessionEnded(function() { 
      stopApp()
-     q("no") 
+     #q("no") 
   })
 
   })

@@ -139,6 +139,9 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 all.sim.stats <- do.call(cbind, results[grep("sim[.]", names(results))])
 	 all.stats.mat <- rbind(all.sim.stats, all.emp.stats)
 	 failstats <- vector()
+	 if(length(all.emp.stats) == 0){
+	 print("No test statistics were calculated.")
+	 } else {
 	 for(i in 1:ncol(all.stats.mat)){
 	        if(length(unique(all.sim.stats[,i])) == 1){
 			print(paste(colnames(all.stats.mat)[i], "will not be included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
@@ -158,6 +161,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 	results$maha.sdpd <- (results$emp.maha - mean(results$sim.maha)) / sd(results$sim.maha)
 	 } else {
 	   	print("Mahalanobis cannot be calculated. This is possibly because all the statistics produced results that cannot be used.")
+	 }
 	 }
 	 }
 	 
