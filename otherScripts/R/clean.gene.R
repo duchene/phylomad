@@ -6,7 +6,7 @@ clean.gene <- function(sdata, format = "phylip"){
            } else if(format == "nexus"){
 		  data <- as.DNAbin(read.nexus.data(sdata))
 	   }
-	   gene <- as.character(data)
+	   gene <- as.character(as.matrix(data))
 	   goodcols <- vector()
 	   for(i in 1:ncol(gene)){
 	   	 if(length(grep("a|c|g|t", gene[, i])) == nrow(gene)) goodcols <- c(goodcols, i)

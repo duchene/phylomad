@@ -1,4 +1,4 @@
-run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F){
+run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F, tree = NULL){
 	 
 	 # Get test statistics
 	 
@@ -12,7 +12,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   	  data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical", phymlPath = phymlPath, model = model, stats = testStats)
+	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
 
 	 # Simulate data sets.
 
@@ -51,7 +51,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats)
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   
@@ -62,7 +62,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   require(doParallel)
 		
 	   runSim <- function(i){
-	     tRep <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats)
+	     tRep <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
              system(paste0("rm ", paste0("sim.data.", i)))
 	     return(tRep)		
 	   }	  

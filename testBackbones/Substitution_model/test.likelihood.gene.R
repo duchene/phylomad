@@ -10,6 +10,8 @@ print("Functions required have been loaded")
 
 if(input$model == "autoModel") modeltested <- get.model(as.character(input$dataPath[1, 4])) else modeltested <- input$model
 
+if(input$treesFormat == "newick"){ trees <- read.tree(as.character(input$treesPath[1, 4])) } else if(input$treesFormat == "nexus"){ trees <- read.nexus(as.character(input$treesPath[1, 4])) }
+
 print("Model has been identified")
 
 geneDNAbin <- clean.gene(sdata = as.character(input$dataPath[1, 4]), format = input$dataFormat)
@@ -24,9 +26,11 @@ setwd(input$outputFolder)
 
 print("Output folder has been identified")
 
-geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = unlist(input$testStats))
-
-print("Gene results have been processed")
+if(input$treesFormat == "none"){
+	geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = unlist(input$testStats))
+} else {
+	geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = unlist(input$testStats), tree = trees)
+}
 
 if("pvals" %in% unlist(input$whatToOutput)){
 	out <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))

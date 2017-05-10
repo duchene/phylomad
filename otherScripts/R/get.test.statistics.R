@@ -1,4 +1,4 @@
-get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical", phymlPath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha")){
+get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical", phymlPath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha"), tree = NULL){
 
 	# Read DNAbin or file of gene.
 	if(format == "phylip"){
@@ -12,7 +12,7 @@ get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical"
 
 	# Run PhyML and extract the maximum likelihood, tree, and parameter estimates.
 	
-	phymlres <- runPhyML(sdata, format = format, temp_name = geneName, phymlPath = phymlPath, model = model)
+	phymlres <- runPhyML(sdata, format = format, temp_name = geneName, phymlPath = phymlPath, model = model, tree = tree)
 	
 	# Get test statistics.
 	

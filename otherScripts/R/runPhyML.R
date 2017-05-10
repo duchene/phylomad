@@ -1,4 +1,4 @@
-runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloads/PhyML-3.1/PhyML-3.1_macOS-MountainLion', model = 'JC'){
+runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloads/PhyML-3.1/PhyML-3.1_macOS-MountainLion', model = 'JC', tree = NULL){
     require(phangorn)
 
     if(format == 'fasta'){
@@ -16,23 +16,27 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
         fileName = sdata
     }
     print(fileName)
-    if(model == 'JC'){
-        phymlOptions = ' -m jc69 -c 1 --q -i '
-    } else if(model == 'JC+G'){
-        phymlOptions = ' -m jc69 -a e --q -i '
-    } else if(model == 'HKY'){
-        phymlOptions = ' -m hky85 -c 1 --q -i '
-    } else if(model == 'HKY+G'){
-      	phymlOptions = ' -m hky85 -a e --q -i '
-    } else if(model == 'GTR'){
-        phymlOptions = ' -m gtr -c 1 --q -i '
-    } else if(model == 'GTR+G'){
-    	phymlOptions = ' -m gtr -a e --q -i '
+
+    if(length(grep("[+]G", model)) == 1) RAS <- " -a e " else RAS <- " -c 1 "
+
+    if(length(grep('JC', model)) == 1){
+        phymlOptions = 'jc69'
+    } else if(length(grep('HKY', model)) == 1){
+       phymlOptions = 'hky85'
+    } else if(length(grep('GTR', model)) == 1){
+        phymlOptions = 'gtr'
     }
 
-    phymlCommand = paste0(phymlPath, phymlOptions, fileName)
+    if(class(tree) != "phylo"){
+    	phymlCommand = paste0(phymlPath, " -m ", phymlOptions, RAS, "--q -i ", fileName)
+    } else {
+      	treenumber <- round(runif(1, min = 1000, max = 9999))
+	write.tree(tree, file = paste0("temp.", treenumber, ".tre"))
+        phymlCommand = paste0(phymlPath, " -m ", phymlOptions, " -o lr -u temp.", treenumber, ".tre", RAS, "--q -i ", fileName)
+    }
 
     system(phymlCommand)
+    if(class(tree) == "phylo") system(paste0("rm temp.", treenumber, ".tre"))
     outTreeName <- paste0(fileName, '_phyml_tree.txt')
     outStatsName <- paste0(fileName, '_phyml_stats.txt')
     outputStats <- readLines(outStatsName)

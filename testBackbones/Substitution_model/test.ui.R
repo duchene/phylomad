@@ -3,11 +3,15 @@ tabsetPanel(
                        fluidRow(
                        column(3),
                        column(6,
-                       fileInput("dataPath", label = h4("Select the data for which the model will be assessed", align = "center"), multiple = T),
-		       h5("You can select a single or multiple data alignments in the same folder."),
+		       h4("Select the data for which the model will be assessed"),
+		       br(),
+                       fileInput("dataPath", label = h5("Multiple data alignments in the same folder can also be selected", align = "center"), multiple = T),
 		       radioButtons("dataFormat", label = h4("Select the format of your data", align = "center"),
-                       choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip")
-                       ),
+                       choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip"),
+		       fileInput("treesPath", label = h5("You can make the tree(s) be a fixed parameter by selecting a file containing all the trees in the box below (leave blank otherwise)", align = "center"), multiple = T),
+                       radioButtons("treesFormat", label = h4("Select the format of your trees", align = "center"),
+                       choices = list("No input tree" = "none", "NEWICK" = "newick", "NEXUS" = "nexus"), selected = "none")
+		       ),
                        column(3))
         ),
 	tabPanel("Model",
@@ -55,12 +59,12 @@ tabsetPanel(
 		       br(),
 		       actionButton("startAnalysis", label = "START ASSESSMENT"),
 		       br(),
-		       p("After the analysis has completed, the steps of the process will be shown below. You can also look at your R console to observe some of the progress."),
 		       br(),
-		       uiOutput("progressMessage1"),
-		       uiOutput("progressMessage2"),
-		       uiOutput("analysisProgress"),
-		       uiOutput("analysisConfirmation")),
+		       h5("Progress can be seen in the R console window. After the analysis has completed, the steps of the process will be shown below", align = "center"),
+		       br(),
+		       uiOutput("analysisConfirmation"),
+		       br(),
+		       uiOutput("analysisProgress")),
 		       column(3))
 	)
 	
