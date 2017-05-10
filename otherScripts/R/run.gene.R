@@ -175,8 +175,11 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 
          if(length(grep("HKY", model)) == 1) results$trtvRatio <- empstats$trtvRatio
 	 
-	 #if(returnSimPhylo) results$simPhylos <- 
-	 #if(returnSimDat) results$simDat <- 
+	 if(returnSimPhylo){
+		results$simPhylos <- lapply(sim.stats, function(x) x$outputTree)
+		class(results$simPhylos) <- "multiPhylo"
+	 }
+	 if(returnSimDat) results$simDat <- sim
 
 	 return(results)
 

@@ -38,7 +38,7 @@ tabsetPanel(
                        column(3),
                        column(6,
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired", align = "center"),
-                       choices = list("Metrics of adequacy" = "pvals", "Phylogenetic analyses for empirical data" = "phyloempres", "Simulated data" = "simdat", "Phylogenetic analyses for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
+                       choices = list("Metrics of adequacy" = "pvals", "Estimated tree for empirical data" = "phyloempres", "Simulated data" = "simdat", "Estimated trees for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
 		       radioButtons("outputFormat", label = h4("Select the format of the output data", align = "center"),
                        choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip"),
 		       textInput("outputFolder", label = h4("Type in the path to folder in which to save the output. PhyloMAd offers a default outputFolder, in the main sofware folder"), value = paste0(getwd(), "/outputFolder/"))
