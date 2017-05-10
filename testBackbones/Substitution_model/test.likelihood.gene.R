@@ -27,9 +27,9 @@ setwd(input$outputFolder)
 print("Output folder has been identified")
 
 if(input$treesFormat == "none"){
-	geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = unlist(input$testStats))
+	geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = unlist(input$testStats), returnSimPhylo = T, returnSimDat = T)
 } else {
-	geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = unlist(input$testStats), tree = trees)
+	geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = unlist(input$testStats), tree = trees, returnSimPhylo = T, returnSimDat = T)
 }
 
 if("pvals" %in% unlist(input$whatToOutput)){
@@ -51,11 +51,11 @@ if("simdat" %in% unlist(input$whatToOutput)){
         system("mkdir predictive.alignments")
 	setwd("predictive.alignments")
 	if(input$outputFormat == "phylip"){
-		for(i in 1:input$Nsims) write.dna(geneResults$simData[[i]], file = paste0("predictive.data.", i, ".phy"))
+		for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".phy"))
 	} else if(input$outputFormat == "fasta"){
-	        for(i in 1:input$Nsims) write.dna(geneResults$simData[[i]], file = paste0("predictive.data.", i, ".fasta"), format = "fasta")
+	        for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".fasta"), format = "fasta")
 	} else if(input$outputFormat == "nexus"){
-	        for(i in 1:input$Nsims) write.nexus.data(geneResults$simData[[i]], file = paste0("predictive.data.", i, ".nex"))
+	        for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".nex"))
 	}
 	setwd("..")
 }
@@ -73,7 +73,8 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 	} else {
 	        pdf("adequacy.tests.plots.pdf", useDingbats = F, height = 4)
 		for(i in 1:length(empstats)){
-		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i]), max(statsmat[, i])), xlab = unlist(input$testStats)[i], main = "")
+		      sdstat <- sd(statsmat[2:nrow(statsmat), i])
+		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i]) - sdstat, max(statsmat[, i]) + sdstat), xlab = unlist(input$testStats)[i], main = "")
 		      abline(v = empstats[i], col = "red", lwd = 3)
 		}
 		dev.off()
