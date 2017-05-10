@@ -12,7 +12,8 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   	  data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	 system("rm empirical.alignment.phy")
 
 	 # Simulate data sets.
 
