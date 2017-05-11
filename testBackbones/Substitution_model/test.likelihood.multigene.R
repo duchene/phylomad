@@ -6,11 +6,13 @@ source("otherScripts/R/get.model.R")
 if("chisq" %in% unlist(input$testStats)) source("testStatistics/get.chisqstat.R")
 if("biochemdiv" %in% unlist(input$testStats)) source("testStatistics/get.biodivstat.R")
 
+initial.dir <- getwd()
+
 print("Functions required have been loaded")
 
 if(input$treesFormat == "newick"){ trees <- read.tree(as.character(input$treesPath[1, 4])) } else if(input$treesFormat == "nexus"){ trees <- read.nexus(as.character(input$treesPath[1, 4])) } else { trees <- NULL }
 
-if(input$treesFormat != "none" & length(list(trees)) == 1){ 
+if(input$treesFormat != "none" & class(trees) == "phylo"){ 
 	trees <- list(trees)
 	print("One tree was found as input")
 }
@@ -33,8 +35,6 @@ print("Gene has been cleaned")
 
 if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
-initial.dir <- getwd()
-
 setwd(input$outputFolder)
 
 print("Output folder has been identified")
@@ -44,7 +44,7 @@ setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
 
 selectedStats <- unlist(input$testStats)
 
-geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[[j]], returnSimPhylo = T, returnSimDat = T)
+geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
 
 if("pvals" %in% unlist(input$whatToOutput)){
 	out <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))
