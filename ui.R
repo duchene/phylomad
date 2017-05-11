@@ -13,7 +13,7 @@ shinyUI(fluidPage(
     h3("Software for assessment of phylogenetic model adequacy", align = "center"),
     h4("Start here", align = "center"),
     br(),
-    radioButtons("modeltotest", label = h4("Select the model and statistical framework"), 
+    radioButtons("modeltotest", label = h4("Select the model to be assessed"), 
     choices = rev(as.list(dir("testBackbones"))), selected = "Substitution_model"),
     br(),
     p("Note that several R packages other than shiny are needed to run model assessment."),

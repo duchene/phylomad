@@ -27,7 +27,7 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
         phymlOptions = 'gtr'
     }
 
-    if(class(tree) != "phylo"){
+    if(is.null(tree)){
     	phymlCommand = paste0(phymlPath, " -m ", phymlOptions, RAS, "--q -i ", fileName)
     } else {
       	treenumber <- round(runif(1, min = 1000, max = 9999))
@@ -36,7 +36,7 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
     }
 
     system(phymlCommand)
-    if(class(tree) == "phylo") system(paste0("rm temp.", treenumber, ".tre"))
+    if(!is.null(tree)) system(paste0("rm temp.", treenumber, ".tre"))
     outTreeName <- paste0(fileName, '_phyml_tree.txt')
     outStatsName <- paste0(fileName, '_phyml_stats.txt')
     outputStats <- readLines(outStatsName)

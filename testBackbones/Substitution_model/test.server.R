@@ -17,11 +17,8 @@ if(input$framework == "likelihood"){
 
 	print(paste("Path for PhyML has been identified as", input$framework, "and machine as", machine))
 	
-	if(ngene == 1){
-		source("testBackbones/Substitution_model/test.likelihood.gene.R", local = T)
-	} else if(ngene > 1){
-	       	source("testBackbones/Substitution_model/test.likelihood.multigene.R", local = T)
-	}
+	source("testBackbones/Substitution_model/test.likelihood.multigene.R", local = T)
+
 } else if(input$framework == "bayesian"){
         if(machine == "Darwin"){
 	           mbPath <-	paste0()
