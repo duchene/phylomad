@@ -49,10 +49,26 @@ get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical"
     if("trlen" %in% stats){
          results$trlen <- phymlres$treeLength
     }
+    
+    if("imbal" %in% stats){
+    	 results$imbal <- colless(as.treeshape(phymlres$tree))
+    }
 
-	# Return test statistics, tree, and parameter estimates.
+    if("stemmystat" %in% stats){
+         results$stemmystat <- stemmy(phymlres$tree)
+    }
+    
+    if("df" %in% stats){
+    	 results$df <- get.df(phymlres$tree)
+    }
+
+    if("aindex" %in% stats){
+    	 results$aindex <- phymlres$tree$edge.length / phymlres$treeLength
+    }
+
+    # Return test statistics, tree, and parameter estimates.
 	
-	results$outputTree <- phymlres$tree
+ 	results$outputTree <- phymlres$tree
 	
 	if(length(grep("HKY|GTR", model)) == 1) results$piParams <- phymlres$piParams
 	

@@ -1,6 +1,6 @@
-run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F, tree = NULL){
+run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format = "phylip", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("imbal", "stemmystat", "df", "trlen"), returnSimPhylo = F, returnSimDat = F){
 	 
-	 # Get test statistics
+	 # Load data
 	 
 	 if(format == "phylip"){
                   data <- read.dna(sdata)
@@ -12,47 +12,99 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   	  data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
-	 system("rm empirical.alignment.phy")
+	 trees <- read.nexus(treesFile)
+         logdat <- read.table(logFile, header = T, comment = "#")
+         burninsamples <- 1:(round(length(trees) * (burninpercentage/100)))
+	 trees <- trees[-burninsamples]
+	 logdat <- logdat[-burninsamples,]
+	 samp <- sample(1:length(trees), Nsims)
+         trees <- trees[samp]
+         logdat <- logdat[samp,]
+	 
+	 if("ucldMean" %in% colnames(logdat) | "meanClockRate" %in% colnames(logdat)){
+                  ratogs <- getRatogs(trees.file)[samp]
+         }
 
 	 # Simulate data sets.
 
 	 l <- ncol(data)
 	 sim <- list()
 	 for(i in 1:Nsims){
-	       if(model == "GTR+G"){
-               	      rates = phangorn:::discrete.gamma(empstats$alphaParam, k = 4)
-               	      rates <- rates + 0.0001
-               	      sim_dat_all <- lapply(rates, function(r) simSeq(empstats$outputTree, l = round(l/4, 0), Q = empstats$gtrMatrix, bf = empstats$piParams, rate = r))
-               	      sim[[i]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
-	       } else if(model == "GTR"){
-	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l, Q = empstats$gtrMatrix, bf = empstats$piParams))
-	       } else if(model == "HKY+G"){
-	       	      rates = phangorn:::discrete.gamma(empstats$alphaParam, k = 4)
-                      rates <- rates + 0.0001
-                      sim_dat_all <- lapply(rates, function(r) simSeq(empstats$outputTree, l = round(l/4, 0), Q = c(1, 2*empstats$trtvRatio, 1, 1, 2*empstats$trtvRatio, 1), bf = empstats$piParams, rate = r))
-                      sim[[i]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
-	       } else if(model == "HKY"){
-	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l, Q = c(1, 2*empstats$trtvRatio, 1, 1, 2*empstats$trtvRatio, 1), bf = empstats$piParams))
-	       } else if(model == "JC+G"){
-	       	      rates = phangorn:::discrete.gamma(empstats$alphaParam, k = 4)
-                      rates <- rates + 0.0001
-		      sim_dat_all <- lapply(rates, function(r) simSeq(empstats$outputTree, l = round(l/4, 0), rate = r))
-                      sim[[i]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
-	       } else if(model == "JC"){
-	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l))
-	       }
+	 
+               tr <- trees[[i]]
+               if("clockRate" %in% colnames(logdat)){
+                      tr$edge.length <- tr$edge.length * logdat[i, "clockRate"]
+                      sim[[i]] <- list(phylogram = tr)
+               } else if("ucldMean" %in% colnames(logdat) | "meanClockRate" %in% colnames(logdat)){
+                      trr <- ratogs[[i]]
+                      trr$edge.length <- trr$edge.length * tr$edge.length
+                      sim[[i]] <- list(phylogram = trr)
+               }
+	       
+	       if(all(c("rateAC", "rateAG", "rateAT", "rateCG", "rateGT") %in% colnames(logdat))){
+                      # GENERAL TIME REVERSIBLE (GTR)
+
+                      basef <- c(logdat$freqParameter.1[i], logdat$freqParameter.2[i], logdat$freqParameter.3[i], logdat$freqParameter.4[i])
+                      qmat <- c(logdat$rateAC[i], logdat$rateAG[i], logdat$rateAT[i], logdat$rateCG[i], 1, logdat$rateGT[i])
+
+                      if("gammaShape" %in% colnames(logdat)){
+		           model <- "GTR+G"
+                           rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
+			   rates <- rates + 0.0001
+                           sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), Q = qmat, bf = basef, rate = r))
+                           sim[[i]][[2]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+                      } else {
+		           model <- "GTR"
+                           sim[[i]][[2]] <- as.DNAbin(simSeq(sim[[i]][[1]], Q = qmat, bf = basef, l = l))
+                      }
+
+               } else if("kappa" %in% colnames(logdat)){
+                      # HASEGAWA-KISHINO-YANO (HKY)
+
+                      basef <- c(logdat$freqParameter.1[i], logdat$freqParameter.2[i], logdat$freqParameter.3[i], logdat$freqParameter.4[i])
+                      qmat <- c(1, 2*logdat$kappa[i], 1, 1, 2*logdat$kappa[i], 1)
+
+                      if("gammaShape" %in% colnames(logdat)){
+                           model <- "HKY+G"
+			   rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
+			   rates <- rates + 0.0001
+                           sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), Q = qmat, bf = basef, rate = r))
+                           sim[[i]][[2]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+                      } else {
+                           model <- "HKY"
+			   sim[[i]][[2]] <- as.DNAbin(simSeq(sim[[i]][[1]], Q = qmat, bf = basef, l = l))
+                      }
+
+               } else {
+                      # JUKES-CANTOR (JC)
+		      
+		      if("gammaShape" %in% colnames(logdat)){
+		           model <- "JC+G"
+			   rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
+                           rates <- rates + 0.0001
+                           sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), rate = r))
+                           sim[[i]][[2]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+		      } else {
+		      	   model <- "JC"
+			   sim[[i]][[2]] <- as.DNAbin(simSeq(sim[[i]][[1]], l = l))
+		      }
+
+               }
 	 
 	 }
 	 
+	 # Get test statistics for empirical data
+	 
+	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+         system("rm empirical.alignment.phy")
 
-	 # Get test statistics for simulations.
+	 # Get test statistics for simulations
 
 	 if(!para){
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]][[2]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   

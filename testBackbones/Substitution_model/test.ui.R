@@ -3,7 +3,7 @@ tabsetPanel(
                        fluidRow(
 		       column(1),
                        column(10,
-		       h4("Select the data for which the model will be assessed"),
+		       h4("Select the data for which the substitution model will be assessed"),
                        fileInput("dataPath", label = h5("Multiple data alignments in the same folder can also be selected"), multiple = T),
 		       radioButtons("dataFormat", label = h4("Select the format of your data"),
                        choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip"),
@@ -28,7 +28,7 @@ tabsetPanel(
 		       column(10,
 		       checkboxGroupInput("testStats", label = h4("Select test statistics for assessment"),
 		       choices = list("Chi-Squared statistic" = "chisq", "Multinomial statistic" = "multlik", "Delta statistic" = "delta", "Biochemical diversity" = "biochemdiv", "Consistency index" = "consind", "Branch support" = "brsup", "Branch support 95% interval" = "CIbrsup", "Tree length" = "trlen", "Squared Mahalanobis distance" = "maha"), selected = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha")),
-		       p("Note that the Mahalanobis statistic should only be selected if more than one other statistic is selected.")
+		       p("Only select the Mahalanobis distance if multiple other statistics are also selected.")
 		       ),
 		       column(1))
 	),
@@ -55,7 +55,7 @@ tabsetPanel(
                        value = 1),
 		       br(),
 		       radioButtons("framework", label = h4("Select the statistical framework to use for assessment"),
-                       choices = list("Likelihood" = "likelihood", "Bayesian" = "bayesian"), selected = "likelihood"),
+                       choices = list("Likelihood" = "likelihood", "Bayesian (temporarily unavailable)" = "bayesian"), selected = "likelihood"),
 		       br(),
 		       actionButton("startAnalysis", label = "START ASSESSMENT"),
 		       br(),
