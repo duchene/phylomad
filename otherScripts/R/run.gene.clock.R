@@ -27,7 +27,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 
 	 # Simulate data sets.
 
-	 l <- ncol(data)
+	 l <- ncol(as.matrix(data))
 	 sim <- list()
 	 for(i in 1:Nsims){
 	 
@@ -52,10 +52,10 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
                            rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
 			   rates <- rates + 0.0001
                            sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), Q = qmat, bf = basef, rate = r))
-                           sim[[i]][[2]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+                           sim[[i]]$alignment <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
                       } else {
 		           model <- "GTR"
-                           sim[[i]][[2]] <- as.DNAbin(simSeq(sim[[i]][[1]], Q = qmat, bf = basef, l = l))
+                           sim[[i]]$alignment <- as.DNAbin(simSeq(sim[[i]][[1]], Q = qmat, bf = basef, l = l))
                       }
 
                } else if("kappa" %in% colnames(logdat)){
@@ -69,10 +69,10 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 			   rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
 			   rates <- rates + 0.0001
                            sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), Q = qmat, bf = basef, rate = r))
-                           sim[[i]][[2]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+                           sim[[i]]$alignment <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
                       } else {
                            model <- "HKY"
-			   sim[[i]][[2]] <- as.DNAbin(simSeq(sim[[i]][[1]], Q = qmat, bf = basef, l = l))
+			   sim[[i]]$alignment <- as.DNAbin(simSeq(sim[[i]][[1]], Q = qmat, bf = basef, l = l))
                       }
 
                } else {
@@ -83,10 +83,10 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 			   rates = phangorn:::discrete.gamma(logdat$gammaShape[i], k = 4)
                            rates <- rates + 0.0001
                            sim_dat_all<- lapply(rates, function(r) simSeq(sim[[i]][[1]], l = round(l/4, 0), rate = r))
-                           sim[[i]][[2]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+                           sim[[i]]$alignment <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
 		      } else {
 		      	   model <- "JC"
-			   sim[[i]][[2]] <- as.DNAbin(simSeq(sim[[i]][[1]], l = l))
+			   sim[[i]]$alignment <- as.DNAbin(simSeq(sim[[i]][[1]], l = l))
 		      }
 
                }
@@ -95,7 +95,8 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 
 	 # Get test statistics for empirical data
 	 
-	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	 
+	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
          system("rm empirical.alignment.phy")
 
 	 # Get test statistics for simulations
@@ -104,7 +105,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]][[2]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]][[2]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   
@@ -115,7 +116,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   require(doParallel)
 		
 	   runSim <- function(i){
-	     tRep <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	     tRep <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
              system(paste0("rm ", paste0("sim.data.", i)))
 	     return(tRep)		
 	   }	  
