@@ -41,19 +41,25 @@ if("pvals" %in% unlist(input$whatToOutput)){
 	       rownames(out) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
 	       write.csv(out, file = "output.pvals.PhyloMAd.csv")
 	}
+	
 }
 
 if("phyloempres" %in% unlist(input$whatToOutput)){
-	write.tree(geneResults$empirical.tree, file = "estimate.empirical.data.tre")
+	if("aindex" %in% unlist(input$testStats)){
+	       branchwise.assessment <- rbind(geneResults$aindex.allp, geneResults$aindex.sds)
+	       rownames(branchwise.assessment) <- c("Branch-wise P-values", "Branch-wise SDPD")
+	       write.csv(branchwise.assessment, file = "Branch-wise.assessment.results.csv")
+	}
+	write.tree(geneResults$empirical.tree, file = "estimate.empirical.data.clock.free.tre")
 }
 
 if("simdat" %in% unlist(input$whatToOutput)){
 	if(input$outputFormat == "phylip"){
-		for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".phy"))
+		for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]]$alignment, file = paste0("predictive.data.", i, ".phy"))
 	} else if(input$outputFormat == "fasta"){
-	        for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".fasta"), format = "fasta")
+	        for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]]$alignment, file = paste0("predictive.data.", i, ".fasta"), format = "fasta")
 	} else if(input$outputFormat == "nexus"){
-	        for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".nex"))
+	        for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]]$alignment, file = paste0("predictive.data.", i, ".nex"))
 	}
 }
 
@@ -72,6 +78,7 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 	if("aindex" %in% selectedStats) statlabels <- c(statlabels, "A index")
 	if("trlen" %in% selectedStats) statlabels <- c(statlabels, "Tree length")
 	if("maha" %in% selectedStats) statlabels <- c(statlabels, "Squared Mahalanobis distance")
+	
 	if(length(empstats) == 0){
 		print("Test plots cannot be returned because no test statistics were calculated.")
 	} else {
@@ -80,9 +87,21 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 		      sdstat <- sd(statsmat[2:nrow(statsmat), i])
 		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i]) - sdstat, max(statsmat[, i]) + sdstat), xlab = statlabels[i], ylab = "Frequency of predictive simulations", main = "")
 		      abline(v = empstats[i], col = "red", lwd = 3)
+		      if("aindex" %in% unlist(input$testStats)){
+		      		  treetoprint <- geneResults$empirical.tree
+				  treetoprint <- $edge.length <- NULL
+				  brPal <- colorRampPalette(c('blue', 'green', 'yellow','red'))
+				  Aindexcol <- brPal(5)[as.numeric(cut(geneResults$aindex.allp, breaks = 5))]
+				  sdcol <- brPal(5)[as.numeric(cut(geneResults$aindex.sds, breaks = 5))]
+				  plot(treetoprint, col = Aindexcol, main = "Branches coloured by P-value")
+				  edgelabels(round(geneResults$aindex.allp, 2))
+				  plot(treetoprint, col = sdcol, main = "Branches coloured by SDPD")
+				  edgelabels(round(geneResults$aindex.sds, 2))
+		      }
 		}
 		dev.off()
 	}
+	
 }
 
 setwd("..")

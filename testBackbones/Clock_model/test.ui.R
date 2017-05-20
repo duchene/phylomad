@@ -18,7 +18,7 @@ tabsetPanel(
 		       column(1),
 		       column(10,
 		       checkboxGroupInput("testStats", label = h4("Select test statistics for assessment"),
-		       choices = list("Imbalance" = "imbal", "Stemminess" = "stemmystat", "Df" = "df", "Tree length" = "trlen", "A-index (tree topology must be fixed)" = "aindex", "Squared Mahalanobis distance" = "maha"), selected = c("imbal", "stemmystat", "df", "trlen", "maha")),
+		       choices = list("Imbalance" = "imbal", "Stemminess" = "stemmystat", "Df" = "df", "Tree length" = "trlen", "A-index (requires a fixed tree topology)" = "aindex", "Squared Mahalanobis distance" = "maha"), selected = c("imbal", "stemmystat", "df", "trlen", "maha")),
 		       p("Only select the Mahalanobis distance if multiple other statistics are also selected.")
 		       ),
 		       column(1))

@@ -105,7 +105,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]][[2]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]]$alignment, format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   
@@ -116,7 +116,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   require(doParallel)
 		
 	   runSim <- function(i){
-	     tRep <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	     tRep <- get.test.statistics(sim[[i]]$alignment, format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
              system(paste0("rm ", paste0("sim.data.", i)))
 	     return(tRep)		
 	   }	  
@@ -161,14 +161,16 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 }
 	 
 	 if("aindex" %in% testStats){
-	 results$emp.aindex <- empstats$aindex
-	 results$sim.aindexs <- lapply(sim.stats, function(x) x$aindex)
+	 results$realdat.aindex <- empstats$aindex
+	 results$emp.aindex <- median(empstats$aindex)
+	 results$all.predblens <- lapply(sim.stats, function(x) x$aindex)
+	 results$sim.aindexs <- sapply(results$all.predblens, median)
 	 results$aindex.allp <- vector()
 	 results$aindex.sds <- vector()
 	 for(i in 1:length(empstats$aindex)){
-	        branchpredlens <- sapply(results$sim.aindexs, function(x) x[i])
+	        branchpredlens <- sapply(results$all.predblens, function(x) x[i])
 	 	results$aindex.allp[i] <- length(which(branchpredlens < empstats$aindex[i])) / Nsims
-	 	results$aindex.sds[i] <- (results$emp.aindex[i] - mean(branchpredlens)) / sd(branchpredlens)
+	 	results$aindex.sds[i] <- (results$realdat.aindex[i] - mean(branchpredlens)) / sd(branchpredlens)
 	 }
 	 results$aindex.tailp <- length(which(results$aindex.allp > 0.05) / length(results$aindex.allp))
 	 results$aindex.sdpd <- mean(results$aindex.sds)
