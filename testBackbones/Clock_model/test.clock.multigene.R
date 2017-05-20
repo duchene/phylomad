@@ -32,10 +32,6 @@ if(nrow(input$posteriorPath) == 1) postPath <- as.character(input$posteriorPath[
 
 geneResults <- run.gene.clock(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, treesFile = treesPath, logFile = postPath, burninpercentage = input$burnin, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnSimPhylo = T, returnSimDat = T)
 
-####
-writeLines(names(geneResults), con = "banana.txt")
-####
-
 if("pvals" %in% unlist(input$whatToOutput)){
 	out <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))
 	if(length(out) == 0){

@@ -130,62 +130,48 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 
 	 # Get P-values for test statistics.
 	 
-	 results <- list()	 
-
-	 if("chisq" %in% testStats){
-	 results$emp.chisq <- empstats$chisq
-	 results$sim.chisqs <- sapply(sim.stats, function(x) x$chisq)
-	 results$chisq.tailp <- length(which(results$sim.chisqs < empstats$chisq)) / Nsims
-	 results$chisq.sdpd <- (results$emp.chisq - mean(results$sim.chisqs)) / sd(results$sim.chisqs)
-	 }
-
-	 if("multlik" %in% testStats){
-	 results$emp.multlik <- empstats$multlik
-	 results$sim.multinoms <- sapply(sim.stats, function(x) x$multlik)
-	 results$multinom.tailp <- length(which(results$sim.multinoms < empstats$multlik)) / Nsims
-	 results$multinom.sdpd <- (results$emp.multlik - mean(results$sim.multinoms)) / sd(results$sim.multinoms)
-	 }
-	 
-	 if("delta" %in% testStats){
-	 results$emp.delta <- empstats$delta
-	 results$sim.deltas <- sapply(sim.stats, function(x) x$delta)
-	 results$delta.tailp <- length(which(results$sim.deltas < empstats$delta)) / Nsims
-	 results$delta.sdpd <- (results$emp.delta - mean(results$sim.deltas)) /	sd(results$sim.deltas)
-	 }
-	 
-	 if("biochemdiv" %in% testStats){
-	 results$emp.biocp <- empstats$biocp
-	 results$sim.biocp <- sapply(sim.stats, function(x) x$biocp)
-	 results$bioc.tailp <- length(which(results$sim.biocp < empstats$biocp)) / Nsims
-	 results$bioc.sdpd <- (results$emp.biocp - mean(results$sim.biocp)) / sd(results$sim.biocp)
-	 }
-	 
-	 if("consind" %in% testStats){
-	 results$emp.consind <- empstats$consind
-	 results$sim.consind <- sapply(sim.stats, function(x) x$consind)
-         results$consind.tailp <- length(which(results$consind < empstats$consind)) / Nsims
-	 results$consind.sdpd <- (results$emp.consind - mean(results$sim.consind)) / sd(results$sim.consind)
-	 }
-	 
-	 if("brsup" %in% testStats){
-	 results$emp.brsup <- empstats$brsup
-	 results$sim.meanbrsup <- sapply(sim.stats, function(x) x$brsup)
-	 results$meanbrsup.tailp <- length(which(results$sim.meanbrsup < empstats$brsup)) / Nsims
-	 results$meanbrsup.sdpd <- (results$emp.brsup - mean(results$sim.meanbrsup)) / sd(results$sim.meanbrsup)
-	 }
-	 
-	 if("CIbrsup" %in% testStats){
-	 results$emp.CIbrsup <- empstats$CIbrsup
-	 results$sim.CIbrsup <- sapply(sim.stats, function(x) x$CIbrsup)
-	 results$CIbrsup.tailp <- length(which(results$sim.CIbrsup < empstats$CIbrsup)) / Nsims
-	 results$CIbrsup.sdpd <- (results$emp.CIbrsup - mean(results$sim.CIbrsup)) / sd(results$sim.CIbrsup)
-	 }
+	 results <- list()
 	 
 	 if("trlen" %in% testStats){
 	 results$emp.trlen <- empstats$trlen
 	 results$sim.trlens <- sapply(sim.stats, function(x) x$trlen)
 	 results$trlen.tailp <- length(which(results$sim.trlens < empstats$trlen)) / Nsims
 	 results$trlen.sdpd <- (results$emp.trlen - mean(results$sim.trlens)) /	sd(results$sim.trlens)
+	 }
+
+	 if("imbal" %in% testStats){
+	 results$emp.imbal <- empstats$imbal
+	 results$sim.imbals <- sapply(sim.stats, function(x) x$imbal)
+	 results$imbal.tailp <- length(which(results$sim.imbals < empstats$imbal)) / Nsims
+	 results$imbal.sdpd <- (results$emp.imbal - mean(results$sim.imbals)) / sd(results$sim.imbals)
+	 }
+
+	 if("stemmystat" %in% testStats){
+	 results$emp.stemmystat <- empstats$stemmystat
+	 results$sim.stemmystats <- sapply(sim.stats, function(x) x$stemmystat)
+	 results$stemmystat.tailp <- length(which(results$sim.stemmystats < empstats$stemmystat)) / Nsims
+	 results$stemmystat.sdpd <- (results$emp.stemmystat - mean(results$sim.stemmystats)) / sd(results$sim.stemmystats)
+	 }
+	 
+	 if("df" %in% testStats){
+	 results$emp.df <- empstats$df
+	 results$sim.dfs <- sapply(sim.stats, function(x) x$df)
+	 results$df.tailp <- length(which(results$sim.dfs < empstats$df)) / Nsims
+	 results$df.sdpd <- (results$emp.df - mean(results$sim.dfs)) /	sd(results$sim.dfs)
+	 }
+	 
+	 if("aindex" %in% testStats){
+	 results$emp.aindex <- empstats$aindex
+	 results$sim.aindexs <- lapply(sim.stats, function(x) x$aindex)
+	 results$aindex.allp <- vector()
+	 results$aindex.sds <- vector()
+	 for(i in 1:length(empstats$aindex)){
+	        branchpredlens <- sapply(results$sim.aindexs, function(x) x[i])
+	 	results$aindex.allp[i] <- length(which(branchpredlens < empstats$aindex[i])) / Nsims
+	 	results$aindex.sds[i] <- (results$emp.aindex[i] - mean(branchpredlens)) / sd(branchpredlens)
+	 }
+	 results$aindex.tailp <- length(which(results$aindex.allp > 0.05) / length(results$aindex.allp))
+	 results$aindex.sdpd <- mean(results$aindex.sds)
 	 }
 	 
 	 if("maha" %in% testStats){
@@ -206,7 +192,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 	all.sim.stats <- all.sim.stats[,-failstats]
            	all.stats.mat <- all.stats.mat[,-failstats]
 	 }
-	 #print(all.stats.mat)
+	 
 	 if(length(all.stats.mat) >= 2*Nsims){
 	 	mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
 	 	results$emp.maha <- tail(mahavector, 1)
