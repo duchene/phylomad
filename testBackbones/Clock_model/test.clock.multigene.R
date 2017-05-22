@@ -2,10 +2,8 @@ source("otherScripts/R/run.gene.clock.R")
 source("otherScripts/R/get.test.statistics.R")
 source("otherScripts/R/runPhyML.R")
 source("otherScripts/R/getRatogs.R")
-if("chisq" %in% unlist(input$testStats)) source("testStatistics/get.chisqstat.R")
-if("biochemdiv" %in% unlist(input$testStats)) source("testStatistics/get.biodivstat.R")
-if("df" %in% unlist(input$testStats)) source("testStatistics/get.df.R")
-if("stemmystat" %in% unlist(input$testStats)) source("testStatistics/stemmy.R")
+source("testStatistics/get.df.R")
+source("testStatistics/stemmy.R")
 
 
 initial.dir <- getwd()
@@ -87,19 +85,22 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 		      sdstat <- sd(statsmat[2:nrow(statsmat), i])
 		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i]) - sdstat, max(statsmat[, i]) + sdstat), xlab = statlabels[i], ylab = "Frequency of predictive simulations", main = "")
 		      abline(v = empstats[i], col = "red", lwd = 3)
-		      if("aindex" %in% unlist(input$testStats)){
-		      		  treetoprint <- geneResults$empirical.tree
-				  treetoprint <- $edge.length <- NULL
-				  brPal <- colorRampPalette(c('blue', 'green', 'yellow','red'))
-				  Aindexcol <- brPal(5)[as.numeric(cut(geneResults$aindex.allp, breaks = 5))]
-				  sdcol <- brPal(5)[as.numeric(cut(geneResults$aindex.sds, breaks = 5))]
-				  plot(treetoprint, col = Aindexcol, main = "Branches coloured by P-value")
-				  edgelabels(round(geneResults$aindex.allp, 2))
-				  plot(treetoprint, col = sdcol, main = "Branches coloured by SDPD")
-				  edgelabels(round(geneResults$aindex.sds, 2))
-		      }
 		}
 		dev.off()
+		
+		if("aindex" %in% unlist(input$testStats)){
+		      pdf("adequacy.branch-wise.tests.plots.pdf", useDingbats = F, height = 5 + (Ntip(geneResults$empirical.tree) * 0.2))
+                      treetoprint <- geneResults$empirical.tree
+                      treetoprint$edge.length <- NULL
+                      brPal <- colorRampPalette(c('blue', 'green', 'yellow','red'))
+                      Aindexcol <- brPal(5)[as.numeric(cut(geneResults$aindex.allp, breaks = 5))]
+                      sdcol <- brPal(5)[as.numeric(cut(geneResults$aindex.sds, breaks = 5))]
+                      plot(treetoprint, col = Aindexcol, main = "Branches coloured by P-value")
+                      edgelabels(round(geneResults$aindex.allp, 2))
+                      plot(treetoprint, col = sdcol, main = "Branches coloured by SDPD")
+                      edgelabels(round(geneResults$aindex.sds, 2))
+		      dev.off()
+                }
 	}
 	
 }

@@ -3,8 +3,8 @@ source("otherScripts/R/get.test.statistics.R")
 source("otherScripts/R/runPhyML.R")
 source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/get.model.R")
-if("chisq" %in% unlist(input$testStats)) source("testStatistics/get.chisqstat.R")
-if("biochemdiv" %in% unlist(input$testStats)) source("testStatistics/get.biodivstat.R")
+source("testStatistics/get.chisqstat.R")
+source("testStatistics/get.biodivstat.R")
 
 initial.dir <- getwd()
 

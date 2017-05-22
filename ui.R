@@ -6,7 +6,7 @@ shinyUI(fluidPage(
   # Application title
   titlePanel(
   #h1("PhyloMAd", align = "center"),
-  img(src = "phylomad.temp.png", height = 150, width = 300, style = "display: block; margin-left: auto; margin-right: auto;"),
+  img(src = "phylomad.temp.png", height = 125, width = 900), #, style = "display: block; margin-left: auto; margin-right: auto;"),
   windowTitle = "PhyloMAd"
   ),
   sidebarLayout(

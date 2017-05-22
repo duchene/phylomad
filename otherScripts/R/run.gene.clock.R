@@ -122,7 +122,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   }	  
 	   cl <- makeCluster(ncore)
 	   registerDoParallel(cl)
-	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runPhyML', 'get.chisqstat', 'get.biodivstat')) %dopar% runSim(x)
+	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape', 'apTreeshape'), .export = c('get.test.statistics', 'runPhyML', 'get.df', 'stemmy')) %dopar% runSim(x)
 	   sim.stats <- simReps 
 	   stopCluster(cl)
 	  }
@@ -172,7 +172,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 	results$aindex.allp[i] <- length(which(branchpredlens < empstats$aindex[i])) / Nsims
 	 	results$aindex.sds[i] <- (results$realdat.aindex[i] - mean(branchpredlens)) / sd(branchpredlens)
 	 }
-	 results$aindex.tailp <- length(which(results$aindex.allp > 0.05) / length(results$aindex.allp))
+	 results$aindex.tailp <- length(which(results$aindex.allp > 0.05)) / length(results$aindex.allp)
 	 results$aindex.sdpd <- mean(results$aindex.sds)
 	 }
 	 
