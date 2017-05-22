@@ -40,7 +40,7 @@ tabsetPanel(
                        choices = list("Metrics of adequacy" = "pvals", "Estimated tree for empirical data" = "phyloempres", "Simulated data" = "simdat", "Estimated trees for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
 		       radioButtons("outputFormat", label = h4("Select the format of the output data"),
                        choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip"),
-		       textInput("outputFolder", label = h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"), value = paste0(getwd(), "/outputFolder/"))
+		       textInput("outputFolder", label = h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"), value = paste0(getwd(), "/../outputFolder/"))
 		       ),
 		       column(1))
 	),
