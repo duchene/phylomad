@@ -22,7 +22,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
          logdat <- logdat[samp,]
 	 
 	 if("ucldMean" %in% colnames(logdat) | "meanClockRate" %in% colnames(logdat)){
-                  ratogs <- getRatogs(trees.file)[samp]
+                  ratogs <- getRatogs(treesFile)[samp]
          }
 
 	 # Simulate data sets.

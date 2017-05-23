@@ -29,7 +29,7 @@ Download and unzip the PhyloMAd repository from GitHub. This can be done by pres
 git clone https://github.com/duchene/modadclocks.git
 ```
 
-Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). This will install the R package *shiny* and its dependencies.
+Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). If needed, this will install all the required R packages. This might take several minutes.
 
 If you have difficulty opening the program, you might want to try opening a bash shell, setting your directory to the PhyloMAd folder and executing the R script by hand.
 

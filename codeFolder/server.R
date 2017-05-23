@@ -13,11 +13,6 @@ shinyServer(function(input, output, session) {
   output$modeltestcode <- renderUI({
   		       source(paste0("testBackbones/", input$modeltotest, "/test.ui.R"), local = T)  
   })
-  
-  observeEvent(input$installPackages, {
-  				      source(paste0("testBackbones/", input$modeltotest, "/install.test.packages.R"), local = T)
-        output$installationConfirmation <- renderText("The packages are now installed")
-  })
 
   observeEvent(input$startAnalysis, { 
   				    output$analysisConfirmation <- renderText("The analysis has been completed and the following are the steps undergone:")

@@ -17,12 +17,8 @@ shinyUI(fluidPage(
     radioButtons("modeltotest", label = h4("Select the model to be assessed"), 
     choices = rev(as.list(dir("testBackbones"))), selected = "Substitution_model"),
     br(),
-    p("Note that several R packages other than shiny are needed to run model assessment."),
-    p("Press the following button if you would like to install these packages. This might take a couple of minutes, and will complete with a new message below."),
     br(),
-    actionButton("installPackages", label = "Install required packages"),
-    br(),
-    uiOutput("installationConfirmation")
+    h5("PhyloMAd is distributed under a yet unknown licence.")
     ),
     mainPanel(
     uiOutput("modeltestcode")
