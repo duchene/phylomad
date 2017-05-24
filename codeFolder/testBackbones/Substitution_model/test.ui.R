@@ -6,10 +6,10 @@ tabsetPanel(
 		       h4("Select the data for which the substitution model will be assessed"),
                        fileInput("dataPath", label = h5("Multiple data alignments in the same folder can also be selected"), multiple = T),
 		       radioButtons("dataFormat", label = h4("Select the format of your data"),
-                       choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip"),
+                       choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       fileInput("treesPath", label = h4("Select any input tree(s) (or leave blank)"), multiple = T),
                        radioButtons("treesFormat", label = h5("Select the format of your tree(s)"),
-                       choices = list("No input tree" = "none", "NEWICK" = "newick", "NEXUS" = "nexus"), selected = "none")
+                       choices = list("No input tree" = "none", "NEXUS" = "nexus", "NEWICK" = "newick"), selected = "none")
 		       ),
 		       column(1))
         ),
@@ -39,7 +39,7 @@ tabsetPanel(
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired"),
                        choices = list("Metrics of adequacy" = "pvals", "Estimated tree for empirical data" = "phyloempres", "Simulated data" = "simdat", "Estimated trees for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
 		       radioButtons("outputFormat", label = h4("Select the format of the output data"),
-                       choices = list("Phylip" = "phylip", "FASTA" = "fasta", "NEXUS" = "nexus"), selected = "phylip"),
+                       choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       textInput("outputFolder", label = h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"), value = paste0(getwd(), "/../outputFolder/"))
 		       ),
 		       column(1))
@@ -60,9 +60,11 @@ tabsetPanel(
 		       actionButton("startAnalysis", label = "START ASSESSMENT"),
 		       br(),
 		       br(),
+		       h5("OUTPUT NOTES"),
 		       h5("Previous results with the same paths will be overwritten"),
-		       h5("Progress is shown in the R console window"),
-		       h5("The steps of analysis are shown below after completion"),
+		       h5("Progress is shown in the shell window"), 
+		       h5("Only press the start button once to avoid analyses being repeated, and note that the analyses might take a few minutes to begin"),
+		       h5("Further notes, warnings, or errors will appear below after completion"),
 		       br(),
 		       uiOutput("analysisConfirmation"),
 		       br(),

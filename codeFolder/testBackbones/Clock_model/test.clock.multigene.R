@@ -5,12 +5,15 @@ source("otherScripts/R/getRatogs.R")
 source("testStatistics/get.df.R")
 source("testStatistics/stemmy.R")
 
-
 initial.dir <- getwd()
 
 print("Functions required have been loaded")
 
 trees <- read.nexus(as.character(input$treesPath[1, 4]))
+
+selectedStats <- unlist(input$testStats)
+
+outs <- list()
 
 for(j in 1:nrow(input$dataPath)){
 
@@ -23,22 +26,24 @@ print("Output folder has been identified")
 system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.clock"))
 setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad.clock"))
 
-selectedStats <- unlist(input$testStats)
-
 if(nrow(input$treesPath) == 1) treesPath <- as.character(input$treesPath[1, 4]) else treesPath <- as.character(input$treesPath[j, 4])
 if(nrow(input$posteriorPath) == 1) postPath <- as.character(input$posteriorPath[1, 4]) else postPath <- as.character(input$posteriorPath[j, 4])
 
 geneResults <- run.gene.clock(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, treesFile = treesPath, logFile = postPath, burninpercentage = input$burnin, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnSimPhylo = T, returnSimDat = T)
 
 if("pvals" %in% unlist(input$whatToOutput)){
-	out <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))
-	if(length(out) == 0){
+	outs[[j]] <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))
+	if(length(outs[[j]]) == 0){
 	       print("P-values cannot be returned because no test statistics were calculated.")
 	} else {
-	       colnames(out) <- unlist(input$testStats)
-	       rownames(out) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
-	       write.csv(out, file = "output.pvals.PhyloMAd.csv")
+	       colnames(outs[[j]]) <- unlist(input$testStats)
+	       rownames(outs[[j]]) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
+	       write.csv(outs[[j]], file = "output.pvals.PhyloMAd.csv")
 	}
+	resvector <- matrix(as.vector(t(outs[[j]])), nrow = 1)
+        rownames(resvector) <- as.character(input$dataPath[j, 1])
+        colnames(resvector) <- c(paste0(colnames(outs[[j]]), ".tail.area.p"), paste0(colnames(outs[[j]]), ".empirical.statistic"), paste0(colnames(outs[[j]]), ".stdev.from.pred.dist"))
+	outs[[j]] <- resvector
 	
 }
 
@@ -107,6 +112,11 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 
 setwd("..")
 
+}
+
+if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput)){
+        allOutput <- do.call("rbind", outs)
+        write.csv(allOutput, file = "output.all.loci.clock.PhyloMAd.csv")
 }
 
 setwd(initial.dir)
