@@ -150,7 +150,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 results$emp.stemmystat <- empstats$stemmystat
 	 results$sim.stemmystats <- sapply(sim.stats, function(x) x$stemmystat)
 	 results$stemmystat.tailp <- length(which(results$sim.stemmystats < empstats$stemmystat)) / Nsims
-	 results$stemmystat.sdpd <- (results$emp.stemmystat - mean(results$sim.stemmystats)) / sd(results$sim.stemmystats)
+	 results$stemmystat.sdpd <- (results$emp.stemmystat - mean(results$sim.stemmystats, na.rm = T)) / sd(results$sim.stemmystats, na.rm = T)
 	 }
 	 
 	 if("df" %in% testStats){

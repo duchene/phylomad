@@ -50,8 +50,14 @@ setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
 
 geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
 
-if("pvals" %in% unlist(input$whatToOutput)){
-	outs[[j]] <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))
+if("pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToOutput)){
+	geneResMat <- matrix(NA, nrow = 3, ncol = length(selectedStats))
+        for(i in 1:length(selectedStats)){
+               geneResMat[1, i] <- geneResults[[paste0(selectedStats[i], ".tailp")]]
+               geneResMat[2, i] <- geneResults[[paste0("emp.", selectedStats[i])]]
+               geneResMat[3, i] <- geneResults[[paste0(selectedStats[i], ".sdpd")]]
+        }
+        outs[[j]] <- geneResMat
 	if(length(outs[[j]]) == 0){
 	       print("P-values cannot be returned because no test statistics were calculated.")
 	} else {
@@ -127,9 +133,11 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 
 setwd("..")
 
+if("simple" %in% unlist(input$whatToOutput)) system(paste0("rm -r ", as.character(input$dataPath[j, 1]), ".phylomad"))
+
 }
 
-if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput)){
+if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToOutput)){
 	allOutput <- do.call("rbind", outs)
 	write.csv(allOutput, file = "output.all.loci.PhyloMAd.csv")
 }

@@ -18,7 +18,7 @@ tabsetPanel(
 		       column(1),
 		       column(10,
 		       checkboxGroupInput("testStats", label = h4("Select test statistics for assessment"),
-		       choices = list("Imbalance" = "imbal", "Stemminess" = "stemmystat", "Df" = "df", "Tree length" = "trlen", "A-index (requires a fixed tree topology)" = "aindex", "Squared Mahalanobis distance" = "maha"), selected = c("imbal", "stemmystat", "df", "trlen", "maha")),
+		       choices = list("Stemminess" = "stemmystat", "Df" = "df", "Tree length" = "trlen", "Imbalance (requires a non-fixed tree topology)" = "imbal", "A-index (requires a fixed tree topology)" = "aindex", "Squared Mahalanobis distance" = "maha"), selected = c("stemmystat", "df", "trlen", "maha")),
 		       p("Only select the Mahalanobis distance if multiple other statistics are also selected.")
 		       ),
 		       column(1))
@@ -28,7 +28,7 @@ tabsetPanel(
                        column(1),
                        column(10,
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired"),
-                       choices = list("Metrics of adequacy" = "pvals", "Estimated clock-free tree for empirical data" = "phyloempres", "Simulated data" = "simdat", "Estimated clock-free trees for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
+                       choices = list("Only summary file" = "simple", "Individual locus metrics of adequacy" = "pvals", "Estimated clock-free tree for empirical data" = "phyloempres", "Simulated data" = "simdat", "Estimated clock-free trees for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
 		       radioButtons("outputFormat", label = h4("Select the format of the output data"),
                        choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       textInput("outputFolder", label = h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"), value = paste0(getwd(), "/../outputFolder/"))
@@ -51,7 +51,7 @@ tabsetPanel(
 		       h5("OUTPUT NOTES"),
                        h5("Previous results with the same paths will be overwritten"),
                        h5("Progress is shown in the shell window"),
-                       h5("Only press the start button once to avoid analyses being repeated, and note that the analyses might take a few minutes to begin"),
+                       h5("To avoid analyses running repeatedly, only press the start button once and be aware that the analyses might take a few minutes to print any progress"),
                        h5("Further notes, warnings, or errors will appear below after completion"),
 		       br(),
 		       uiOutput("analysisConfirmation"),
