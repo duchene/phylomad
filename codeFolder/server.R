@@ -21,7 +21,7 @@ shinyServer(function(input, output, session) {
 
   session$onSessionEnded(function() { 
      stopApp()
-     #q("no") 
+     q("no") 
   })
 
   })

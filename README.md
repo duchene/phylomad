@@ -1,8 +1,6 @@
 ![software logo](codeFolder/www/phylomad.temp.png)
---------------------------------------------------------------------------------------------------------------------------------------------
 
-This repository was contributed by David Duchene
-
+For support contact David A. Duchêne
 david.duchene[at]sydney.edu.au
 
 23 May 2017
@@ -10,11 +8,11 @@ david.duchene[at]sydney.edu.au
 Introduction
 ------------
 
-This introduces PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy in a likelihood statistical framework.
+This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy.
+
+Copyright 2017 by the PhyloMAd authors. The software PhyloMAd is distributed without warranty of any kind or support for previous versions. The authors will not be responsible for any damage resulting from the use of this software. The source and documentation are distributed under the GNU General Public Licence except where stated otherwise. See http://www.opensource.org/licenses for details.
 
 Substitution models supported inlcude the JC, HKY, and GTR models, including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
-
-The following are a set of examples of how to use PhyloMAd and a description of the output.
 
 Download and package installation
 ---------------------------------

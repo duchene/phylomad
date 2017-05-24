@@ -23,6 +23,12 @@ if(input$treesFormat != "none" & length(trees) < nrow(input$dataPath)){
 
 if(input$treesFormat != "none") class(trees) <- "multiPhylo"
 
+selectedStats <- unlist(input$testStats)
+
+if("chisq" %in% selectedStats) chisqthresholds <- data.frame(seqlen = c(500, 1000, 5000), minD = c(40, 70, 367), maxD = c(135, 258, 1273))
+
+outs <- list()
+
 for(j in 1:nrow(input$dataPath)){
 
 if(input$model == "autoModel") modeltested <- get.model(as.character(input$dataPath[j, 4])) else modeltested <- input$model
@@ -42,18 +48,35 @@ print("Output folder has been identified")
 system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad"))
 setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
 
-selectedStats <- unlist(input$testStats)
-
 geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
 
 if("pvals" %in% unlist(input$whatToOutput)){
-	out <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))
-	if(length(out) == 0){
+	outs[[j]] <- rbind(unlist(geneResults[grep("[.]tailp", names(geneResults))]), unlist(geneResults[grep("emp[.]", names(geneResults))]), unlist(geneResults[grep("[.]sdpd", names(geneResults))]))
+	if(length(outs[[j]]) == 0){
 	       print("P-values cannot be returned because no test statistics were calculated.")
 	} else {
-	       colnames(out) <- unlist(input$testStats)
-	       rownames(out) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
-	       write.csv(out, file = "output.pvals.PhyloMAd.csv")
+	       colnames(outs[[j]]) <- unlist(input$testStats)
+	       rownames(outs[[j]]) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
+	       write.csv(outs[[j]], file = "output.pvals.PhyloMAd.csv")
+	}
+	resvector <- matrix(as.vector(t(outs[[j]])), nrow = 1)
+	rownames(resvector) <- as.character(input$dataPath[j, 1])
+	colnames(resvector) <- c(paste0(colnames(outs[[j]]), ".tail.area.p"), paste0(colnames(outs[[j]]), ".empirical.statistic"), paste0(colnames(outs[[j]]), ".stdev.from.pred.dist"))
+	outs[[j]] <- resvector
+	if("chisq" %in% selectedStats){
+	       thresholdMidRisk <- predict(lm(minD ~ seqlen, data = chisqthresholds), data.frame(seqlen = ncol(as.matrix(geneDNAbin))))
+	       thresholdHighRisk <- predict(lm(maxD ~ seqlen, data = chisqthresholds), data.frame(seqlen = ncol(as.matrix(geneDNAbin))))
+	       if(geneResults$chisq.sdpd > thresholdHighRisk){
+	       		writeLines(c("This locus is at high risk of leading to biased inferences due to comopositional heterogeneity. It is highly unadvisable to use this locus with homogeneous substitution models such as those of the GTR family.", "This advice is based on simulations in the following study:", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534."), con = "locus.at.high.risk.txt")
+			outs[[j]] <- cbind(outs[[j]], "high")
+	       } else if(geneResults$chisq.sdpd > thresholdMidRisk){
+	       	        writeLines(c("This locus is at medium risk of leading to biased inferences due to comopositional heterogeneity. These data might not lead to biased inferences when using homogeneous substitution models such as those of the GTR family. However, these inferences should be made with caution and the results of this assessment should be reported. Alternatively, a heterogeneous substitution model can be used.", "This advice is based on the following simulations study:", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534."), con = "locus.at.medium.risk.txt")
+			outs[[j]] <- cbind(outs[[j]], "mid")
+	       } else {
+			writeLines(c("This locus is at low risk of leading to biased inferences due to comopositional heterogeneity. Homogeneous substitution models such as those of the GTR family might provide reasonable results. It is also advisable to verify that other test statistics do not have extreme distances from the predictive distribution.", "This advice is based on the following simulations study:", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534."), con = "locus.at.low.risk.txt")
+			outs[[j]] <- cbind(outs[[j]], "low")
+	       }
+	       colnames(outs[[j]])[length(colnames(outs[[j]]))] <- "heterogeneity.bias.risk"
 	}
 }
 
@@ -104,6 +127,11 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 
 setwd("..")
 
+}
+
+if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput)){
+	allOutput <- do.call("rbind", outs)
+	write.csv(allOutput, file = "output.all.loci.PhyloMAd.csv")
 }
 
 setwd(initial.dir)

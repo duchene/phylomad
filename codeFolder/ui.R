@@ -11,14 +11,11 @@ shinyUI(fluidPage(
   ),
   sidebarLayout(
     sidebarPanel(
-    h3("Software for assessment of phylogenetic model adequacy", align = "center"),
-    h4("Start here", align = "center"),
+    h6("Copyright 2017 - PhyloMAd authors", align = "center"),
+    h3("Software for Assessment of Phylogenetic Model Adequacy", align = "center"),
     br(),
-    radioButtons("modeltotest", label = h4("Select the model to be assessed"), 
-    choices = rev(as.list(dir("testBackbones"))), selected = "Substitution_model"),
-    br(),
-    br(),
-    h5("PhyloMAd is distributed under a yet unknown licence.")
+    radioButtons("modeltotest", label = h4("Start by selecting the model to be assessed"), 
+    choices = rev(as.list(dir("testBackbones"))), selected = "Substitution_model")
     ),
     mainPanel(
     uiOutput("modeltestcode")
