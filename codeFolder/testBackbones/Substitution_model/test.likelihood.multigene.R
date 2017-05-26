@@ -103,9 +103,9 @@ if("simdat" %in% unlist(input$whatToOutput)){
 	        for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".fasta"), format = "fasta")
 	} else if(input$outputFormat == "nexus"){
 	        if(aadata){
-			for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".nex"))
-		} else {
 			for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], format = "protein", file = paste0("predictive.data.", i, ".nex"))
+		} else {
+			for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".nex"))
 		}
 	}
 }
