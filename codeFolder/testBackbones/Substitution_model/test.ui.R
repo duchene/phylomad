@@ -4,7 +4,7 @@ tabsetPanel(
 		       column(1),
                        column(10,
 		       h4("Select the nucleotide or amino acid alignment(s) for which the substitution model will be assessed"),
-                       fileInput("dataPath", label = h5("All the data alignments selected must be in the same folder"), multiple = T),
+                       fileInput("dataPath", label = h5("Alignments selected must come from the same folder"), multiple = T),
 		       radioButtons("dataFormat", label = h4("Select the format of your data"),
                        choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       fileInput("treesPath", label = h4("Select any input tree(s) (or leave blank)"), multiple = T),
