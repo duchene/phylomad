@@ -3,8 +3,8 @@ tabsetPanel(
                        fluidRow(
 		       column(1),
                        column(10,
-		       h4("Select the data for which the substitution model will be assessed"),
-                       fileInput("dataPath", label = h5("Multiple data alignments in the same folder can also be selected"), multiple = T),
+		       h4("Select the nucleotide or amino acid alignment(s) for which the substitution model will be assessed"),
+                       fileInput("dataPath", label = h5("All the data alignments selected must be in the same folder"), multiple = T),
 		       radioButtons("dataFormat", label = h4("Select the format of your data"),
                        choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       fileInput("treesPath", label = h4("Select any input tree(s) (or leave blank)"), multiple = T),
@@ -18,7 +18,9 @@ tabsetPanel(
 		       column(1),
 		       column(10,
 		       selectInput("model", label = h4("Select the substitution model that will be assessed"),
-		       choices = list("GTR+G" = "GTR+G", "GTR" = "GTR", "HKY+G" = "HKY+G", "HKY" = "HKY", "JC+G" = "JC+G", "JC" = "JC", "Automatic BIC model selection" = "autoModel"))
+		       choices = list("GTR" = "GTR", "HKY" = "HKY", "JC" = "JC", "Automatic BIC model selection" = "autoModel", "JTT" = "JTT", "LG" = "LG", "WAG" = "WAG", "Dayhoff" = "Dayhoff")),
+		       radioButtons("RASmodel", label = h4("Select the model of rates across sites"),
+                       choices = list("Gamma-distributed" = "+G", "Equal across sites" = ""), selected = "+G")
 		       ),
 		       column(1))
 	),

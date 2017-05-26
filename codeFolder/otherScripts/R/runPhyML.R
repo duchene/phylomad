@@ -1,15 +1,15 @@
-runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloads/PhyML-3.1/PhyML-3.1_macOS-MountainLion', model = 'JC', tree = NULL){
+runPhyML <- function(sdata, format = 'phylip', aadata = aadata, temp_name, phymlPath = '~/Downloads/PhyML-3.1/PhyML-3.1_macOS-MountainLion', model = 'JC', tree = NULL){
     require(phangorn)
-
+    
     if(format == 'fasta'){
-        d <- read.dna(sdata, format = 'fasta')
+    	if(aadata) d <- read.aa(sdata, format = 'fasta') else d <- read.dna(sdata, format = 'fasta')
         fileName = gsub('fasta', 'phy', sdata)
-        write.dna(d, file = fileName)
-    } else if(format == 'DNAbin'){
+	write.dna(d, file = fileName)
+    } else if(format == 'bin'){
         write.dna(sdata, temp_name)
         fileName = temp_name
     } else if(format == "nexus"){
-        d <- as.DNAbin(read.nexus.data(sdata))
+        if(aadata) d <- as.AAbin(read.nexus.data(sdata)) else d <- as.DNAbin(read.nexus.data(sdata))
 	fileName = gsub('nexus', 'phy', sdata)
 	write.dna(d, file = fileName)
     } else {
@@ -25,14 +25,24 @@ runPhyML <- function(sdata, format = 'phylip', temp_name, phymlPath = '~/Downloa
        phymlOptions = 'hky85'
     } else if(length(grep('GTR', model)) == 1){
         phymlOptions = 'gtr'
+    } else if(length(grep('LG', model)) == 1){
+        phymlOptions = 'lg'
+    } else if(length(grep('WAG', model)) == 1){
+        phymlOptions = 'wag'
+    } else if(length(grep('JTT', model)) == 1){
+        phymlOptions = 'jtt'
+    } else if(length(grep('Dayhoff', model)) == 1){
+        phymlOptions = 'dayhoff'
     }
 
+    if(aadata) aasetting <- " -d aa" else aasetting <- ""
+
     if(is.null(tree)){
-    	phymlCommand = paste0(phymlPath, " -m ", phymlOptions, RAS, "--q -i ", fileName)
+    	phymlCommand = paste0(phymlPath, aasetting, " -m ", phymlOptions, RAS, "--q -i ", fileName)
     } else {
       	treenumber <- round(runif(1, min = 1000, max = 9999))
 	write.tree(tree, file = paste0("temp.", treenumber, ".tre"))
-        phymlCommand = paste0(phymlPath, " -m ", phymlOptions, " -o lr -u temp.", treenumber, ".tre", RAS, "--q -i ", fileName)
+        phymlCommand = paste0(phymlPath, aasetting, " -m ", phymlOptions, " -o lr -u temp.", treenumber, ".tre", RAS, "--q -i ", fileName)
     }
 
     system(phymlCommand)

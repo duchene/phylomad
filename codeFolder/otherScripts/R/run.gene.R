@@ -1,18 +1,18 @@
-run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F, tree = NULL){
+run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F, tree = NULL){
 	 
 	 # Get test statistics
 	 
 	 if(format == "phylip"){
-                  data <- read.dna(sdata)
+                  if(aadata) data <- read.aa(sdata) else data <- read.dna(sdata)
          } else if(format == "fasta"){
-                  data <- read.dna(sdata, format = "fasta")
-         } else if(format == "DNAbin"){
+                  if(aadata) data <- read.aa(sdata, format = "fasta") else data <- read.dna(sdata, format = "fasta")
+         } else if(format == "bin"){
                   data <- sdata
          } else if(format == "nexus"){
-	   	  data <- as.DNAbin(read.nexus.data(sdata))
+	   	  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	 empstats <- get.test.statistics(data, format = "bin", aadata = aadata, geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
 	 system("rm empirical.alignment.phy")
 
 	 # Simulate data sets.
@@ -41,7 +41,15 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
                       sim[[i]] <- as.DNAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
 	       } else if(model == "JC"){
 	       	      sim[[i]] <- as.DNAbin(simSeq(empstats$outputTree, l = l))
-	       }
+	       } else if(model == "LG+G" | model == "WAG+G" | model == "JTT+G" | model == "Dayhoff+G"){
+	       	      simpmod <- gsub("[+]G", "", model)
+                      rates = phangorn:::discrete.gamma(empstats$alphaParam, k = 4)
+                      rates <- rates + 0.0001
+                      sim_dat_all <- lapply(rates, function(r) simSeq(empstats$outputTree, type = "AA", model = simpmod, l = round(l/4, 0), rate = r))
+                      sim[[i]] <- as.AAbin(c(sim_dat_all[[1]], sim_dat_all[[2]], sim_dat_all[[3]], sim_dat_all[[4]]))
+               } else if(model == "LG" | model == "WAG" | model == "JTT" | model == "Dayhoff"){
+                      sim[[i]] <- as.AAbin(simSeq(empstats$outputTree, l = l, type = "AA", model = model))
+               }
 	 
 	 }
 	 
@@ -52,7 +60,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]], format = "bin", aadata = aadata, geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   
@@ -63,7 +71,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	   require(doParallel)
 		
 	   runSim <- function(i){
-	     tRep <- get.test.statistics(sim[[i]], format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	     tRep <- get.test.statistics(sim[[i]], format = "bin", aadata = aadata, geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
              system(paste0("rm ", paste0("sim.data.", i)))
 	     return(tRep)		
 	   }	  
@@ -88,9 +96,9 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 
 	 if("multlik" %in% testStats){
 	 results$emp.multlik <- empstats$multlik
-	 results$sim.multinoms <- sapply(sim.stats, function(x) x$multlik)
-	 results$multinom.tailp <- length(which(results$sim.multinoms < empstats$multlik)) / Nsims
-	 results$multinom.sdpd <- (results$emp.multlik - mean(results$sim.multinoms)) / sd(results$sim.multinoms)
+	 results$sim.multliks <- sapply(sim.stats, function(x) x$multlik)
+	 results$multlik.tailp <- length(which(results$sim.multliks < empstats$multlik)) / Nsims
+	 results$multlik.sdpd <- (results$emp.multlik - mean(results$sim.multliks)) / sd(results$sim.multliks)
 	 }
 	 
 	 if("delta" %in% testStats){
@@ -101,10 +109,10 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 }
 	 
 	 if("biochemdiv" %in% testStats){
-	 results$emp.biocp <- empstats$biocp
-	 results$sim.biocp <- sapply(sim.stats, function(x) x$biocp)
-	 results$bioc.tailp <- length(which(results$sim.biocp < empstats$biocp)) / Nsims
-	 results$bioc.sdpd <- (results$emp.biocp - mean(results$sim.biocp)) / sd(results$sim.biocp)
+	 results$emp.biochemdiv <- empstats$biocp
+	 results$sim.biochemdiv <- sapply(sim.stats, function(x) x$biocp)
+	 results$biochemdiv.tailp <- length(which(results$sim.biochemdiv < empstats$biocp)) / Nsims
+	 results$biochemdiv.sdpd <- (results$emp.biochemdiv - mean(results$sim.biochemdiv)) / sd(results$sim.biochemdiv)
 	 }
 	 
 	 if("consind" %in% testStats){
@@ -117,8 +125,8 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 if("brsup" %in% testStats){
 	 results$emp.brsup <- empstats$brsup
 	 results$sim.meanbrsup <- sapply(sim.stats, function(x) x$brsup)
-	 results$meanbrsup.tailp <- length(which(results$sim.meanbrsup < empstats$brsup)) / Nsims
-	 results$meanbrsup.sdpd <- (results$emp.brsup - mean(results$sim.meanbrsup)) / sd(results$sim.meanbrsup)
+	 results$brsup.tailp <- length(which(results$sim.meanbrsup < empstats$brsup)) / Nsims
+	 results$brsup.sdpd <- (results$emp.brsup - mean(results$sim.meanbrsup)) / sd(results$sim.meanbrsup)
 	 }
 	 
 	 if("CIbrsup" %in% testStats){
@@ -134,7 +142,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 results$trlen.tailp <- length(which(results$sim.trlens < empstats$trlen)) / Nsims
 	 results$trlen.sdpd <- (results$emp.trlen - mean(results$sim.trlens)) /	sd(results$sim.trlens)
 	 }
-	 
+
 	 if("maha" %in% testStats){
 	 all.emp.stats <- unlist(results[grep("emp[.]", names(results))])
 	 all.sim.stats <- do.call(cbind, results[grep("sim[.]", names(results))])
@@ -144,7 +152,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 print("No test statistics were calculated.")
 	 } else {
 	 for(i in 1:ncol(all.stats.mat)){
-	        if(length(unique(all.sim.stats[,i])) == 1){
+	        if(length(unique(all.sim.stats[,i])) == 1 || any(is.na(all.sim.stats[,i]))){
 			print(paste(colnames(all.stats.mat)[i], "will not be included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
 	 		failstats <- c(failstats, i)
 	 	}
@@ -155,7 +163,7 @@ run.gene <- function(sdata, format = "phylip", model = "GTR+G", phymlPath, Nsims
 	 }
 	 #print(all.stats.mat)
 	 if(length(all.stats.mat) >= 2*Nsims){
-	 	mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat), cov(all.stats.mat))
+	 	mahavector <- mahalanobis(all.stats.mat, colMeans(all.stats.mat, na.rm = T), cov(all.stats.mat, use = "complete.obs"))
 	 	results$emp.maha <- tail(mahavector, 1)
 	 	results$sim.maha <- mahavector[1:Nsims]
 	 	results$maha.tailp <- length(which(mahavector[1:Nsims] > results$emp.maha)) / Nsims

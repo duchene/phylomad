@@ -1,18 +1,18 @@
-get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical", phymlPath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha"), tree = NULL){
+get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName = "empirical", phymlPath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha"), tree = NULL){
 
 	# Read DNAbin or file of gene.
 	if(format == "phylip"){
-		  data <- read.dna(sdata)
+		  if(aadata) data <- read.aa(sdata) else data <- read.dna(sdata)
 	} else if(format == "fasta"){
-	       	  data <- read.dna(sdata, format = "fasta")
-	} else if(format == "DNAbin"){
+	       	  if(aadata) data <- read.aa(sdata, format = "fasta") else data <- read.dna(sdata, format = "fasta")
+	} else if(format == "bin"){
 	          data <- sdata
 	}
 
 
 	# Run PhyML and extract the maximum likelihood, tree, and parameter estimates.
 	
-	phymlres <- runPhyML(sdata, format = format, temp_name = geneName, phymlPath = phymlPath, model = model, tree = tree)
+	phymlres <- runPhyML(sdata, format = format, aadata = aadata, temp_name = geneName, phymlPath = phymlPath, model = model, tree = tree)
 	
 	# Get test statistics.
 	
@@ -35,7 +35,7 @@ get.test.statistics <- function(sdata, format = "phylip", geneName = "empirical"
     }
 
     if("consind" %in% stats){
-         results$consind <- CI(phymlres$tree, phyDat(data))
+         if(!aadata) results$consind <- CI(phymlres$tree, phyDat(data)) else results$consind <- CI(phymlres$tree, phyDat(as.phyDat(data), type = "AA"))
     }
 
     if("brsup" %in% stats){

@@ -29,13 +29,17 @@ if("chisq" %in% selectedStats) chisqthresholds <- data.frame(seqlen = c(500, 100
 
 outs <- list()
 
+model <- paste0(input$model, input$RASmodel)
+
+aadata <- model == "LG+G" | model == "WAG+G" | model == "JTT+G" | model == "Dayhoff+G" | model == "LG" | model == "WAG" | model == "JTT" | model == "Dayhoff"
+
 for(j in 1:nrow(input$dataPath)){
 
-if(input$model == "autoModel") modeltested <- get.model(as.character(input$dataPath[j, 4])) else modeltested <- input$model
+if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j, 4]))
 
 print("Model has been identified")
 
-geneDNAbin <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat)
+genebin <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata)
 
 print("Gene has been cleaned")
 
@@ -48,16 +52,17 @@ print("Output folder has been identified")
 system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad"))
 setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
 
-geneResults <- run.gene(sdata = geneDNAbin, format = "DNAbin", model = modeltested, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
-
+geneResults <- run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
 if("pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToOutput)){
 	geneResMat <- matrix(NA, nrow = 3, ncol = length(selectedStats))
-        for(i in 1:length(selectedStats)){
+	
+	for(i in 1:length(selectedStats)){
                geneResMat[1, i] <- geneResults[[paste0(selectedStats[i], ".tailp")]]
                geneResMat[2, i] <- geneResults[[paste0("emp.", selectedStats[i])]]
                geneResMat[3, i] <- geneResults[[paste0(selectedStats[i], ".sdpd")]]
         }
         outs[[j]] <- geneResMat
+	
 	if(length(outs[[j]]) == 0){
 	       print("P-values cannot be returned because no test statistics were calculated.")
 	} else {
@@ -69,9 +74,10 @@ if("pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToO
 	rownames(resvector) <- as.character(input$dataPath[j, 1])
 	colnames(resvector) <- c(paste0(colnames(outs[[j]]), ".tail.area.p"), paste0(colnames(outs[[j]]), ".empirical.statistic"), paste0(colnames(outs[[j]]), ".stdev.from.pred.dist"))
 	outs[[j]] <- resvector
+	
 	if("chisq" %in% selectedStats){
-	       thresholdMidRisk <- predict(lm(minD ~ seqlen, data = chisqthresholds), data.frame(seqlen = ncol(as.matrix(geneDNAbin))))
-	       thresholdHighRisk <- predict(lm(maxD ~ seqlen, data = chisqthresholds), data.frame(seqlen = ncol(as.matrix(geneDNAbin))))
+	       thresholdMidRisk <- predict(lm(minD ~ seqlen, data = chisqthresholds), data.frame(seqlen = ncol(as.matrix(genebin))))
+	       thresholdHighRisk <- predict(lm(maxD ~ seqlen, data = chisqthresholds), data.frame(seqlen = ncol(as.matrix(genebin))))
 	       if(geneResults$chisq.sdpd > thresholdHighRisk){
 	       		writeLines(c("This locus is at high risk of leading to biased inferences due to comopositional heterogeneity. It is highly unadvisable to use this locus with homogeneous substitution models such as those of the GTR family.", "This advice is based on simulations in the following study:", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534."), con = "locus.at.high.risk.txt")
 			outs[[j]] <- cbind(outs[[j]], "high")
@@ -96,7 +102,11 @@ if("simdat" %in% unlist(input$whatToOutput)){
 	} else if(input$outputFormat == "fasta"){
 	        for(i in 1:input$Nsims) write.dna(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".fasta"), format = "fasta")
 	} else if(input$outputFormat == "nexus"){
-	        for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".nex"))
+	        if(aadata){
+			for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], file = paste0("predictive.data.", i, ".nex"))
+		} else {
+			for(i in 1:input$Nsims) write.nexus.data(geneResults$simDat[[i]], format = "protein", file = paste0("predictive.data.", i, ".nex"))
+		}
 	}
 }
 
@@ -124,7 +134,7 @@ if("testPlots" %in% unlist(input$whatToOutput)){
 	        pdf("adequacy.tests.plots.pdf", useDingbats = F, height = 5)
 		for(i in 1:length(empstats)){
 		      sdstat <- sd(statsmat[2:nrow(statsmat), i])
-		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i]) - sdstat, max(statsmat[, i]) + sdstat), xlab = statlabels[i], ylab = "Frequency of predictive simulations", main = "")
+		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i], na.rm = T) - sdstat, max(statsmat[, i], na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of predictive simulations", main = "")
 		      abline(v = empstats[i], col = "red", lwd = 3)
 		}
 		dev.off()
