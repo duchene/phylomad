@@ -27,7 +27,7 @@ Download and unzip the PhyloMAd repository from GitHub. This can be done by pres
 git clone https://github.com/duchene/modadclocks.git
 ```
 
-Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). If needed, this will install all the required R packages. This might take several minutes.
+Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). Opening the package for the first time might take several minutes and can require internet connection. This is because PhyloMAd will check that all the required R packages are installed, and then it will install them if needed.
 
 If you have difficulty opening the program, you might want to try opening a bash shell, setting your directory to the PhyloMAd folder and executing the R script by hand.
 
@@ -36,7 +36,9 @@ cd pathToPyloMAd
 Rscript phylomad.Rscript
 ```
 
-Once you have opened PhyloMAd, select the model you wish to assess from the buttons at the left of the screen, and press the *Install required packages* button. This will install any other packages that might not yet be installed.
+In mac machines, PhyloMAd will open a terminal window when opened and log the progress. In windows, a log file with the progress will be saved in the main PhyloMAd folder. This log file is mainly useful for checking progress, so it is safe to delete it when the program is closed.
+
+Once you have opened PhyloMAd, select the model you wish to assess from the buttons at the left of the screen.
 
 Basic assessment of substitution model adequacy
 -----------------------------------------------
