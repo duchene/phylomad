@@ -5,7 +5,7 @@ david.duchene[at]sydney.edu.au
 
 23 May 2017
 
-### Introduction
+## Introduction
 
 This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy.
 
@@ -13,7 +13,7 @@ Copyright 2017 by the PhyloMAd authors. The software PhyloMAd is distributed wit
 
 Substitution models supported inlcude the JC, HKY, and GTR models, including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
 
-### Download and package installation
+## Download and package installation
 
 PhyloMAd requires that the R statistical computing language is installed. R is freely available from the R project website.
 
@@ -38,9 +38,13 @@ In mac machines, PhyloMAd will open a terminal window when opened and log the pr
 
 Once you have opened PhyloMAd, select the model you wish to assess from the buttons at the left of the screen.
 
-### Brief tutorial for assessing substitution model adequacy in a single locus
+## Brief tutorial 
 
-When a model is selected from the box in the left, you will see a corresponding set of tabs in the main screen ranging from *Data* to *Other options and START*.
+This is a brief tutotrial for assessing substitution model adequacy in a single locus. Refer to the manual for more detailed settings.
+
+### User interface
+
+After selecting a model from the box to the left, you will see a corresponding set of tabs in the main screen ranging from *Data* to *Other options and START*.
 
 You can go through the tabs before modifying the settings to make sure you understand them. Further information about each of the options can be found in the manual.
 
@@ -62,7 +66,7 @@ Now press the *START ASSESSMENT* button.
 
 You can monitor the assessment in the shell (mac) or checking the log file that is created in the main PhyloMAd folder (windows). Also check the output folder and make sure that data are being stored and removed as successive simulations are analyzed.
 
-#### Example output
+### Interpreting output
 
 In this example, the output folder was kept as the default. This means that the output will have been saved in the *outputFolder*, which is in the main PhyloMAd folder.
 
