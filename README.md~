@@ -46,21 +46,21 @@ You can go through the tabs before modifying the settings to make sure you under
 
 1. For a quick trial of the software, press *Browse* in the Data tab under the *Select nucleotide or amino acid alignment* header.
 
-Browse through your files into the *phylomad* folder, then the *codeFolder*, and the *exampleData* folder, and select the data set called *example.covarion.longtips.nex*. If you have selected the file successfully, the PhyloMAd window should say *Upload complete*.
-
 ![browseButton](codeFolder/www/browseButton.png)
 
-2. You can now read through the other options without changing anything. Browse through each of the tabs entitled *Model*, *Test statistics*, and *Output*, making sure you understand what the settings mean, and referring to the manual for any further details.
+Browse through your files into the *phylomad* folder, then the *codeFolder*, and the *exampleData* folder, and select the data set called *example.covarion.longtips.nex*. If you have selected the file successfully, the PhyloMAd window should say *Upload complete*.
+
+2. You can now read through the other options without changing anything. Browse through each of the *Model*, *Test statistics*, and *Output* tabs making sure you understand what the settings mean, and referring to the manual for any further details.
 
 ![tabs](codeFolder/www/tabs.png)
 
 3. Once you get to the *Other options and START* tab, you can reduce the number of simulations to 40, since this is only a test run. If possible, check whether your machine has multiple cores and increase the number in the corresponding section to 4 cores.
 
-Now press the *START ASSESSMENT* button. 
+Now press the *START ASSESSMENT* button. You can monitor the assessment in the shell (mac) or checking the log file that is created in the main PhyloMAd folder (windows).
 
 ![startAssessment](codeFolder/www/startAssessment.png)
 
-You can monitor the assessment in the shell (mac) or checking the log file that is created in the main PhyloMAd folder (windows). Also check the output folder and make sure that data are being stored and removed as successive simulations are analyzed.
+Also check the output folder and make sure that data are being stored and removed as successive simulations are analyzed.
 
 #### Example output
 
@@ -70,7 +70,7 @@ Inside the output folder, there will be a separate folder containing the output 
 
 ![outputFiles](codeFolder/www/outputFiles.png)
 
-One is a PDF with histograms of the values of the test statistics calculated from simulated data, with the value calculated for the empirical data set shown in a red line. These graphics are useful for qualitative interpretation of the results. This qualitative interpretation is necessary for most of the test statistics until they are better understood.
+One is a PDF with histograms of the values of the test statistics calculated from simulated data, with the value calculated for the empirical data set shown in a red line. These graphics are useful for qualitative interpretation of the results, which is necessary for most of the test statistics, until they are better understood.
 
 ![exampleHist](codeFolder/www/exampleHist.png)
 
@@ -90,4 +90,4 @@ The last file is a table that shows three values (rows) for each test statistic 
 
 ![resultsTable](codeFolder/www/resultsTable.png)
 
-In this example that the multinomial statistic is not available for analysis. This is probably because this data set comes from a scenario with extremely long terminal branches. The high divergence among taxa has led to every site having a different pattern in every data set, so every simulated data set has the same multinomial likelihood as the empirical data set. This test statistic is not useful in this scenario.
+It is interesting to note from this example that the multinomial statistic is not available for analysis. This is probably because this data set comes from a scenario with extremely long terminal branches, such that there is extremely high divergence among taxa. This means that every site pattern in every data set is different, so every simulated data set has the same multinomial likelihood as the empirical data set. This test statistic is not useful in this scenario.
