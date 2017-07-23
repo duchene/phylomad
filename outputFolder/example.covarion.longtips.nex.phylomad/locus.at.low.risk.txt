@@ -1,0 +1,3 @@
+This locus is at low risk of leading to biased inferences due to comopositional heterogeneity. Homogeneous substitution models such as those of the GTR family might provide reasonable results. It is also advisable to verify that other test statistics do not have extreme distances from the predictive distribution.
+This advice is based on the following simulations study:
+Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534.
