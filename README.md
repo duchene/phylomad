@@ -5,7 +5,7 @@ david.duchene[at]sydney.edu.au
 
 23 May 2017
 
-## Introduction
+### Introduction
 
 This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy.
 
@@ -13,7 +13,7 @@ Copyright 2017 by the PhyloMAd authors. The software PhyloMAd is distributed wit
 
 Substitution models supported inlcude the JC, HKY, and GTR models, including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
 
-## Download and package installation
+### Download and package installation
 
 PhyloMAd requires that the R statistical computing language is installed. R is freely available from the R project website.
 
@@ -38,7 +38,7 @@ In mac machines, PhyloMAd will open a terminal window when opened and log the pr
 
 Once you have opened PhyloMAd, select the model you wish to assess from the buttons at the left of the screen.
 
-## Brief tutorial: assessment of substitution model adequacy
+### Brief tutorial for assessing substitution model adequacy in a single locus
 
 When a model is selected from the box in the left, you will see a corresponding set of tabs in the main screen ranging from *Data* to *Other options and START*.
 
