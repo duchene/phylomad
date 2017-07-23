@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy. Briefly, assessing phylogenetic model adequacy provides an independent assessment of the power of a model for describing the empirical data. This is different to model selection, where a set of candidate models are compared to each other, under the assumption that at least the best fitting model is an adequate description of the data.
+This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy. Briefly, an assessment of model adequacy provides an independent account of the power of a model for describing the empirical data. This is different to model selection, where a set of candidate models are compared to each other, under the assumption that at least the best-fitting model is an adequate description of the data.
 
 Substitution models supported by PhyloMAd inlcude the JC, HKY, and GTR models, including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
 
