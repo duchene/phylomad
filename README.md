@@ -1,17 +1,11 @@
 ![software logo](codeFolder/www/phylomad.temp.png)
 
-For support contact David A. Duchêne
-david.duchene[at]sydney.edu.au
-
-23 May 2017
 
 ## Introduction
 
-This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy.
+This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy. Briefly, assessing phylogenetic model adequacy provides an independent assessment of the power of a model for describing the empirical data. This is different to model selection, where a set of candidate models are compared to each other, under the assumption that at least the best fitting model is an adequate description of the data.
 
-Copyright 2017 by the PhyloMAd authors. The software PhyloMAd is distributed without warranty of any kind or support for previous versions. The authors will not be responsible for any damage resulting from the use of this software. The source and documentation are distributed under the GNU General Public Licence except where stated otherwise. See http://www.opensource.org/licenses for details.
-
-Substitution models supported inlcude the JC, HKY, and GTR models, including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
+Substitution models supported by PhyloMAd inlcude the JC, HKY, and GTR models, including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
 
 ## Download and package installation
 
@@ -95,3 +89,12 @@ The last file is a table that shows three values (rows) for each test statistic 
 ![resultsTable](codeFolder/www/resultsTable.png)
 
 In this example that the multinomial statistic is not available for analysis. This is probably because this data set comes from a scenario with extremely long terminal branches. The high divergence among taxa has led to every site having a different pattern in every data set, so every simulated data set has the same multinomial likelihood as the empirical data set. This test statistic is not useful in this scenario.
+
+## Support and bug reports
+
+For support contact David A. Duchêne:
+david.duchene[at]sydney.edu.au
+
+## Licence
+
+Copyright 2017 by the PhyloMAd authors. The software PhyloMAd is distributed without warranty of any kind or support for previous versions. The authors will not be responsible for any damage resulting from the use of this software. The source and documentation are distributed under the GNU General Public Licence except where stated otherwise. See http://www.opensource.org/licenses for details.
