@@ -46,33 +46,48 @@ You can go through the tabs before modifying the settings to make sure you under
 
 1. For a quick trial of the software, press *Browse* in the Data tab under the *Select nucleotide or amino acid alignment* header.
 
+![browseButton](codeFolder/www/browseButton.png)
+
 Browse through your files into the *phylomad* folder, then the *codeFolder*, and the *exampleData* folder, and select the data set called *example.covarion.longtips.nex*. If you have selected the file successfully, the PhyloMAd window should say *Upload complete*.
 
-2. You can now read throught the other options without changing anything. Browse through each of the *Model*, *Test statistics*, and *Output* tabs making sure you understand what the settings mean, and referring to the manual for any further details.
+2. You can now read through the other options without changing anything. Browse through each of the *Model*, *Test statistics*, and *Output* tabs making sure you understand what the settings mean, and referring to the manual for any further details.
+
+![tabs](codeFolder/www/tabs.png)
 
 3. Once you get to the *Other options and START* tab, you can reduce the number of simulations to 40, since this is only a test run. If possible, check whether your machine has multiple cores and increase the number in the corresponding section to 4 cores.
 
 Now press the *START ASSESSMENT* button. You can monitor the assessment in the shell (mac) or checking the log file that is created in the main PhyloMAd folder (windows).
 
+![startAssessment](codeFolder/www/startAssessment.png)
+
+Also check the output folder and make sure that data are being stored and removed as successive simulations are analyzed.
+
 #### Example output
 
 In this example, the output folder was kept as the default. This means that the output will have been saved in the *outputFolder*, which is in the main PhyloMAd folder.
 
-Inside the output folder, there will be a separate folder containing the output for each locus for which the model was assessed. In the case of this example, there will be a single folder containing three files. One is a PDF with histograms of the values of the test statistics calculated from simulated data, with the value calculated for the empirical data set shown in a red line. These graphics are useful for qualitative interpretation of the results, which is still necessary for most of the test statistics.
+Inside the output folder, there will be a separate folder containing the output for each locus for which the model was assessed. In the case of this example, there will be a single folder containing three files. 
 
-Next is a file with an interpretation of the test for the chi-squared test for non-stationarity. This test has been explored in detail in a previous study. According to the thresholds investigated in that study, the test allows for interpretation of the results. The last file is a table that shows three values (rows) for each test statistic selected (columns). These three values include: 
+![outputFiles](codeFolder/www/outputFiles.png)
 
-(i) the tail area probability, which is the proportion of values calculated for simulations that are lower than the value calculated for the empirical data set; 
+One is a PDF with histograms of the values of the test statistics calculated from simulated data, with the value calculated for the empirical data set shown in a red line. These graphics are useful for qualitative interpretation of the results, which is necessary for most of the test statistics, until they are better understood.
 
-(ii) the statistic calculated for the empirical data set;
+![exampleHist](codeFolder/www/exampleHist.png)
 
-and (iii) the distace between the empirical data set and the mean of the simulated distribution in terms of the number of standard deviations of the distribution.
+Next is a file with an interpretation of the test for the chi-squared test for non-stationarity. This test has been explored in detail in a previous study. According to the thresholds investigated in that study, the test allows for interpretation of the results. 
 
+![chisqResults](codeFolder/www/chisqResult.png)
 
-Brief tutorial: assessment of clock model adequacy
---------------------------------------------------
+In this example the test tells us that the amount of compositional heterogeneity is unlikely to be of concern.
 
+The last file is a table that shows three values (rows) for each test statistic selected (columns). These three values include: 
 
+- The tail area probability, which is the proportion of values calculated for simulations that are lower than the value calculated for the empirical data set; 
 
+- The statistic calculated for the empirical data set;
 
+- The distace between the empirical data set and the mean of the simulated distribution in terms of the number of standard deviations of the distribution.
 
+![resultsTable](codeFolder/www/resultsTable.png)
+
+It is interesting to note from this example that the multinomial statistic is not available for analysis. This is probably because this data set comes from a scenario with extremely long terminal branches, such that there is extremely high divergence among taxa. This means that every site pattern in every data set is different, so every simulated data set has the same multinomial likelihood as the empirical data set. This test statistic is not useful in this scenario.
