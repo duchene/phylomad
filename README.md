@@ -13,7 +13,11 @@ PhyloMAd requires that the R statistical computing language is installed. R is f
 
 https://www.r-project.org/
 
-Download and unzip the PhyloMAd repository from GitHub. This can be done by pressing the *Clone or download* button above or by typing the following in a bash shell. The later option assumes that the machine has git installed.
+Download and unzip the PhyloMAd repository by clicking the following link:
+
+https://github.com/duchene/phylomad/archive/master.zip
+
+This can also be done by pressing the *Clone or download* button in github or by typing the following in a bash shell. The later option assumes that the machine has git installed.
 
 ```coffee
 git clone https://github.com/duchene/modadclocks.git

@@ -8,7 +8,7 @@ source("testStatistics/get.biodivstat.R")
 
 initial.dir <- getwd()
 
-print("Functions required have been loaded")
+print("Functions required were loaded successfully")
 
 if(input$treesFormat == "newick"){ trees <- read.tree(as.character(input$treesPath[1, 4])) } else if(input$treesFormat == "nexus"){ trees <- read.nexus(as.character(input$treesPath[1, 4])) } else { trees <- NULL }
 
@@ -18,7 +18,7 @@ if(input$treesFormat != "none" & class(trees) == "phylo"){
 }
 if(input$treesFormat != "none" & length(trees) < nrow(input$dataPath)){
 	trees <- rep(trees[1], nrow(input$dataPath))
-	print("Since there are less trees than loci, the first tree will be used for all locus analysis")
+	print("Since there are less trees than loci, the first tree was used for all locus analysis")
 }
 
 if(input$treesFormat != "none") class(trees) <- "multiPhylo"
@@ -37,17 +37,17 @@ for(j in 1:nrow(input$dataPath)){
 
 if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j, 4]))
 
-print("Model has been identified")
+print("Model to be assessed was identified")
 
 genebin <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata)
 
-print("Gene has been cleaned")
+print("Locus was cleaned successfully")
 
 if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 setwd(input$outputFolder)
 
-print("Output folder has been identified")
+print("Output folder was identified successfully")
 
 system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad"))
 setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))

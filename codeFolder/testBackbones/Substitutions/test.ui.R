@@ -60,17 +60,7 @@ tabsetPanel(
                        choices = list("Likelihood" = "likelihood", "Bayesian (temporarily unavailable)" = "bayesian"), selected = "likelihood"),
 		       br(),
 		       actionButton("startAnalysis", label = "START ASSESSMENT"),
-		       br(),
-		       br(),
-		       h5("OUTPUT NOTES"),
-		       h5("Previous results with the same paths will be overwritten"),
-		       h5("Progress is shown in the shell window (mac) or in a log file saved to the main PhyloMAd folder (windows)"), 
-		       h5("To avoid analyses running repeatedly, only press the start button once and be aware that the analyses might take a few minutes to print any progress"),
-		       h5("Further notes, warnings, or errors will appear below after completion"),
-		       br(),
-		       uiOutput("analysisConfirmation"),
-		       br(),
-		       uiOutput("analysisProgress")),
+		       br()),
 		       column(1))
 	)
 	

@@ -4,7 +4,7 @@ machine <- Sys.info()[["sysname"]]
 
 ngene <- nrow(input$dataPath)
 
-print(paste("Number of loci and kind of machine have been identified as", ngene))
+print(paste("This analyses contained", ngene, "loci"))
 
 if(input$framework == "likelihood"){
 	if(machine == "Darwin"){
@@ -15,7 +15,7 @@ if(input$framework == "likelihood"){
 	           phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_linux64")
 	}
 
-	print(paste("Path for PhyML has been identified as", input$framework, "and machine as", machine))
+	print(paste("Analysis was performed in the", input$framework, "statistical framework and the machine type is", machine))
 	
 	source("testBackbones/Substitutions/test.likelihood.multigene.R", local = T)
 
@@ -28,7 +28,7 @@ if(input$framework == "likelihood"){
 	       	   mbPath <-	paste0()
 	}
 
-	print("Path for PhyML has been identified")
+	print(paste("Analysis was performed in the", input$framework, "statistical framework and the machine type is", machine))
 	
 	if(ngene == 1){
 	      	source("testBackbones/Substitutions/test.bayesian.gene.R", local = T)

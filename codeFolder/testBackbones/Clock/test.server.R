@@ -5,7 +5,7 @@ machine <- Sys.info()[["sysname"]]
 
 ngene <- nrow(input$dataPath)
 
-print(paste("Number of loci and kind of machine have been identified as", ngene))
+print(paste("The analysis contained", ngene, "loci"))
 
 if(machine == "Darwin"){
 	phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_macOS-MountainLion")
@@ -15,6 +15,6 @@ if(machine == "Darwin"){
 	phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_linux64")
 }
 
-print(paste("Path for PhyML has been identified as", input$framework, "and machine as", machine))
+print(paste("The machine type was identified as", machine))
 
 source("testBackbones/Clock/test.clock.multigene.R", local = T)

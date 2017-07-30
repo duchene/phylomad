@@ -7,7 +7,7 @@ source("testStatistics/stemmy.R")
 
 initial.dir <- getwd()
 
-print("Functions required have been loaded")
+print("Functions required were loaded successfully")
 
 trees <- read.nexus(as.character(input$treesPath[1, 4]))
 
@@ -21,7 +21,7 @@ if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 setwd(input$outputFolder)
 
-print("Output folder has been identified")
+print("Output folder was identified")
 
 system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.clock"))
 setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad.clock"))
