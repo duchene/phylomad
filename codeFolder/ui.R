@@ -14,8 +14,8 @@ shinyUI(fluidPage(
     h6("Copyright 2017 - PhyloMAd authors", align = "center"),
     h3("Software for Assessment of Phylogenetic Model Adequacy", align = "center"),
     br(),
-    radioButtons("modeltotest", label = h4("Start by selecting the model to be assessed"), 
-    choices = rev(as.list(dir("testBackbones"))), selected = "Substitution_model")
+    radioButtons("modeltotest", label = h4("Select the type of model to be assessed"), 
+    choices = rev(as.list(dir("testBackbones"))), selected = "Substitutions")
     ),
     mainPanel(
     uiOutput("modeltestcode")

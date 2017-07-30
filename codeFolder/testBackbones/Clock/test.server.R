@@ -17,4 +17,4 @@ if(machine == "Darwin"){
 
 print(paste("Path for PhyML has been identified as", input$framework, "and machine as", machine))
 
-source("testBackbones/Clock_model/test.clock.multigene.R", local = T)
+source("testBackbones/Clock/test.clock.multigene.R", local = T)

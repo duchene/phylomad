@@ -96,7 +96,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 # Get test statistics for empirical data
 	 
 	 
-	 empstats <- get.test.statistics(data, format = "DNAbin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	 empstats <- get.test.statistics(data, format = "bin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
          system("rm empirical.alignment.phy")
 
 	 # Get test statistics for simulations
@@ -105,7 +105,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]]$alignment, format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]]$alignment, format = "bin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   
@@ -116,7 +116,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   require(doParallel)
 		
 	   runSim <- function(i){
-	     tRep <- get.test.statistics(sim[[i]]$alignment, format = "DNAbin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	     tRep <- get.test.statistics(sim[[i]]$alignment, format = "bin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
              system(paste0("rm ", paste0("sim.data.", i)))
 	     return(tRep)		
 	   }	  

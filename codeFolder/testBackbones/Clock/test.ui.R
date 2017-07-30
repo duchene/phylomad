@@ -28,7 +28,7 @@ tabsetPanel(
                        column(1),
                        column(10,
 		       checkboxGroupInput("whatToOutput", label = h4("Select the output desired"),
-                       choices = list("Only summary file" = "simple", "Individual locus metrics of adequacy" = "pvals", "Estimated clock-free tree for empirical data" = "phyloempres", "Simulated data" = "simdat", "Estimated clock-free trees for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
+                       choices = list("Only summary file (overrides other options)" = "simple", "Individual locus metrics of adequacy" = "pvals", "Estimated clock-free tree for empirical data" = "phyloempres", "Simulated data" = "simdat", "Estimated clock-free trees for simulated data" = "phylosimres", "Test plots" = "testPlots"), selected = c("pvals", "testPlots")),
 		       radioButtons("outputFormat", label = h4("Select the format of the output data"),
                        choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       textInput("outputFolder", label = h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"), value = paste0(getwd(), "/../outputFolder/"))

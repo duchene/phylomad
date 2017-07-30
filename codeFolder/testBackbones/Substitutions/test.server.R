@@ -17,7 +17,7 @@ if(input$framework == "likelihood"){
 
 	print(paste("Path for PhyML has been identified as", input$framework, "and machine as", machine))
 	
-	source("testBackbones/Substitution_model/test.likelihood.multigene.R", local = T)
+	source("testBackbones/Substitutions/test.likelihood.multigene.R", local = T)
 
 } else if(input$framework == "bayesian"){
         if(machine == "Darwin"){
@@ -31,8 +31,8 @@ if(input$framework == "likelihood"){
 	print("Path for PhyML has been identified")
 	
 	if(ngene == 1){
-	      	source("testBackbones/Substitution_model/test.bayesian.gene.R", local = T)
+	      	source("testBackbones/Substitutions/test.bayesian.gene.R", local = T)
 	} else if(ngene > 1){
-	        source("testBackbones/Substitution_model/test.bayesian.multigene.R", local = T)
+	        source("testBackbones/Substitutions/test.bayesian.multigene.R", local = T)
 	}
 }

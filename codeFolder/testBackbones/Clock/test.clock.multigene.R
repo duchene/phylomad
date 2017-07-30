@@ -106,9 +106,9 @@ if("testPlots" %in% unlist(input$whatToOutput)){
                       brPal <- colorRampPalette(c('blue', 'green', 'yellow','red'))
                       Aindexcol <- brPal(5)[as.numeric(cut(geneResults$aindex.allp, breaks = 5))]
                       sdcol <- brPal(5)[as.numeric(cut(geneResults$aindex.sds, breaks = 5))]
-                      plot(treetoprint, col = Aindexcol, main = "Branches coloured by P-value")
+                      plot(treetoprint, col = Aindexcol, main = "Branches labelled by P-value")
                       edgelabels(round(geneResults$aindex.allp, 2))
-                      plot(treetoprint, col = sdcol, main = "Branches coloured by SDPD")
+                      plot(treetoprint, col = sdcol, main = "Branches labelled by SDPD")
                       edgelabels(round(geneResults$aindex.sds, 2))
 		      dev.off()
                 }
