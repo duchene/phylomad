@@ -23,8 +23,12 @@ setwd(input$outputFolder)
 
 print("Output folder was identified")
 
-system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.clock"))
-setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad.clock"))
+if(input$overwrite == F && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad.clock"))){
+       stop("Existing file will not be overwritten")
+} else {
+       system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.clock"))
+       setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad.clock"))
+}
 
 if(nrow(input$treesPath) == 1) treesPath <- as.character(input$treesPath[1, 4]) else treesPath <- as.character(input$treesPath[j, 4])
 if(nrow(input$posteriorPath) == 1) postPath <- as.character(input$posteriorPath[1, 4]) else postPath <- as.character(input$posteriorPath[j, 4])

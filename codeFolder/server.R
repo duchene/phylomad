@@ -17,9 +17,8 @@ shinyServer(function(input, output, session) {
   observeEvent(input$startAnalysis, {
   		       showModal(modalDialog(
 				title = "Are you sure?",
-				"This will start model assessment. Progress will be shown in the terminal window (mac), or in the log file saved in the main PhyloMAd folder (windows).
-
-				Previous results with the same folder and file names will be overwritten.",
+				h5("This will start model assessment."),
+				h5("Progress will be shown in the terminal window (mac), or in the log file saved in the main PhyloMAd folder (windows)."),
 				easyClose = F,
 				footer = tagList(
 				       modalButton("Cancel"),
@@ -30,7 +29,10 @@ shinyServer(function(input, output, session) {
 
   observeEvent(input$START, {
   		       showModal(modalDialog(
-				title = "The steps undergone, warnings, and errors, will appear below on completion.\n\nPressing 'Close' will not stop the analysis (only closing PhyloMAd will).\n\nIf you close this window, avoid pressing START ANALYSIS again, since this will run several analyses repeatedly.",
+				title = "Assessment steps appear below on completion.",
+				h5("'Close' will not stop the analysis (closing PhyloMAd will)."),
+				h5("Avoid pressing START ANALYSIS again, since analyses will be run repeatedly."),
+				h5("In the event of an error, it is necessary to reopen PhyloMAd."),
 				renderPrint(source(paste0("testBackbones/", input$modeltotest, "/test.server.R"), local = T)),
 				easyClose = F,
 				footer = modalButton("Close")

@@ -49,8 +49,12 @@ setwd(input$outputFolder)
 
 print("Output folder was identified successfully")
 
-system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad"))
-setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
+if(input$overwirte == F && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))){
+       stop("Exisitng file will not be overwritten.")
+} else {
+       system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad"))
+       setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
+}
 
 geneResults <- run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
 if("pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToOutput)){
