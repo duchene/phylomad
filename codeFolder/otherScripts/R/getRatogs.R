@@ -11,7 +11,7 @@ getRatogs <- function(treesf){
 	  #trs <- read.nexus(trs)
 
 	  trsname <- paste0(sample(letters, 5), collapse = "")
-	  print(trsname)
+	  #print(trsname)
 	  writeLines(trs, con = trsname)
 	  trs <- read.nexus(trsname)
 	  system(paste("rm", trsname))

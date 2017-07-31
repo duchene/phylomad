@@ -16,6 +16,7 @@ if(input$treesFormat != "none" & class(trees) == "phylo"){
 	trees <- list(trees)
 	print("One tree was found as input")
 }
+
 if(input$treesFormat != "none" & length(trees) < nrow(input$dataPath)){
 	trees <- rep(trees[1], nrow(input$dataPath))
 	print("Since there are less trees than loci, the first tree was used for all locus analysis")
@@ -157,3 +158,5 @@ if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput) || "simpl
 }
 
 setwd(initial.dir)
+
+print("Assessment completed successfully.")

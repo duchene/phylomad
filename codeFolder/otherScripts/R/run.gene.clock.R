@@ -111,7 +111,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   
 	 } else {
 	   ### START PARALLEL COMPUTING
-	   print('Enter parallel computing')
+	   print('Parallel computing started')
 	   require(foreach)
 	   require(doParallel)
 		
@@ -125,6 +125,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape', 'apTreeshape'), .export = c('get.test.statistics', 'runPhyML', 'get.df', 'stemmy')) %dopar% runSim(x)
 	   sim.stats <- simReps 
 	   stopCluster(cl)
+	   print("Parallel computing ended successfully")
 	  }
 	  ### END PARALLEL COMPUTING
 
@@ -186,7 +187,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 } else {
 	 for(i in 1:ncol(all.stats.mat)){
 	        if(length(unique(all.sim.stats[,i])) == 1){
-			print(paste(colnames(all.stats.mat)[i], "will not be included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
+			print(paste(colnames(all.stats.mat)[i], "was not included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
 	 		failstats <- c(failstats, i)
 	 	}
 	 }

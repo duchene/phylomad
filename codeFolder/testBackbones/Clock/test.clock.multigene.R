@@ -132,3 +132,5 @@ if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput) || "simpl
 }
 
 setwd(initial.dir)
+
+print("Assessment completed successfully.")

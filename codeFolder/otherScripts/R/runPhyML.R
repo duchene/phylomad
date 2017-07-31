@@ -15,7 +15,7 @@ runPhyML <- function(sdata, format = 'phylip', aadata = aadata, temp_name, phyml
     } else {
         fileName = sdata
     }
-    print(fileName)
+    print(paste("Locus", fileName, "was read successfully."))
 
     if(length(grep("[+]G", model)) == 1) RAS <- " -a e " else RAS <- " -c 1 "
 

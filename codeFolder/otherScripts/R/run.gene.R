@@ -66,7 +66,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phym
 	   
 	 } else {
 	   ### START PARALLEL COMPUTING
-	   print('Enter parallel computing')
+	   print('Parallel computing started')
 	   require(foreach)
 	   require(doParallel)
 		
@@ -80,6 +80,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phym
 	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runPhyML', 'get.chisqstat', 'get.biodivstat')) %dopar% runSim(x)
 	   sim.stats <- simReps 
 	   stopCluster(cl)
+	   print("Parallel computing ended successfully")
 	  }
 	  ### END PARALLEL COMPUTING
 
@@ -153,7 +154,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phym
 	 } else {
 	 for(i in 1:ncol(all.stats.mat)){
 	        if(length(unique(all.sim.stats[,i])) == 1 || any(is.na(all.sim.stats[,i]))){
-			print(paste(colnames(all.stats.mat)[i], "will not be included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
+			print(paste(colnames(all.stats.mat)[i], "was not included in the mahalanobis calculation and is likely to be unreliable. This is possibly because the values for all simulations are the same."))
 	 		failstats <- c(failstats, i)
 	 	}
 	 }

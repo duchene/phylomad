@@ -32,7 +32,7 @@ shinyServer(function(input, output, session) {
 				title = "Assessment steps appear below on completion.",
 				h5("'Close' will not stop the analysis (closing PhyloMAd will)."),
 				h5("Avoid pressing START ANALYSIS again, since analyses will be run repeatedly."),
-				h5("In the event of an error, it is necessary to reopen PhyloMAd."),
+				h5("In the event of an error, PhyloMAd should be closed and reopened."),
 				renderPrint(source(paste0("testBackbones/", input$modeltotest, "/test.server.R"), local = T)),
 				easyClose = F,
 				footer = modalButton("Close")
