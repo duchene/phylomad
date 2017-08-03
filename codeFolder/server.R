@@ -11,7 +11,7 @@ shinyServer(function(input, output, session) {
   })
 
   output$modeltestcode <- renderUI({
-  		       source(paste0("testBackbones/", input$modeltotest, "/test.ui.R"), local = T)  
+  		       source(paste0("testBackbones/", input$modeltotest, "/test.ui.R"), local = T)
   })
 
   observeEvent(input$startAnalysis, {
