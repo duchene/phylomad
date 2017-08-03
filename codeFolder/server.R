@@ -22,7 +22,7 @@ shinyServer(function(input, output, session) {
                 button.appendChild(document.createTextNode('", buttonLabel, "'));
 
                 input.parentElement.parentElement.appendChild(button);
-                shinyBS.addTooltip(buttonID, \"tooltip\", {\"placement\": \"bottom\", \"trigger\": \"hover\", \"title\": \"", Tooltip, "\"}) 
+                shinyBS.addTooltip(buttonID, \"tooltip\", {\"placement\": \"right\", \"trigger\": \"hover\", \"title\": \"", Tooltip, "\"}) 
               };
             }
           });
