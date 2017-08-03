@@ -6,5 +6,6 @@ if(!require(phytools)) install.packages("phytools", repos = "http://cran.us.r-pr
 if(!require(apTreeshape)) install.packages("apTreeshape", repos = "http://cran.us.r-project.org", dependencies = T)
 if(!require(shinyBS)) install.packages("shinyBS", repos = "http://cran.us.r-project.org", dependencies = T)
 library(shiny)
+library(shinyBS)
 setwd("codeFolder")
 runApp(launch.browser=TRUE)
