@@ -38,8 +38,17 @@ tabsetPanel(
 		       column(1),
 		       column(10,
 		       h4("Select test statistics for assessment"),
-		       checkboxGroupInput("testStats", label = "",
-		       choices = list("Chi-squared statistic" = "chisq", "Multinomial statistic" = "multlik", "Delta statistic" = "delta", "Biochemical diversity" = "biochemdiv", "Consistency index" = "consind", "Branch support" = "brsup", "Branch support 95% interval" = "CIbrsup", "Tree length" = "trlen", "Squared Mahalanobis distance" = "maha"), selected = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"))
+		       checkboxGroupInput("testStats", tags$span("", tipify(bsButton("pB2", "?", style = "inverse", size = "extra-small"), "Hover over each test statistic for further details.")),
+		       choices = list("Chi-squared statistic" = "chisq", "Multinomial statistic" = "multlik", "Delta statistic" = "delta", "Biochemical diversity" = "biochemdiv", "Consistency index" = "consind", "Branch support" = "brsup", "Branch support 95% interval" = "CIbrsup", "Tree length" = "trlen", "Squared Mahalanobis distance" = "maha"), selected = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha")),
+		       makeCheckboxTooltip(checkboxValue = "chisq", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "multlik", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "delta", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "biochemdiv", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "consind", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "brsup", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "CIbrsup", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "trlen", buttonLabel = "?", Tooltip = "To be added"),
+		       makeCheckboxTooltip(checkboxValue = "maha", buttonLabel = "?", Tooltip = "To be added")
 		       ),
 		       column(1))
 	),

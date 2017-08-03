@@ -4,6 +4,7 @@ if(!require(foreach)) install.packages("foreach", repos = "http://cran.us.r-proj
 if(!require(doParallel)) install.packages("doParallel", repos = "http://cran.us.r-project.org", dependencies = T)
 if(!require(phytools)) install.packages("phytools", repos = "http://cran.us.r-project.org", dependencies = T)
 if(!require(apTreeshape)) install.packages("apTreeshape", repos = "http://cran.us.r-project.org", dependencies = T)
+if(!require(shinyBS)) install.packages("shinyBS", repos = "http://cran.us.r-project.org", dependencies = T)
 library(shiny)
 setwd("codeFolder")
 runApp(launch.browser=TRUE)

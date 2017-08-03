@@ -5,6 +5,30 @@ options(shiny.maxRequestSize = 100*1024^2)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
 
+   makeCheckboxTooltip <- function(checkboxValue, buttonLabel, Tooltip){
+   tags$script(HTML(paste0("
+          $(document).ready(function() {
+            var inputElements = document.getElementsByTagName('input');
+            for(var i = 0; i < inputElements.length; i++){
+              var input = inputElements[i];
+
+              if(input.getAttribute('value') == '", checkboxValue, "'){
+                var buttonID = 'button_' + Math.floor(Math.random()*1000);
+
+                var button = document.createElement('button');
+                button.setAttribute('id', buttonID);
+                button.setAttribute('type', 'button');
+                button.setAttribute('class', 'btn action-button btn-inverse btn-xs');
+                button.appendChild(document.createTextNode('", buttonLabel, "'));
+
+                input.parentElement.parentElement.appendChild(button);
+                shinyBS.addTooltip(buttonID, \"tooltip\", {\"placement\": \"bottom\", \"trigger\": \"hover\", \"title\": \"", Tooltip, "\"}) 
+              };
+            }
+          });
+        ")))
+  }
+
   output$files = renderDataTable({
     files = list.files(readDirectoryInput(session, "directory"), full.names = T)
     data.frame(name = basename(files), file.info(files))
