@@ -25,9 +25,9 @@ tabsetPanel(
 		       fluidRow(
 		       column(1),
 		       column(10,
-		       h4("Select test statistics for assessment"),
-		       checkboxGroupInput("testStats", tags$span("", tipify(bsButton("pB2", "?", style = "inverse", size = "extra-small", placement = "right"), placement = "right", "Hover over each test statistic for further details.")),
-		       choices = list("Stemminess" = "stemmystat", "Df" = "df", "Tree length" = "trlen", "Imbalance (req a non-fixed topology)" = "imbal", "A-index (requires a fixed tree topology)" = "aindex", "Squared Mahalanobis distance" = "maha"), selected = c("stemmystat", "df", "trlen", "maha")),
+		       tags$span(h4("Select test statistics for assessment"), tipify(bsButton("pB2", "?", style = "inverse", size = "extra-small"), placement = "right", "Test statistics are metrics used to compare empirical data with those generated under the model. They form the core of model assessment.")),
+		       checkboxGroupInput("testStats", label = "",
+		       choices = list("Stemminess  " = "stemmystat", "Df  " = "df", "Tree length  " = "trlen", "Imalance (req a non-fixed topology)  " = "imbal", "A-index (req a fixed topology)  " = "aindex", "Squared Mahalanobis distance  " = "maha"), selected = c("stemmystat", "df", "trlen", "maha")),
 		       makeCheckboxTooltip(checkboxValue = "stemmystat", buttonLabel = "?", Tooltip = "To be added"),
                        makeCheckboxTooltip(checkboxValue = "df", buttonLabel = "?", Tooltip = "To be added"),
                        makeCheckboxTooltip(checkboxValue = "trlen", buttonLabel = "?", Tooltip = "To be added"),

@@ -37,9 +37,9 @@ tabsetPanel(
 		       fluidRow(
 		       column(1),
 		       column(10,
-		       h4("Select test statistics for assessment"),
-		       checkboxGroupInput("testStats", tags$span("", tipify(bsButton("pB2", "?", style = "inverse", size = "extra-small"), placement = "right", "Hover over each test statistic for further details.")),
-		       choices = list("Chi-squared statistic" = "chisq", "Multinomial statistic" = "multlik", "Delta statistic" = "delta", "Biochemical diversity" = "biochemdiv", "Consistency index" = "consind", "Branch support" = "brsup", "Branch support 95% interval" = "CIbrsup", "Tree length" = "trlen", "Squared Mahalanobis distance" = "maha"), selected = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha")),
+		       tags$span(h4("Select test statistics for assessment"), tipify(bsButton("pB2", "?", style = "inverse", size = "extra-small"), placement = "right", "Test statistics are metrics used to compare empirical data with those generated under the model. They form the core of model assessment.")),
+		       checkboxGroupInput("testStats", label = "",
+		       choices = list("Chi-squared statistic  " = "chisq", "Multinomial statistic  " = "multlik", "Delta statistic  " = "delta", "Biochemical diversity  " = "biochemdiv", "Consistency index  " = "consind", "Branch support  " = "brsup", "Branch support 95% interval  " = "CIbrsup", "Tree length  " = "trlen", "Squared Mahalanobis distance  " = "maha"), selected = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha")),
 		       makeCheckboxTooltip(checkboxValue = "chisq", buttonLabel = "?", Tooltip = "To be added"),
 		       makeCheckboxTooltip(checkboxValue = "multlik", buttonLabel = "?", Tooltip = "To be added"),
 		       makeCheckboxTooltip(checkboxValue = "delta", buttonLabel = "?", Tooltip = "To be added"),
