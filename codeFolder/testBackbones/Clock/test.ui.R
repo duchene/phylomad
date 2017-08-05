@@ -28,12 +28,12 @@ tabsetPanel(
 		       tags$span(h4("Select test statistics for assessment"), tipify(bsButton("pB2", "?", style = "inverse", size = "extra-small"), placement = "right", "Test statistics are metrics used to compare empirical data with those generated under the model. They form the core of model assessment.")),
 		       checkboxGroupInput("testStats", label = "",
 		       choices = list("Stemminess  " = "stemmystat", "Df  " = "df", "Tree length  " = "trlen", "Imalance (req a non-fixed topology)  " = "imbal", "A-index (req a fixed topology)  " = "aindex", "Squared Mahalanobis distance  " = "maha"), selected = c("stemmystat", "df", "trlen", "maha")),
-		       makeCheckboxTooltip(checkboxValue = "stemmystat", buttonLabel = "?", Tooltip = "To be added"),
-                       makeCheckboxTooltip(checkboxValue = "df", buttonLabel = "?", Tooltip = "To be added"),
-                       makeCheckboxTooltip(checkboxValue = "trlen", buttonLabel = "?", Tooltip = "To be added"),
-                       makeCheckboxTooltip(checkboxValue = "imbal", buttonLabel = "?", Tooltip = "To be added"),
-                       makeCheckboxTooltip(checkboxValue = "aindex", buttonLabel = "?", Tooltip = "To be added"),
-                       makeCheckboxTooltip(checkboxValue = "maha", buttonLabel = "?", Tooltip = "To be added")
+		       makeCheckboxTooltip(checkboxValue = "stemmystat", buttonLabel = "?", Tooltip = "The proportion of the inferred tree length represented by internal branches. Assesses whether the priors on rates or times place excessive constraints on the relationship between terminal and internal branches."),
+                       makeCheckboxTooltip(checkboxValue = "df", buttonLabel = "?", Tooltip = "Normalized difference between summed terminal branch lengths and summed branch lengths (tree length) in a given tree estimate. Provides an indication of whether the clock and tree priors lead to implausible ratios of summed terminal branches to tree length."),
+                       makeCheckboxTooltip(checkboxValue = "trlen", buttonLabel = "?", Tooltip = "The summed branch lengths for a given tree estimate. Assesses whether the priors on rates or times are favouring implausibly large or small amounts of molecular evolution."),
+                       makeCheckboxTooltip(checkboxValue = "imbal", buttonLabel = "?", Tooltip = "The extent to which only a single root-to-tip path has undergone diversification events. Assesses whether the priors on node times place excessive weight on particular tree shapes that are distinct from the signal in the data."),
+                       makeCheckboxTooltip(checkboxValue = "aindex", buttonLabel = "?", Tooltip = "The proportion of branches in the phylogram from the empirical data that have lengths falling outside the 95% quantile range of those estimated from the posterior predictive data sets. A low A index indicates that a large proportion of branch rates and/or times are inconsistent with the expected number of substitutions along the branches."),
+                       makeCheckboxTooltip(checkboxValue = "maha", buttonLabel = "?", Tooltip = "This statistic summarizes multiple test statistics. Provides a summary of the tests from a group of other test statistics. For this reason, it should only be selected if more than one other statistic has also been selected.")
 		       ),
 		       column(1))
 	),
