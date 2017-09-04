@@ -53,7 +53,7 @@ shinyServer(function(input, output, session) {
 
   observeEvent(input$START, {
   		       showModal(modalDialog(
-				title = "Assessment steps appear below on completion.",
+				title = "Started! Assessment steps appear below on completion.",
 				h5("'Close' will not stop the analysis (closing PhyloMAd will)."),
 				h5("Avoid pressing START ANALYSIS again, since analyses will be run repeatedly."),
 				h5("In the event of an error, PhyloMAd should be closed and reopened."),

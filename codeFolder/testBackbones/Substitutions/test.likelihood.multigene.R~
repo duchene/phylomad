@@ -138,6 +138,8 @@ if("simple" %in% unlist(input$whatToOutput)) system(paste0("rm -r ", as.characte
 
 }
 
+save(outs, file = "outs.test.Rdata")
+
 if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToOutput)){
 	allOutput <- do.call("rbind", outs)
 	write.csv(allOutput, file = "output.all.loci.PhyloMAd.csv")
