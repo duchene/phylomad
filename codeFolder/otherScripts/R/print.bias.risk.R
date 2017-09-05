@@ -54,10 +54,10 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites){
 	       if(is.na(geneResults$biochemdiv.sdpd)){
 			risktext <- c(risktext, "This locus is at UNKNOWN risk of leading to biased inferences according to the biochemical diversity. It looks like the assessment failed.", "")
                         outs <- c(outs, "Unknown")
-	       } else if(geneResults$biochemdiv.sdpd > thresholdHighRisk){
+	       } else if(geneResults$biochemdiv.sdpd < thresholdHighRisk){
                         risktext <- c(risktext, "This locus is at HIGH risk of leading to biased inferences according to the biochemical diversity. Some explanations include excessive substitutional saturation or a highly variable subsitution process across branches and across sites. This test might also reject the model if the locus is extremely short.", "")
                         outs <- c(outs, "high")
-               } else if(geneResults$biochemdiv.sdpd > thresholdMidRisk){
+               } else if(geneResults$biochemdiv.sdpd < thresholdMidRisk){
                         risktext <- c(risktext, "This locus is at MEDIUM risk of leading to biased inferences according to the biochemical diversity. Some explanations include considerable substitutional saturation or a variable subsitution process across branches and across sites.", "")
                         outs <- c(outs, "mid")
                } else {
@@ -73,10 +73,10 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites){
 	       if(is.na(geneResults$consind.sdpd)){
 			risktext <- c(risktext, "This locus is at UNKNOWN risk of leading to biased inferences according to the consistency index. It looks like the assessment failed.", "")
                         outs <- c(outs, "Unknown")
-               } else if(geneResults$consind.sdpd > thresholdHighRisk){
+               } else if(geneResults$consind.sdpd < thresholdHighRisk){
                         risktext <- c(risktext, "This locus is at HIGH risk of leading to biased inferences according to the consistency index. One explanation is that there is strong variation in the rates of evolution across both branches and sites. This test might also reject the model if the locus is extremely short.", "")
                         outs <- c(outs, "high")
-               } else if(geneResults$consind.sdpd > thresholdMidRisk){
+               } else if(geneResults$consind.sdpd < thresholdMidRisk){
                         risktext <- c(risktext, "This locus is at MEDIUM risk of leading to biased inferences according to the consistency index. One explanation is that there is considerable variation in the rates of evolution across both branches and sites.", "")
                         outs <- c(outs, "mid")
                } else {
