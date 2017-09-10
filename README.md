@@ -76,13 +76,13 @@ One is a PDF with histograms of the values of the test statistics calculated fro
 
 ![exampleHist](codeFolder/www/exampleHist.png)
 
-Next is a file with an interpretation of the test for the chi-squared test for non-stationarity. This test has been explored in detail in a previous study. According to the thresholds investigated in that study, the test allows for interpretation of the results. 
+Next is a file with an interpretation of the test for five test statistics that are known to be sensitive to multiple sources of wrong inferences of tree topology and branch lengths. These recommendations come from a detailed previous simulations study. According to the thresholds investigated in that study, the test allows for interpretation of the results. 
 
 ![chisqResults](codeFolder/www/chisqResult.png)
 
-In this example the test tells us that the amount of compositional heterogeneity is unlikely to be of concern.
+In this example, the chi-squared statistic test tells us that the amount of compositional heterogeneity is unlikely to be of concern.
 
-The last file is a table that shows three values (rows) for each test statistic selected (columns). These three values include: 
+The last file is a table that shows three values (rows) for each test statistic selected (columns). These three values include:
 
 - The tail area probability, which is the proportion of values calculated for simulations that are lower than the value calculated for the empirical data set; 
 
