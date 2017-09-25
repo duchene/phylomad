@@ -1,0 +1,53 @@
+aicm                    Akaike's Information Criterion for MCMC samples
+                        (AICM)
+aicw                    determining Akaike weights
+amphibia                example datasets
+aov.phylo               phylogenetic ANOVA and MANOVA
+area.between.curves     deprecated functions in GEIGER
+bd.ms                   estimate net diversification rate
+calibrate.mecca         calibrating MECCA
+calibrate.rjmcmc        initialize proposal width
+congruify.phylo         ultrametricization of trees from a supplied
+                        timetree
+dcount                  prior densities for truncated discrete random
+                        variable
+drop.extinct            prune specified taxa from a phylogenetic tree
+dtt                     disparity-through-time
+ex.traitgram            internal geiger functions
+fitContinuous           model fitting for continuous comparative data
+fitContinuousMCMC       Fit models of continuous trait evolution to
+                        comparative data using MCMC
+fitDiscrete             model fitting for discrete comparative data
+gbresolve               NCBI taxonomy
+geiger-package          GEIGER
+load.rjmcmc             posterior samples from single or multiple MCMC
+                        runs
+make.gbm                tailor reversible-jump Markov chain Monte Carlo
+                        sampling
+mecca                   running a MECCA analysis
+medusa                  MEDUSA: modeling evolutionary diversification
+                        using stepwise AIC
+name.check              Compares taxa in data and tree
+nh.test                 using the Freckleton and Harvey node-height
+                        test
+nodelabel.phylo         Blending information from taxonomies and trees
+plot.medusa             MEDUSA: modeling evolutionary diversification
+                        using stepwise AIC
+pp.mcmc                 using posterior predictive MCMC for modeling
+                        quantitative trait evolution
+print.bm                internal geiger functions
+ratematrix              evolutionary VCV matrix
+rc                      relative cladogenesis test
+rescale                 Tree transformations
+rjmcmc.bm               Bayesian sampling of shifts in trait evolution:
+                        relaxed Brownian motion
+sim.bd                  birth-death population simulator
+sim.bdtree              birth-death tree simulator
+sim.char                simulate character evolution
+startingpt.mecca        starting values for MECCA
+subset.phylo            blending information from taxonomies and trees
+tips                    descendents of a given node in a phylogenetic
+                        tree
+to.auteur               conversion of MCMC samples between auteur and
+                        coda
+treedata                compare taxa in data and tree

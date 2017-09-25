@@ -1,0 +1,86 @@
+MatrixExp               Matrix exponential
+aneur                   Aortic aneurysm progression data
+boot.msm                Bootstrap resampling for multi-state models
+bos                     Bronchiolitis obliterans syndrome after lung
+                        transplants
+cav                     Heart transplant monitoring data
+cmodel.object           Developer documentation: censoring model object
+coef.msm                Extract model coefficients
+crudeinits.msm          Calculate crude initial values for transition
+                        intensities
+d2phase                 Coxian phase-type distribution with two phases
+deltamethod             The delta method
+draic.msm               Criteria for comparing two multi-state models
+                        with nested state spaces
+ecmodel.object          Developer documentation: model for covariates
+                        on misclassification probabilities
+efpt.msm                Expected first passage time
+ematrix.msm             Misclassification probability matrix
+emodel.object           Developer documentation: misclassification
+                        model structure object
+fev                     FEV1 measurements from lung transplant
+                        recipients
+hazard.msm              Calculate tables of hazard ratios for
+                        covariates on transition intensities
+hmm-dists               Hidden Markov model constructors
+hmmMV                   Multivariate hidden Markov models
+hmodel.object           Developer documentation: hidden Markov model
+                        structure object
+logLik.msm              Extract model log-likelihood
+lrtest.msm              Likelihood ratio test
+medists                 Measurement error distributions
+model.frame.msm         Extract original data from 'msm' objects.
+msm                     Multi-state Markov and hidden Markov models in
+                        continuous time
+msm.form.qoutput        Extract msm model parameter estimates in
+                        compact format
+msm.object              Fitted msm model objects
+msm2Surv                Convert data for 'msm' to data for 'survival',
+                        'mstate' or 'flexsurv' analysis
+odds.msm                Calculate tables of odds ratios for covariates
+                        on misclassification probabilities
+paramdata.object        Developer documentation: internal msm
+                        parameters object
+pearson.msm             Pearson-type goodness-of-fit test
+pexp                    Exponential distribution with
+                        piecewise-constant rate
+phasemeans.msm          Parameters of phase-type models in mixture form
+plot.msm                Plots of multi-state models
+plot.prevalence.msm     Plot of observed and expected prevalences
+plot.survfit.msm        Plot empirical and fitted survival curves
+plotprog.msm            Kaplan Meier estimates of incidence
+pmatrix.msm             Transition probability matrix
+pmatrix.piecewise.msm   Transition probability matrix for processes
+                        with piecewise-constant intensities
+pnext.msm               Probability of each state being next
+ppass.msm               Passage probabilities
+prevalence.msm          Tables of observed and expected prevalences
+print.msm               Print a fitted msm model object
+printold.msm            Print a fitted msm model object
+psor                    Psoriatic arthritis data
+qcmodel.object          Developer documentation: model for covariates
+                        on transition intensities
+qgeneric                Generic function to find quantiles of a
+                        distribution
+qmatrix.msm             Transition intensity matrix
+qmodel.object           Developer documentation: transition model
+                        structure object
+qratio.msm              Estimated ratio of transition intensities
+recreate.olddata        Convert data stored in msm object to old format
+scoreresid.msm          Score residuals
+sim.msm                 Simulate one individual trajectory from a
+                        continuous-time Markov model
+simfitted.msm           Simulate from a Markov model fitted using msm
+simmulti.msm            Simulate multiple trajectories from a
+                        multi-state Markov model with arbitrary
+                        observation times
+sojourn.msm             Mean sojourn times from a multi-state model
+statetable.msm          Table of transitions
+summary.msm             Summarise a fitted multi-state model
+surface.msm             Explore the likelihood surface
+tnorm                   Truncated Normal distribution
+totlos.msm              Total length of stay, or expected number of
+                        visits
+transient.msm           Transient and absorbing states
+viterbi.msm             Calculate the probabilities of underlying
+                        states and the most likely path through them

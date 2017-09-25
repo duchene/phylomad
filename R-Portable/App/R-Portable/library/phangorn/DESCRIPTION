@@ -1,0 +1,40 @@
+Package: phangorn
+Title: Phylogenetic Analysis in R
+Version: 2.2.0
+Date: 2017-4-3
+Authors@R: c(person("Klaus", "Schliep", email="klaus.schliep@gmail.com", role = c("aut", "cre")), 
+  person("Emmanuel", "Paradis", role = c("aut")), 
+  person("Leonardo", "de Oliveira Martins", role = c("aut")), 
+  person("Alastair", "Potts", role = c("aut")), 
+  person("Tim W.", "White", role = c("aut")),
+  person("Cyrill", "Stachniss", role = c("ctb")),
+  person("Michelle", "Kendall", email="m.kendall@imperial.ac.uk", role = c("ctb")))
+Maintainer: Klaus Schliep <klaus.schliep@gmail.com>
+Description: Phylogenetic analysis in R: Estimation of phylogenetic
+    trees and networks using Maximum Likelihood, Maximum Parsimony,
+    distance methods and Hadamard conjugation.
+Depends: R (>= 3.2.0), ape (>= 4.1)
+Imports: quadprog, igraph (>= 1.0), Matrix, parallel, methods, utils,
+        stats, graphics, grDevices, fastmatch, magrittr, Rcpp (>=
+        0.12.0)
+LinkingTo: Rcpp
+Suggests: testthat, seqLogo, seqinr, xtable, flashClust, rgl, knitr,
+        rmarkdown, Biostrings
+ByteCompile: TRUE
+License: GPL (>= 2)
+VignetteBuilder: utils, knitr
+URL: https://github.com/KlausVigo/phangorn
+Repository: CRAN
+RoxygenNote: 6.0.1
+NeedsCompilation: yes
+Packaged: 2017-04-03 18:16:30 UTC; klaus
+Author: Klaus Schliep [aut, cre],
+  Emmanuel Paradis [aut],
+  Leonardo de Oliveira Martins [aut],
+  Alastair Potts [aut],
+  Tim W. White [aut],
+  Cyrill Stachniss [ctb],
+  Michelle Kendall [ctb]
+Date/Publication: 2017-04-03 20:40:30 UTC
+Built: R 3.4.1; x86_64-w64-mingw32; 2017-09-24 02:48:14 UTC; windows
+Archs: i386, x64

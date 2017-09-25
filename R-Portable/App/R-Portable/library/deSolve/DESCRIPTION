@@ -1,0 +1,40 @@
+Package: deSolve
+Version: 1.20
+Title: Solvers for Initial Value Problems of Differential Equations
+        ('ODE', 'DAE', 'DDE')
+Authors@R: c(person("Karline","Soetaert", role = c("aut"), 
+                     email = "karline.soetaert@nioz.nl"),
+             person("Thomas","Petzoldt", role = c("aut", "cre"),
+                     email = "thomas.petzoldt@tu-dresden.de"),
+             person("R. Woodrow","Setzer", role = c("aut"),
+                     email = "setzer.woodrow@epa.gov"),
+             person("odepack authors", role = "cph"))
+Author: Karline Soetaert [aut],  
+        Thomas Petzoldt [aut, cre],  
+        R. Woodrow Setzer [aut], 
+        odepack authors [cph]
+Maintainer: Thomas Petzoldt <thomas.petzoldt@tu-dresden.de>
+Depends: R (>= 2.15.0)
+Imports: methods, graphics, grDevices, stats
+Suggests: scatterplot3d
+Description: Functions that solve initial value problems of a system
+        of first-order ordinary differential equations ('ODE'), of
+        partial differential equations ('PDE'), of differential
+        algebraic equations ('DAE'), and of delay differential
+        equations.  The functions provide an interface to the FORTRAN
+        functions 'lsoda', 'lsodar', 'lsode', 'lsodes' of the 'ODEPACK'
+        collection, to the FORTRAN functions 'dvode', 'zvode' and 'daspk'
+	and a C-implementation of solvers of the 'Runge-Kutta' family with
+        fixed or variable time steps.  The package contains routines
+        designed for solving 'ODEs' resulting from 1-D, 2-D and 3-D
+        partial differential equations ('PDE') that have been converted
+        to 'ODEs' by numerical differencing.
+License: GPL (>= 2)
+URL: http://desolve.r-forge.r-project.org/
+LazyData: yes
+NeedsCompilation: yes
+Packaged: 2017-07-13 20:03:15 UTC; user
+Repository: CRAN
+Date/Publication: 2017-07-14 16:34:05 UTC
+Built: R 3.4.1; x86_64-w64-mingw32; 2017-08-16 00:41:03 UTC; windows
+Archs: i386, x64

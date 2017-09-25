@@ -1,0 +1,25 @@
+citHeader("To cite package 'deSolve' in publications use:")
+
+citEntry(entry="Article",
+  title = "Solving Differential Equations in R: Package deSolve",
+  author = personList(as.person("Karline Soetaert"),
+                      as.person("Thomas Petzoldt"),
+                      as.person("R. Woodrow Setzer")),
+  journal  =	"Journal of Statistical Software",
+  volume   =	"33",
+  number   =	"9",
+  pages    =	"1--25",
+  year     = "2010",
+  CODEN    =	"JSSOBK",
+  ISSN     = "1548-7660",
+  URL      = "http://www.jstatsoft.org/v33/i09",
+  DOI      = "10.18637/jss.v033.i09",
+  keywords =	"ordinary differential equations, partial differential
+    equations, differential algebraic equations, initial value problems,
+    R, FORTRAN, C",
+  textVersion =  paste("Karline Soetaert, Thomas Petzoldt, R. Woodrow Setzer (2010).",
+                       "Solving Differential Equations in R: Package deSolve.",
+                       "Journal of Statistical Software, 33(9), 1--25.",
+                       "URL http://www.jstatsoft.org/v33/i09/",
+                       "DOI 10.18637/jss.v033.i09")
+)

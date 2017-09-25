@@ -1,0 +1,16 @@
+Package: ncbit
+Type: Package
+Title: retrieve and build NBCI taxonomic data
+Version: 2013.03.29
+Date: 2013-03-29
+Author: Jon Eastman
+Maintainer: Jon Eastman <jonathan.eastman@gmail.com>
+Depends: R (>= 2.10)
+Description: making NCBI taxonomic data locally available and
+        searchable as an R object
+License: GPL (>= 2)
+Packaged: 2013-03-30 02:14:50 UTC; jeastman
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2013-04-03 20:01:02
+Built: R 3.4.1; ; 2017-08-16 00:43:07 UTC; windows

@@ -1,3 +1,4 @@
+if(Sys.info()["sysname"] == "Windows") .libPaths("./R-Portable/App/R-Portable/library")
 if(!require(shiny)) install.packages("shiny", repos = "http://cran.us.r-project.org", dependencies = T)
 if(!require(phangorn)) install.packages("phangorn", repos = "http://cran.us.r-project.org", dependencies = T)
 if(!require(foreach)) install.packages("foreach", repos = "http://cran.us.r-project.org", dependencies = T)

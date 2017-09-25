@@ -1,0 +1,172 @@
+
+
+Changes version 1.20
+================================
+ o register native routines (Thomas)
+ o check if event data frame has ordered time (and if not, order)
+ o change 'event list' to event matrix or data frame in docs
+ o intentional version jump to indicate chances at the C level
+
+Changes version 1.14
+================================
+o matplot.deSolve is not anymore exported as matplot to avoid the 
+  respective startup message
+o please use matplot.deSolve or the alias matplot.0D instead  (Thomas)
+o small fix that allows parameters in list format for DLLfunc and DLLres
+o a little bit fortran modification (e.g. avoid real*8 and complex*16 types)
+
+Changes version 1.13
+================================
+ o observed data and plot.deSolve / matplot for multiple outputs  (Karline)
+ o combining compiled code function with R code event function (Karline)
+ o check sorting of event times (Karline)
+ o fix bug related to negative event time (patch supplied by J. Stott)
+ o relax setting of tcrit to make integration with events slightly faster
+   (patch from J. Stott)
+ o adapt maxstep calculation for rk methods,
+   print a warning if maxsteps is exceeded, fix diagnostics (Thomas)
+ o more argument checking for rk solvers (Thomas)
+ o add reference to book of Soetaert, Cash and Mazzia (2012)
+
+Changes version 1.12
+================================
+ o new functions matplot.deSolve and matplot.1D
+ o fix valgrind issue (detected by new compilers)
+ o small improvments of plotting functions
+ o import standard packages as required by upcoming R versions
+
+Changes version 1.11
+================================
+ o compiledCode vignette now with dede example
+ o warning and error bug resolved
+ o Time SEXP incompatibility with R 3.1.1 resolved
+ o CFunc compatibility (compiled code)
+
+Changes version 1.10.9
+================================
+ o documentation updates, hyperlinks to examples and vignettes
+ o moved example directories
+
+Changes version 1.10.8
+================================
+ o remove redundant .R files from inst/doc
+ o fixed bug in event code (patch contributed by Jonathan Stott)
+
+Changes version 1.10.7
+================================
+ o Fortran examples of compiled dede models (Woody)
+ o vignettes moved to /vignettes
+ o roles of authors (Authors@R)
+ o function timestep is now internal
+ o small documentation updates
+
+Changes version 1.10.6 (Thomas) 
+================================
+ o change declaration of variable dimensions from (1) to (*) in legacy
+   Fortran code to pass automatic bounds check
+ o remove the Jacobian examples from ?ode because banddown=0 can
+   lead to problems on some systems; examples will come back in a
+   next release
+ o fixed bug in the "iteration" solver
+ o small documentation updates
+
+Changes version 1.10.5 (Karline, Thomas)
+================================
+ o extended subset.deSolve with argument arr, when TRUE returns an
+   array for >2-D output
+ o fixed the R compiler notes
+ o plot.ode.2D now has an mtext argument, via the ..., to label multiple 
+    figures in margin... CHECK - see ode.2D
+ o subset can also be a vector with indices in addition to logical
+ o image with legend = TRUE changed size of plot in different layouts - now solved
+   (by adding par(mar = par("mar")) )
+ o new method to output warnings and error messages 
+ o add data type check for external outputs in rk_util.c
+ o add interface for compiled dede models
+ o emphasize consistent order of states in y and return value of func
+ o changes of Fortran error messages (to be continued)
+
+Changes version 1.10-4 (Thomas, Karline)
+================================
+ o allow reverted time vector for fixed step solvers
+   - todo: find solution for dense output methods, and Livermore solvers
+ o all solvers now have default atol = 1e-6; before this daspk and vode had 1e-8.
+ o multiple warnings from daspk if num steps = 500 toggled off.
+ o added input argument "nind" to daspk, to make it compatible with radau.
+   this also changes the way the variables are weighed, 
+   hence this differs from the original daspk 2.0 code.
+ o improved warning printing in daspk and vode 
+ o extended sparse Jacobian input in lsodes. (2-D and 3-D sparsity
+   with mapping var and arbitrary sparsity in ian/jan format).
+
+Changes version 1.10-3 (Karline)
+================================
+ o rwork and iwork in lsodes from Fortran -> C (to remove compiler warnings)
+ o roots + events:  now certain roots can stop simulation + fixed bug in radau root
+ o improved events\roots help file
+ o diagnostics(out) gave error in case method=iteration (no rstate) now fixed
+ o the package authors agreed to assign the maintainer role to T.P.,
+   but the order of authorship and credits remain unchanged.
+
+Changes version 1.10-2 (Karline)
+================================
+ o remove NAs from forcing functions - when used in DLL (file forcings.R)
+ o new argument "restructure" in ode.1D, for use with implicit solvers not in deSolve
+ o removed requirement to have eventfunc in compiled code when func is in compiled code
+ o subsetting on summary.deSolve
+ 
+Changes version 1.10-1 (Thomas)
+===============================
+ o remove several redundant variables from C code
+ o add NEWS file
+
+Changes version 1.10 (Karline, Thomas)
+======================================
+ o compiled code using mass in daspk
+ o cleanEventTimes
+
+Changes version 1.9+ (Karline)
+==============================
+ o roots, events, lags in radau
+ o roots in lsodes
+ o lags in daspk
+ o ode (method = "iteration")
+
+Changes version 1.9 (Karline, Thomas)
+=====================================
+ o summary.deSolve
+ o subset.deSolve
+ o plotting deSolve objects improved:
+   - plot more than one output in same figures (scenarios), 
+   - add observations
+ o vignette improved
+ o fixed bug in 'timesteps'
+
+Changes version 1.8.1 (Thomas, Woody, Karline)
+==============================================
+ o fixed compiler warnings using valgrind
+ o fixed compiler warning C-code
+
+Changes version 1.8 (Thomas)
+============================
+ o Dormand-Prince 8(7) coefficients use now common 
+   instead of decimal fractions
+
+
+Changes version 1.8 (Karline)
+=============================
+ o Runge-Kuttas:
+   - extra output: number of failed steps (see also 2)
+   - number of function evaluations + 1 for initial condition
+   - dense output for cash-karp
+   - dopri8(7) added
+   - radau added!! implicit runge kutta, solves also DAE up to index 3!
+ o other:
+   - image function for ode.2-D added.
+   - changed warning printing in FORTRAN code
+   - common interface for radau and daspk:
+     both can solve systems written as M*dy = f(x,y).
+     daspk can also solve systems written as 0 = g(x,y,dy) (=default for daspk)
+   
+
+

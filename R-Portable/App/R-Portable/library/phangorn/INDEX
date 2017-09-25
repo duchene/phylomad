@@ -1,0 +1,58 @@
+Ancestors               tree utility function
+CI                      Consistency Index and Retention Index
+Laurasiatherian         Laurasiatherian data (AWCMEE)
+NJ                      Neighbor-Joining
+SH.test                 Shimodaira-Hasegawa Test
+SOWH.test               Swofford-Olsen-Waddell-Hillis Test
+allSplits               Splits representation of graphs and trees.
+allTrees                Compute all trees topologies.
+ancestral.pml           Ancestral character reconstruction.
+as.networx              Phylogenetic networks
+bab                     Branch and bound for finding all most
+                        parsimonious trees
+bootstrap.pml           Bootstrap
+chloroplast             Chloroplast alignment
+cladePar                Utility function to plot.phylo
+coalSpeciesTree         Species Tree
+consensusNet            Computes a consensusNetwork from a list of
+                        trees Computes a 'networx' object from a
+                        collection of splits.
+cophenetic.networx      Pairwise Distances from a Phylogenetic Network
+createLabel             Compare splits and add support values to an
+                        object
+delta.score             Computes the delta score
+densiTree               Plots a densiTree.
+designTree              Compute a design matrix or non-negative LS
+discrete.gamma          Internal maximum likelihood functions.
+dist.hamming            Pairwise Distances from Sequences
+dist.p                  Pairwise Polymorphism P-Distances from DNA
+                        Sequences
+distanceHadamard        Distance Hadamard
+fitch                   Parsimony tree.
+getClans                Clans, slices and clips
+getRoot                 Tree manipulation
+hadamard                Hadamard Matrices and Fast Hadamard
+                        Multiplication
+ldfactorial             Arithmetic Operators
+lento                   Lento plot
+maxCladeCred            Maximum clade credibility tree
+modelTest               ModelTest
+multiphyDat2pmlPart     Partition model.
+neighborNet             Computes a neighborNet from a distance matrix
+nni                     Tree rearrangements.
+phangorn-package        Phylogenetic analysis in R
+phyDat                  Conversion among Sequence Formats
+pml.control             Likelihood of a tree.
+pmlCluster              Stochastic Partitioning
+pmlMix                  Phylogenetic mixture model
+read.aa                 Read Amino Acid Sequences in a File
+read.nexus.splits       Function to import and export splits and
+                        networks
+simSeq                  Simulate sequences.
+splitsNetwork           Phylogenetic Network
+superTree               Super Tree methods
+treedist                Distances between trees
+upgma                   UPGMA and WPGMA
+writeDist               Writing and reading distances in phylip and
+                        nexus format
+yeast                   Yeast alignment (Rokas et al.)
