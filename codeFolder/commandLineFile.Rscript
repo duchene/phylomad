@@ -9,39 +9,38 @@ input <- list()
 phylomadpath <- "."
 
 # Type of model to assess. Must be one of "Substitutions" or "Clock"
-input$modeltotest <- "Substitutions"
+input$modeltotest <- "Clock"
 
 # Full paths to alignments. 
-input$dataPath <- c("")
+input$dataPath <- c("~/Desktop/phylomad/codeFolder/exampleData/betgmc1/algmc.nex")
 
 # Names of alignments.
-
-alNames <- c("")
+alNames <- c("algmc.nex")
 
 # Format of alignments. Options include "NEXUS", "phylip", and "FASTA"
 input$dataFormat <- "NEXUS"
 
 # The format of trees. Options include "none", "NEXUS", and "newick"
-input$treesFormat <- "none"
+input$treesFormat <- "NEXUS"
 
 # The path of trees. When assessing clock models, this is the path for the .trees BEAST output file.
-input$treesPath <- c("")
+input$treesPath <- c("~/Desktop/phylomad/codeFolder/exampleData/betgmc1/simulationduchene.trees")
 
 # For clock model assessment, the following is the path of .log BEAST output file. Ignore when assessing substitution models.
-input$posteriorPath <- ""
+input$posteriorPath <- c("~/Desktop/phylomad/codeFolder/exampleData/betgmc1/sim.log")
 
 # For clock model assessment, the following is the percentage of the posterior to be removed as burn-in. Ignore when assessing substitution models.
-input$burnin <- 10
+input$burnin <- 0
 
 # Model to assess. Options include "GTR", "HKY", "JC", "autoModel", "JTT", "LG", "WAG", "Dayhoff". RAS model options include "", "+G". These options can be left blank when assesing clock models.
-input$model <- "GTR"
+input$model <- "JC"
 input$RASmodel <- "+G"
 
 # Test statistics. Options include "chisq", "multlik", "biochemdiv", "consind", "delta", "brsup", "CIbrsup", "trlen", "maha". Options for clock model assessment include "stemmystat", "df", "trlen", "imbal", "aindex", "maha"
-input$testStats <- list("chisq", "multlik", "biochemdiv", "consind", "delta", "brsup", "CIbrsup", "trlen", "maha")
+input$testStats <- list("trlen", "aindex")
 
 # Output. Options include "pvals", "testPlots", "simple", "phyloempres", "simdat", "phylosimres"
-input$whatToOutput <- list("pvals", "testPlots", "simple", "phyloempres", "simdat", "phylosimres")
+input$whatToOutput <- list("pvals", "testPlots")
 
 # Output format. Options include "NEXUS", "phylip", "FASTA"
 input$outputFormat <- "NEXUS"
@@ -50,10 +49,10 @@ input$outputFormat <- "NEXUS"
 input$outputFolder <- "../outputFolder/"
 
 # Number of simulations to make.
-input$Nsims <- 100 
+input$Nsims <- 50
 
 # Number of computer cores to use.
-input$Ncores <- 1
+input$Ncores <- 4
 
 # Overwrite previous runs with the same name and folder, if any.
 input$overwrite <- F
@@ -72,7 +71,14 @@ dataPath[,4] <- input$dataPath
 if(alNames == "") dataPath[,1] <- paste0("locus", 1:length(input$dataPath)) else dataPath[,1] <- alNames
 input$dataPath <- dataPath
 
+treesPath <- matrix(NA, length(input$treesPath), 4)
+treesPath[,4] <- input$treesPath
+input$treesPath <- treesPath
+
+posteriorPath <- matrix(NA, length(input$posteriorPath), 4)
+posteriorPath[,4] <- input$posteriorPath
+input$posteriorPath <- posteriorPath
+
 input$framework <- "likelihood"
 
-source(paste0("testBackbones/", input$modeltotest, "/test.server.R")
-setwd(origindir)
+source(paste0("testBackbones/", input$modeltotest, "/test.server.R"))

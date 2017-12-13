@@ -76,7 +76,7 @@ One is a PDF with histograms of the values of the test statistics calculated fro
 
 ![exampleHist](codeFolder/www/exampleHist.png)
 
-Next is a file with an interpretation of the test for five test statistics that are known to be sensitive to multiple sources of wrong inferences of tree topology and branch lengths. These recommendations come from a detailed previous simulations study. The test allows for interpretation of the results, according to the thresholds investigated in that study. 
+Next is a file with an interpretation of the test for five test statistics that are known to be sensitive to multiple sources of wrong inferences of tree topology and branch lengths. These recommendations come from a detailed previous simulations study. The test allows for interpretation of the results, according to the thresholds investigated in that study. Note that while the model might be adequate regarding each of these test statistics, it might still suffer an unknown type of bias. This means that the output should be placed in context of what each of these statistics describe. See manual for more details.
 
 ![chisqResults](codeFolder/www/chisqResult.png)
 

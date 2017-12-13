@@ -1,5 +1,0 @@
-This locus is at MEDIUM risk of leading to biased inferences due to compositional heterogeneity. These data might not lead to biased inferences when using homogeneous substitution models such as those of the GTR family. However, these inferences should be made with caution and the results of this assessment should be reported. Alternatively, a heterogeneous substitution model can be used.
-
-This advice is based on simulations in the following studies:
-Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534.
-Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (in prep). New Statistical Criteria Detect Biased Inferences From Phylogenomic Data. 
