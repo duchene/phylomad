@@ -17,15 +17,24 @@ Download and unzip the PhyloMAd repository by clicking the following link:
 
 https://github.com/duchene/phylomad/archive/master.zip
 
-This can also be done by pressing the *Clone or download* button in github or by typing the following in a bash shell. The later option assumes that the machine has git installed.
+This can also be done by pressing the *Clone or download* button in github or by typing the following in a bash shell (if available and the machine has git installed).
 
 ```coffee
 git clone https://github.com/duchene/phylomad.git
 ```
 
+The rest of this tutorial focuses on the Graphical User Interface. Refer to the manual for information about running PhyloMAd through the command-line.
+
 Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). Opening the package for the first time might take several minutes and will require internet connection if any R dependencies are not yet installed.
 
-If you have difficulty opening the program, you might want to try opening a bash shell, setting your directory to the PhyloMAd folder and executing the R script by hand.
+If you have difficulty opening the program, you might want to try opening it directly through R. By typing the following in the R command line:
+
+```coffee
+setwd("pathToPhyloMAd")
+source("phylomad.Rscript")
+```
+
+Similarly, if you have access to a bash shell, set your directory to the PhyloMAd folder and execute the R script by hand.
 
 ```coffee
 cd pathToPhyloMAd
