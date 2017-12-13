@@ -20,27 +20,27 @@ https://github.com/duchene/phylomad/archive/master.zip
 This can also be done by pressing the *Clone or download* button in github or by typing the following in a bash shell. The later option assumes that the machine has git installed.
 
 ```coffee
-git clone https://github.com/duchene/modadclocks.git
+git clone https://github.com/duchene/phylomad.git
 ```
 
-Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). Opening the package for the first time might take several minutes and can require internet connection. This is because PhyloMAd will check that all the required R packages are installed, and then it will install them if needed.
+Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). Opening the package for the first time might take several minutes and will require internet connection if any R dependencies are not yet installed.
 
 If you have difficulty opening the program, you might want to try opening a bash shell, setting your directory to the PhyloMAd folder and executing the R script by hand.
 
 ```coffee
-cd pathToPyloMAd
+cd pathToPhyloMAd
 Rscript phylomad.Rscript
 ```
 
-In mac machines, PhyloMAd will open a terminal window when opened and log the progress. In windows, a log file with the progress will be saved in the main PhyloMAd folder. This log file is mainly useful for checking progress, so it is safe to delete it when the program is closed.
+In mac machines, PhyloMAd will open a terminal window when opened and log the progress. In windows, a log file with the progress will be saved in the main PhyloMAd folder. This log file is mainly useful for debugging or monitoring progress, so it is safe to delete it when the program is closed.
 
-Once you have opened PhyloMAd, select the model you wish to assess from the buttons at the left of the screen.
-
-## Brief tutorial 
+## Brief tutorial
 
 This is a brief tutotrial for assessing substitution model adequacy in a single locus. Refer to the manual for more detailed settings.
 
 ### User interface
+
+Once you have opened PhyloMAd, select the model you wish to assess from the buttons at the left of the window.
 
 After selecting a model from the box to the left, you will see a corresponding set of tabs in the main screen ranging from *Data* to *Other options and START*.
 
@@ -48,7 +48,7 @@ You can go through the tabs before modifying the settings to make sure you under
 
 1. For a quick trial of the software, press *Browse* in the Data tab under the *Select nucleotide or amino acid alignment* header.
 
-Browse through your files into the *phylomad* folder, then the *codeFolder*, and the *exampleData* folder, and select the data set called *example.covarion.longtips.nex*. If you have selected the file successfully, the PhyloMAd window should say *Upload complete*.
+Browse through your files into the *phylomad/codeFolder/exampleData/* folder, and select the data set called *example.covarion.longtips.nex*. If you have selected the file successfully, the PhyloMAd window should say *Upload complete*.
 
 ![browseButton](codeFolder/www/browseButton.png)
 
@@ -56,13 +56,13 @@ Browse through your files into the *phylomad* folder, then the *codeFolder*, and
 
 ![tabs](codeFolder/www/tabs.png)
 
-3. Once you get to the *Other options and START* tab, you can reduce the number of simulations to 40, since this is only a test run. If possible, check whether your machine has multiple cores and increase the number in the corresponding section to 4 cores.
+3. Once you get to the *Other options and START* tab, you can reduce the number of simulations to 40, since this is only a test run. Check whether your machine has multiple cores and increase the number in the corresponding section to 4 cores.
 
 Now press the *START ASSESSMENT* button. 
 
 ![startAssessment](codeFolder/www/startAssessment.png)
 
-You can monitor the assessment in the shell (mac) or checking the log file that is created in the main PhyloMAd folder (windows). Also check the output folder and make sure that data are being stored and removed as successive simulations are analyzed.
+You can monitor the assessment in the shell (mac) or by checking the log file that is created in the main PhyloMAd folder (windows). Also check the output folder and make sure that data are being stored and removed as successive simulations are analyzed.
 
 ### Interpreting output
 
@@ -72,11 +72,11 @@ Inside the output folder, there will be a separate folder containing the output 
 
 ![outputFiles](codeFolder/www/outputFiles.png)
 
-One is a PDF with histograms of the values of the test statistics calculated from simulated data, with the value calculated for the empirical data set shown in a red line. These graphics are useful for qualitative interpretation of the results. This qualitative interpretation is necessary for most of the test statistics until they are better understood.
+One is a PDF with histograms of the values of the test statistics calculated from simulated data, with the value calculated for the empirical data set shown in a red line. These graphics are useful for qualitative interpretation of the results. This qualitative interpretation is necessary for many of the test statistics until they are better understood.
 
 ![exampleHist](codeFolder/www/exampleHist.png)
 
-Next is a file with an interpretation of the test for five test statistics that are known to be sensitive to multiple sources of wrong inferences of tree topology and branch lengths. These recommendations come from a detailed previous simulations study. According to the thresholds investigated in that study, the test allows for interpretation of the results. 
+Next is a file with an interpretation of the test for five test statistics that are known to be sensitive to multiple sources of wrong inferences of tree topology and branch lengths. These recommendations come from a detailed previous simulations study. The test allows for interpretation of the results, according to the thresholds investigated in that study. 
 
 ![chisqResults](codeFolder/www/chisqResult.png)
 
@@ -92,7 +92,7 @@ The last file is a table that shows three values (rows) for each test statistic 
 
 ![resultsTable](codeFolder/www/resultsTable.png)
 
-In this example that the multinomial statistic is not available for analysis. This is probably because this data set comes from a scenario with extremely long terminal branches. The high divergence among taxa has led to every site having a different pattern in every data set, so every simulated data set has the same multinomial likelihood as the empirical data set. This test statistic is not useful in this scenario.
+This example shows that the multinomial statistic is not available for analysis. This is because this data set comes from a scenario with extremely long terminal branches. The high divergence among taxa has led to every site having a different pattern in every data set, so every simulated data set has the same multinomial likelihood as the empirical data set. This test statistic is therefore not useful in this scenario.
 
 ## Support and bug reports
 
@@ -101,4 +101,4 @@ david.duchene[at]sydney.edu.au
 
 ## Licence
 
-Copyright 2017 by the PhyloMAd authors. The software PhyloMAd is distributed without warranty of any kind or support for previous versions. The authors will not be responsible for any damage resulting from the use of this software. The source and documentation are distributed under the GNU General Public Licence except where stated otherwise. See http://www.opensource.org/licenses for details.
+Copyright 2017 by the PhyloMAd authors. The software PhyloMAd is distributed without warranty of any kind or support for previous versions. The authors will not be responsible for any damage resulting from the use of this software. The source and documentation are distributed under the GNU General Public License except where stated otherwise. See the copy of the GNU GPL license found in the *codeFolder* for further details.

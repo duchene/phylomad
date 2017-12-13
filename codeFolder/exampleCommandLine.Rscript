@@ -5,11 +5,17 @@ input <- list()
 # Fill in the following settings after the <- tag as indicated
 ############################################
 
+# Path to the phylomad/codeFolder/
+phylomadpath <- "."
+
 # Type of model to assess. Must be one of "Substitutions" or "Clock"
 input$modeltotest <- "Substitutions"
 
 # Paths to alignments. 
 input$dataPath <- c("exampleData/sim.long.half.nonmon.1.phy")
+
+# Names of alignments.
+alNames <- c("locus_1")
 
 # Format of alignments. Options include "NEXUS", "phylip", and "FASTA"
 input$dataFormat <- "phylip"
@@ -43,7 +49,7 @@ input$outputFormat <- "NEXUS"
 input$outputFolder <- "../outputFolder/"
 
 # Number of simulations to make.
-input$Nsims <- 20
+input$Nsims <- 100
 
 # Number of computer cores to use.
 input$Ncores <- 4
@@ -57,9 +63,12 @@ input$overwrite <- F
 
 print("License statement. Copyright (C) 2017 Authors. PhyloMAd is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version. This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License found in the folder codeFolder for more details or see www.gnu.org/licenses/")
 
+origindir <- getwd()
+setwd(phylomadpath)
+
 dataPath <- matrix(NA, length(input$dataPath), 4)
 dataPath[,4] <- input$dataPath
-dataPath[,1] <- input$dataPath
+if(alNames == "") dataPath[,1] <- paste0("locus", 1:length(input$dataPath)) else dataPath[,1] <- alNames
 input$dataPath <- dataPath
 
 input$framework <- "likelihood"

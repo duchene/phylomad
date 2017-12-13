@@ -5,11 +5,18 @@ input <- list()
 # Fill in the following settings after the <- tag as indicated
 ############################################
 
+# Path to the phylomad/codeFolder/
+phylomadpath <- "."
+
 # Type of model to assess. Must be one of "Substitutions" or "Clock"
 input$modeltotest <- "Substitutions"
 
-# Paths to alignments. 
+# Full paths to alignments. 
 input$dataPath <- c("")
+
+# Names of alignments.
+
+alNames <- c("")
 
 # Format of alignments. Options include "NEXUS", "phylip", and "FASTA"
 input$dataFormat <- "NEXUS"
@@ -55,13 +62,17 @@ input$overwrite <- F
 # End user input
 ############################################
 
-print("License statement. Copyright (C) 2017 Authors. PhyloMAd is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version. This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License found in the folder codeFolder for more details or see www.gnu.org/licenses/")
+print("License statement. Copyright (C) 2017 Authors. PhyloMAd is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version. This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License found in the folder codeFolder or see www.gnu.org/licenses/ for more details. Users must cite PhyML when using PhyloMAd as indicated in the manual.")
+
+origindir <- getwd()
+setwd(phylomadpath)
 
 dataPath <- matrix(NA, length(input$dataPath), 4)
 dataPath[,4] <- input$dataPath
-dataPath[,1] <- input$dataPath
+if(alNames == "") dataPath[,1] <- paste0("locus", 1:length(input$dataPath)) else dataPath[,1] <- alNames
 input$dataPath <- dataPath
 
 input$framework <- "likelihood"
 
 source(paste0("testBackbones/", input$modeltotest, "/test.server.R")
+setwd(origindir)
