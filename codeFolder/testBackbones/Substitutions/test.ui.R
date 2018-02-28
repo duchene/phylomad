@@ -58,7 +58,7 @@ tabsetPanel(
                        column(10,
 		       h4("Select the output desired"),
 		       checkboxGroupInput("whatToOutput", label = "",
-                       choices = list("Metrics of adequacy for individual loci" = "pvals", "Test plots" = "testPlots", "Only overall summary file (overrides other options)" = "simple", "Tree estimated from empirical data" = "phyloempres", "Simulated data" = "simdat", "Trees estimated from simulated data" = "phylosimres"), selected = c("pvals", "testPlots")),
+                       choices = list("Metrics of adequacy for individual loci" = "pvals", "Test plots" = "testPlots", "Multi-locus tests plots" = "multiTestPlots", "Only overall summary file (overrides other options)" = "simple", "Tree estimated from empirical data" = "phyloempres", "Simulated data" = "simdat", "Trees estimated from simulated data" = "phylosimres"), selected = c("pvals", "testPlots")),
 		       br(),
 		       h4("Select the format of the output data"),
 		       radioButtons("outputFormat", label = "",
