@@ -153,35 +153,35 @@ if(nrow(input$dataPath) > 1 && "pvals" %in% whatToOutput || "simple" %in% whatTo
 
 if("multiTestPlots" %in% whatToOutput){
 	pdf("multi.locus.results.plots.pdf", height = 4, width = 4, useDingbats = F)
-	if("chisq" %in% selectedStats && !any(allOutput[,"chisq.stdev.from.pred.dist"] == Inf) && !any(is.na(allOutput[,"chisq.stdev.from.pred.dist"]))){ 
+	if("chisq" %in% selectedStats && !any(allOutput[,"chisq.stdev.from.pred.dist"] == Inf)){ 
 		plot(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"]), locilengths, main = "Chi-squared statistic", xlab = "Standard deviations from mean\nof predictive distribution (SDPD)", ylab = "Locus length (number of sites)", pch = 19, xlim = c(if(min(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"])) < 0) min(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"])) else 0, max(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"]))), ylim = c(0, if(max(locilengths) < 500) 500 else if(max(locilengths) < 5000) 5000 else max(locilengths)))
 		abline(lm(biasrisk[[2]][,"seqlen.chisq"] ~ biasrisk[[2]][,"minD.chisq"]), lwd = 2, col = "orange")
 		abline(lm(biasrisk[[2]][,"seqlen.chisq"] ~ biasrisk[[2]][,"maxD.chisq"]), lwd = 2, col = "red")
 		points(biasrisk[[2]][,"minD.chisq"], biasrisk[[2]][,"seqlen.chisq"], pch = 19, col = "orange")
 		points(biasrisk[[2]][,"maxD.chisq"], biasrisk[[2]][,"seqlen.chisq"], pch = 19, col = "red")
 	}
-	if("multlik" %in% selectedStats && !any(allOutput[,"multlik.stdev.from.pred.dist"] == Inf) && !any(is.na(allOutput[,"multlik.stdev.from.pred.dist"]))){
+	if("multlik" %in% selectedStats && !any(allOutput[,"multlik.stdev.from.pred.dist"] == Inf)){
 		plot(as.numeric(allOutput[,"multlik.stdev.from.pred.dist"]), log(locilengths), main = "Multinomial likelihood statistic", xlab = "Standard deviations from mean\nof predictive distribution (SDPD)", ylab = "Log locus length (number of sites)", pch = 19, xlim = c(if(min(as.numeric(allOutput[,"multlik.stdev.from.pred.dist"])) < 0) min(as.numeric(allOutput[,"multlik.stdev.from.pred.dist"])) else 0, max(as.numeric(allOutput[,"multlik.stdev.from.pred.dist"]))), ylim = c(0, if(max(locilengths) < 500) log(500) else if(max(locilengths) < 5000) log(5000) else log(max(locilengths))))
 		abline(lm(log(biasrisk[[2]][,"seqlen"]) ~ biasrisk[[2]][,"minD.multlik"]), lwd = 2, col = "orange")
 		abline(lm(log(biasrisk[[2]][,"seqlen"]) ~ biasrisk[[2]][,"maxD.multlik"]), lwd = 2, col = "red")
 		points(biasrisk[[2]][,"minD.multlik"], log(biasrisk[[2]][,"seqlen"]), pch = 19, col = "orange")
 		points(biasrisk[[2]][,"maxD.multlik"], log(biasrisk[[2]][,"seqlen"]), pch = 19, col = "red")
 	}
-	if("biochemdiv" %in% selectedStats && !any(allOutput[,"biochemdiv.stdev.from.pred.dist"] == Inf) && !any(is.na(allOutput[,"biochemdiv.stdev.from.pred.dist"]))){
+	if("biochemdiv" %in% selectedStats && !any(allOutput[,"biochemdiv.stdev.from.pred.dist"] == Inf)){
 		plot(as.numeric(allOutput[,"biochemdiv.stdev.from.pred.dist"]), log(locilengths), main = "Biochemical diversity statistic", xlab = "Standard deviations from mean\nof predictive distribution (SDPD)", ylab = "Log locus length (number of sites)", pch = 19, xlim = c(if(max(as.numeric(allOutput[,"biochemdiv.stdev.from.pred.dist"])) > 0) max(as.numeric(allOutput[,"biochemdiv.stdev.from.pred.dist"])) else 0, min(as.numeric(allOutput[,"biochemdiv.stdev.from.pred.dist"]))), ylim = c(0, if(max(locilengths) < 500) log(500) else if(max(locilengths) < 5000) log(5000) else log(max(locilengths))))
 		abline(lm(log(biasrisk[[2]][,"seqlen"]) ~ biasrisk[[2]][,"minD.biochemdiv"]), lwd = 2, col = "orange")
 		abline(lm(log(biasrisk[[2]][,"seqlen"]) ~ biasrisk[[2]][,"maxD.biochemdiv"]), lwd = 2, col = "red")
 		points(biasrisk[[2]][,"minD.biochemdiv"], log(biasrisk[[2]][,"seqlen"]), pch = 19, col = "orange")
 		points(biasrisk[[2]][,"maxD.biochemdiv"], log(biasrisk[[2]][,"seqlen"]), pch = 19, col = "red")
 	}
-	if("consind" %in% selectedStats && !any(allOutput[,"consind.stdev.from.pred.dist"] == Inf) && !any(is.na(allOutput[,"consind.stdev.from.pred.dist"]))){
+	if("consind" %in% selectedStats && !any(allOutput[,"consind.stdev.from.pred.dist"] == Inf)){
 		plot(as.numeric(allOutput[,"consind.stdev.from.pred.dist"]), log(locilengths), main = "Consistency Index statistic", xlab = "Standard deviations from mean\nof predictive distribution (SDPD)", ylab = "Log locus length (number of sites)", pch = 19, xlim = c(if(max(as.numeric(allOutput[,"consind.stdev.from.pred.dist"])) > 0) max(as.numeric(allOutput[,"consind.stdev.from.pred.dist"])) else 0, min(as.numeric(allOutput[,"consind.stdev.from.pred.dist"]))), ylim = c(0, if(max(locilengths) < 500) log(500) else if(max(locilengths) < 5000) log(5000) else log(max(locilengths))))
 		abline(lm(log(biasrisk[[2]][,"seqlen"]) ~ biasrisk[[2]][,"minD.consind"]), lwd = 2, col = "orange")
 		abline(lm(log(biasrisk[[2]][,"seqlen"]) ~ biasrisk[[2]][,"maxD.consind"]), lwd = 2, col = "red")
 		points(biasrisk[[2]][,"minD.consind"], log(biasrisk[[2]][,"seqlen"]), pch = 19, col = "orange")
 		points(biasrisk[[2]][,"maxD.consind"], log(biasrisk[[2]][,"seqlen"]), pch = 19, col = "red")
 	}
-	if("maha" %in% selectedStats && !any(allOutput[,"maha.stdev.from.pred.dist"] == Inf) && !any(is.na(allOutput[,"maha.stdev.from.pred.dist"]))){
+	if("maha" %in% selectedStats && !any(allOutput[,"maha.stdev.from.pred.dist"] == Inf)){
 		plot(as.numeric(allOutput[,"maha.stdev.from.pred.dist"]), log(locilengths), main = "Mahalanobis distance statistic", xlab = "Standard deviations from mean\nof predictive distribution (SDPD)", ylab = "Log locus length (number of sites)", pch = 19, xlim = c(0, max(as.numeric(allOutput[,"maha.stdev.from.pred.dist"]))), ylim = c(0, if(max(locilengths) < 500) log(500) else if(max(locilengths) < 5000) log(5000) else log(max(locilengths))))
 		abline(lm(log(biasrisk[[2]][,"seqlen"]) ~ biasrisk[[2]][,"minD.maha"]), lwd = 2, col = "orange")
 		points(biasrisk[[2]][,"minD.maha"], log(biasrisk[[2]][,"seqlen"]), pch = 19, col = "orange")
