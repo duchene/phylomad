@@ -10,14 +10,6 @@ outs <- list()
 
 locilengths <- vector()
 
-for(j in 1:nrow(input$dataPath)){
-
-if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j, 4]))
-
-print("Model to be assessed was identified")
-
-genebin <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata, clean = input$cleanOrNot)
-
 print("Locus was cleaned successfully")
 
 if(input$Ncores > 1) parallelise <- T else parallelise <- F
@@ -35,7 +27,15 @@ if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".
 
 whatToOutput <- unlist(input$whatToOutput)
 
-geneResults <- run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
+if(input$Ncores > 1) parallelise <- T else parallelise <- F
+
+if("satPlots" %in% whatToOutput) plotdat <- T else plotdat <- F
+
+geneResults <- test.saturation(sdata = as.character(input$dataPath[, 4]), format = input$dataFormat, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, plotdat = plotdat)
+
+
+#### Output missing
+
 if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 	geneResMat <- matrix(NA, nrow = 3, ncol = length(selectedStats))
 	

@@ -10,7 +10,11 @@ tabsetPanel(
 		       radioButtons("dataFormat", label = "",
                        choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       br(),
-		       checkboxInput("cleanOrNot", label = tags$span(h5("Remove sites with missing data from each alignment"), tipify(bsButton("pB1", "?", style = "inverse", size = "extra-small"), placement = "right", "Removing sites with missing data is important for accurate estimation of test statistics. Only uncheck this box if the alignments only have a negligible amount of missing data.")), value = TRUE)
+		       h4("Select the method of data handling"),
+		       radioButtons("dataTreatment", label = "", choices = list("Remove sites with missing data  " = "cleandata", "Test complete data set  " = "complete", "1st+2nd versus 3rd codon positions  " = "codonpos")),
+		       makeCheckboxTooltip(checkboxValue = "cleandata", buttonLabel = "?", Tooltip = "This will lead to the most accurate test of saturation, but might be a poor reflection of the quality of phylogenetic inferences if a large amount of data are missing."),
+                       makeCheckboxTooltip(checkboxValue = "complete", buttonLabel = "?", Tooltip = "Loci will be kept whole for assessment. This can lead to a misleading saturation test if there is a large amount of missing data in the alignment."),
+                       makeCheckboxTooltip(checkboxValue = "codonpos", buttonLabel = "?", Tooltip = "This performs independent tests of saturation for the two types of sites.")
 		       ),
 		       column(1))
         ),
