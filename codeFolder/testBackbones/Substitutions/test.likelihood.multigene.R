@@ -41,7 +41,7 @@ if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j,
 
 print("Model to be assessed was identified")
 
-genebin <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata)
+genebin <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata, clean = input$cleanOrNot)
 
 print("Locus was cleaned successfully")
 

@@ -1,4 +1,4 @@
-clean.gene <- function(sdata, format = "phylip", aadata = F){
+clean.gene <- function(sdata, format = "phylip", aadata = F, clean = T){
 	   if(format == "phylip"){
                   if(aadata) data <- as.AAbin(read.aa(sdata)) else data <- read.dna(sdata)
            } else if(format == "fasta"){
@@ -7,6 +7,8 @@ clean.gene <- function(sdata, format = "phylip", aadata = F){
 		  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.DNAbin(read.nexus.data(sdata))
 	   }
 	   
+	   if(!clean) return(data)
+
 	   gene <- as.character(as.matrix(data))
 	   goodcols <- vector()
 	   if(aadata){

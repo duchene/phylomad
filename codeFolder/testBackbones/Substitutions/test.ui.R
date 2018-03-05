@@ -10,6 +10,8 @@ tabsetPanel(
 		       radioButtons("dataFormat", label = "",
                        choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
 		       br(),
+		       checkboxInput("cleanOrNot", label = tags$span(h5("Remove sites with missing data from each alignment"), tipify(bsButton("pB1", "?", style = "inverse", size = "extra-small"), placement = "right", "Removing sites with missing data is important for accurate estimation of test statistics. Only uncheck this box if the alignments only have a negligible amount of missing data.")), value = TRUE),
+			   br(),
 		       h4("Select any input tree(s) (or leave blank)"),
 		       fileInput("treesPath", label = "", multiple = T),
 		       br(),
