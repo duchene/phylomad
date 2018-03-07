@@ -44,7 +44,7 @@ if("satPlots" %in% whatToOutput){
 	pdf("saturation.plots.pdf", height = 5, width = 5, useDingbats = F)
 	for(i in 1:length(locinames)){
 		if(input$dataTreatment == "codonpos"){
-			plot(geneResults[[i]][[2]][[2]][[1]] ~ geneResults[[i]][[2]][[2]][[2]], pch = 20, col = "purple", ylab = "Uncorrected pairwise genetic distances", xlab = "Pairwise distances including the ratio\nof transitions to transversions", main = paste0("Saturation plot for\n", locinames[i]))
+			plot(geneResults[[i]][[2]][[2]][[1]] ~ geneResults[[i]][[2]][[2]][[2]], pch = 20, col = "purple", ylab = "Uncorrected pairwise genetic distances", xlab = "Pairwise distances including the ratio\nof transitions to transversions (Tamura and Nei 1993)", main = paste0("Saturation plot for\n", locinames[i]))
 			abline(lm(geneResults[[i]][[2]][[2]][[1]] ~ 0 + geneResults[[i]][[2]][[2]][[2]]), lwd=2, col = "purple")
 			points(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]], pch = 20, col = "red")
 			abline(lm(geneResults[[i]][[2]][[1]][[1]] ~ 0 + geneResults[[i]][[2]][[1]][[2]]), lwd=2, col = "red")
@@ -52,7 +52,7 @@ if("satPlots" %in% whatToOutput){
 			cor3 <- round(cor.test(geneResults[[i]][[2]][[2]][[1]], geneResults[[i]][[2]][[2]][[2]])$estimate, 3)
 			legend("topleft", legend = c(paste0("1st and 2nd positions, cor = ", cor12), paste0("3rd position, cor = ", cor3)), lty = 1, lwd = 2, col = c("red", "purple"), cex = 0.7)
 		} else {
-			plot(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]], pch = 20, col = "red", ylab = "Uncorrected pairwise genetic distances", xlab = "Pairwise distances including the ratio\nof transitions to transversions", main = paste0("Saturation plot for\n", locinames[i]))
+			plot(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]], pch = 20, col = "red", ylab = "Uncorrected pairwise genetic distances", xlab = "Pairwise distances including the ratio\nof transitions to transversions (Tamura and Nei 1993)", main = paste0("Saturation plot for\n", locinames[i]))
 			abline(lm(geneResults[[i]][[2]][[1]][[1]] ~ 0 + geneResults[[i]][[2]][[1]][[2]]), lwd=2, col = "red")
 			corlocus <- round(cor.test(geneResults[[i]][[2]][[1]][[1]], geneResults[[i]][[2]][[1]][[2]])$estimate, 3)
 			legend("topleft", legend = paste0("cor = ", corlocus), cex = 0.7)
