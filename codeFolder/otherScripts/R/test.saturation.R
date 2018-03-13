@@ -10,13 +10,30 @@ test.saturation <- function(loci, format = "phylip", para = parallelise, ncore =
 	     satres <- list()
 	     if(plotdat) distdat <- list()
 	     
+	     get.saturation.index <- function(alignment){
+                        locentr.obs <- mean(apply(alignment, function(x){
+				p <- as.numeric(table(as.character(x)))
+                        	p <- p / sum(p)
+                        	siteentr <- sum(-p*log(p))
+                        	return(siteentr)
+			}))
+			p.loc <- as.numeric(table(as.charater(alignment)))
+			p.loc <- p.loc / sum(p.loc)
+			locentr.exp <- sum(-p*log(p))
+			SI <- locentr.obs / locentr.exp 
+             		return(SI)
+	     }
+	     
+	     
 	     for(i in 1:length(genebin)){
 	     
-		## FILL IN CODE TO TEST SATURATION!!
+		#### FILL IN CODE TO TEST SATURATION!! ####
+		
+		locus.sat.index <- get.saturation.index(genebin[[i]])
 
 	     	satres[[i]] <- "banana"
 	     
-		##
+		###########################################
 	     	
 		if(plotdat){
 			dist.raw <- dist.dna(genebin[[i]], model = "raw", pairwise.deletion = T)
