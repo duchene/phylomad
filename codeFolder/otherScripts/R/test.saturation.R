@@ -11,7 +11,7 @@ test.saturation <- function(loci, format = "phylip", para = parallelise, ncore =
 	     if(plotdat) distdat <- list()
 	     
 	     get.saturation.index <- function(alignment){
-                        locentr.obs <- mean(apply(alignment, function(x){
+                        locentr.obs <- mean(apply(alignment, 2, function(x){
 				p <- as.numeric(table(as.character(x)))
                         	p <- p / sum(p)
                         	siteentr <- sum(-p*log(p))
