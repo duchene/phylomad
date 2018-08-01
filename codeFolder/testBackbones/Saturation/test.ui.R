@@ -18,17 +18,28 @@ tabsetPanel(
 		       ),
 		       column(1))
         ),
-	tabPanel("Output and START",
+	tabPanel("Output",
+		       fluidRow(
+		       column(1),
+		       column(10,
+		       h4("Select saturation statistics"),
+                       checkboxGroupInput("whatToOutput", label = "",
+                       choices = list("Entropy" = "enth", "Consistency Index" = "cith", "Compression statistic" = "comth"), selected = c("enth", "cith", "comth")),
+                       br(),
+		       h4("Select the output desired"),
+                       checkboxGroupInput("whatToOutput", label = "",
+                       choices = list("Test of saturation for loci" = "tsat", "Saturation plots" = "satPlots", "Multi-locus saturation plots" = "multiSatPlots"), selected = c("tsat", "satPlots")),
+                       br(),
+                       h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"),
+                       textInput("outputFolder", label = "", value = paste0(getwd(), "/../outputFolder/"))
+		       ),
+		       column(1))
+	
+	),	
+	tabPanel("Other options and START",
 		       fluidRow(
                        column(1),
                        column(10,
-		       h4("Select the output desired"),
-		       checkboxGroupInput("whatToOutput", label = "",
-                       choices = list("Test of saturation for loci" = "tsat", "Saturation plots" = "satPlots", "Multi-locus saturation plots" = "multiSatPlots"), selected = c("tsat", "satPlots")),
-		       br(),
-		       h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"),
-		       textInput("outputFolder", label = "", value = paste0(getwd(), "/../outputFolder/")),
-		       br(),
 		       h4("Select the number of computer cores to be used"),
 		       numericInput("Ncores", label = h5("Multi-core assessments can only be aborted at the completion of a locus assessment"),
                        value = 1),

@@ -13,6 +13,8 @@ get.chisqstat <- function(al){
 	        for(i in 1:nrow(al)) cont[i,] <- table(al[i,])[c("a", "c", "g", "t")]
 	}
 	
+	cont[which(is.na(cont))] <- 0
+	
 	chisqstat <- chisq.test(cont)$statistic
 
         return(chisqstat)
