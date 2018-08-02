@@ -49,8 +49,6 @@ if("tsat" %in% whatToOutput){
 
         if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- locinames
 	
-	save(geneResults, file = "banana.Rdata")
-	
 	write.csv(restab, file = "saturation.test.results.csv")
 }
 
