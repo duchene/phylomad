@@ -1,5 +1,10 @@
 require(ape)
 
+
+get.entropy.test <- function(al){
+
+### Create functions needed ###
+
 calc_term <- function(n, p_i){
 
   res = c()
@@ -42,7 +47,8 @@ calculate_estimated_entropy <- function(site_wise_info, mat){
   return(estimated_entropy)
 }
 
-get.entropy.test <- function(al){
+### Functions needed created. Statstic calculated below ###
+
   mat <- as.character(al)
   
   base_counts <- as.vector(table(mat))

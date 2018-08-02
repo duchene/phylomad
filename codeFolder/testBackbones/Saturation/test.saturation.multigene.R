@@ -1,5 +1,6 @@
 source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/test.saturation.R")
+source("otherScripts/R/runPhyML.R")
 source("testStatistics/get.entropy.test.R")
 source("testStatistics/get.ci.test.R")
 source("testStatistics/get.comp.test.R")
@@ -31,14 +32,25 @@ if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 if("satPlots" %in% whatToOutput | "multiSatPlots" %in% whatToOutput) plotdat <- T else plotdat <- F
 
-geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input = saturationStats, plotdat = plotdat)
+geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, phymlPath = phymlPath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, funclist = funclist)
 
 #### Output missing
 
 locinames <- as.character(input$dataPath[, 1])
 
 if("tsat" %in% whatToOutput){
-	write.csv(geneResults, file = "saturation.tests.phylomad")
+	
+	if(length(geneResults) > 1){
+		restabs <- lapply(geneResults, function(x) x[[1]][[1]])
+		restab <- do.call(rbind, restabs)
+	} else {
+	        restab <- matrix(geneResults[[1]][[1]][[1]], 1)
+		colnames(restab) <- names(geneResults[[1]][[1]][[1]])
+	}
+
+        if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- loci
+
+	write.csv(restab, file = "saturation.test.results.csv")
 }
 
 if("satPlots" %in% whatToOutput){

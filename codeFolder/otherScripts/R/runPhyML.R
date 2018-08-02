@@ -16,7 +16,7 @@ runPhyML <- function(sdata, format = 'phylip', aadata = aadata, temp_name, phyml
         fileName = sdata
     }
     print(paste("Locus", fileName, "was read successfully."))
-
+    
     if(length(grep("[+]G", model)) == 1) RAS <- " -a e " else RAS <- " -c 1 "
 
     if(length(grep('JC', model)) == 1){
@@ -36,7 +36,7 @@ runPhyML <- function(sdata, format = 'phylip', aadata = aadata, temp_name, phyml
     }
 
     if(aadata) aasetting <- " -d aa" else aasetting <- ""
-
+    
     if(is.null(tree)){
     	phymlCommand = paste0(phymlPath, aasetting, " -m ", phymlOptions, RAS, "--q -i ", fileName)
     } else {

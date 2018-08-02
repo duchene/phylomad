@@ -1,6 +1,6 @@
 require(phangorn)
 
-ci.test <- function(phy, al){
+get.ci.test <- function(phy, al){
 	
 	invarsites <- which(apply(as.character(al), 2, function(x) length(unique(x))) == 1)
 	if(length(invarsites) > 0) al <- al[,-invarsites] 
