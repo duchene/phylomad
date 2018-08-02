@@ -41,15 +41,16 @@ locinames <- as.character(input$dataPath[, 1])
 if("tsat" %in% whatToOutput){
 	
 	if(length(geneResults) > 1){
-		restabs <- lapply(geneResults, function(x) x[[1]][[1]])
+		restabs <- lapply(geneResults, function(x) x[[1]])
 		restab <- do.call(rbind, restabs)
 	} else {
-	        restab <- matrix(geneResults[[1]][[1]][[1]], 1)
-		colnames(restab) <- names(geneResults[[1]][[1]][[1]])
+	        restab <- geneResults[[1]][[1]]
 	}
 
-        if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- loci
-
+        if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- locinames
+	
+	save(geneResults, file = "banana.Rdata")
+	
 	write.csv(restab, file = "saturation.test.results.csv")
 }
 

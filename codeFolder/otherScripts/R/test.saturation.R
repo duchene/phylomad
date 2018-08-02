@@ -66,11 +66,15 @@ test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para
 	     	}
 	     }
 	     
-	     if(length(genesres) > 1) genesrestab <- do.call(rbind, genesres) else genesrestab <- matrix(genesres[[1]], 1, 4)
+	     if(length(genesres) > 1){
+	     		genesrestab <- do.call(rbind, genesres)
+	     } else {
+			genesrestab <- matrix(genesres[[1]], 1, length(satres)*4)
+			colnames(genesrestab) <- names(genesres[[1]])
+	     }
 	     
-	     if(length(genebin) > 1) rownames(genesrestab) <- paste(loc, names(genebin), sep = "_") else rownames(genesrestab) <- loc
+             if(plotdat) tRep <- list(saturation.test.results = genesrestab, genetic.distance.data = distdat) else tRep <- list(saturation.test.results = genesrestab)
 	     
-             if(plotdat) tRep <- list(saturation.test.results = genesres, genetic.distance.data = distdat) else tRep <- list(saturation.test.results = satres)
              return(tRep)
          }
 
