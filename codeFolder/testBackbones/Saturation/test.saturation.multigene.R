@@ -1,6 +1,9 @@
 source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/test.saturation.R")
-
+source("testStatistics/get.entropy.test.R")
+source("testStatistics/get.ci.test.R")
+source("testStatistics/get.comp.test.R")
+load("testStatistics/thresholdFunctions.Rdata")
 
 initial.dir <- getwd()
 
@@ -28,16 +31,14 @@ if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 if("satPlots" %in% whatToOutput | "multiSatPlots" %in% whatToOutput) plotdat <- T else plotdat <- F
 
-geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, plotdat = plotdat)
+geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input = saturationStats, plotdat = plotdat)
 
 #### Output missing
 
 locinames <- as.character(input$dataPath[, 1])
 
 if("tsat" %in% whatToOutput){
-	
-	#saturation.result <- 
-	#write.csv(saturation.result, file = "saturation.test.phylomad")
+	write.csv(geneResults, file = "saturation.tests.phylomad")
 }
 
 if("satPlots" %in% whatToOutput){
