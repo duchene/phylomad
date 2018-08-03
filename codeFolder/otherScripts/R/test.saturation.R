@@ -1,9 +1,9 @@
 
-test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para = parallelise, ncore = 1, clean = "cleandata", stats = stats, plotdat = F, funclist = funclist){
+test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para = parallelise, ncore = 1, clean = "cleandata", stats = stats, plotdat = F, linmods = funclist){
 	 
 	 aadata <- F
 	 
-	 runLoc <- function(loc, format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat, satfunclist = funclist){
+	 runLoc <- function(loc, format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat, satfunclist = linmods){
              if(clean == "cleandata") cleanlogical <- T else cleanlogical <- F
 	     genebin <- list(clean.gene(sdata = loc, format = format, aadata = aadata, clean = cleanlogical))
 	     
@@ -93,7 +93,7 @@ test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para
          if(!para){
 
            for(i in 1:length(loci)){
-	       reslist[[i]] <- runLoc(loci[i], format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat)
+	       reslist[[i]] <- runLoc(loci[i], format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat, satfunclist = linmods)
            }
 
          } else {
@@ -104,7 +104,7 @@ test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para
            require(doParallel)
            cl <- makeCluster(ncore)
            registerDoParallel(cl)
-           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'funclist', 'runPhyML', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% runLoc(x, format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat)
+           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runPhyML', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% runLoc(x, format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat, satfunclist = linmods)
            stopCluster(cl)
            print("Parallel computing ended successfully")
            ### END PARALLEL COMPUTING

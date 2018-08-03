@@ -32,13 +32,11 @@ if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 if("satPlots" %in% whatToOutput | "multiSatPlots" %in% whatToOutput) plotdat <- T else plotdat <- F
 
-geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, phymlPath = phymlPath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, funclist = funclist)
+geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, phymlPath = phymlPath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, linmods = funclist)
 
 #### Output missing
 
 locinames <- as.character(input$dataPath[, 1])
-
-
 	
 if(length(geneResults) > 1){
 	restabs <- lapply(geneResults, function(x) x[[1]])
@@ -47,9 +45,9 @@ if(length(geneResults) > 1){
         restab <- geneResults[[1]][[1]]
 }
 if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- locinames
-rownames(restab) <- gsub("enth", "Entropy", rownames(restab))
-rownames(restab) <- gsub("cith", "CI", rownames(restab))
-rownames(restab) <- gsub("comth", "Compression", rownames(restab))
+colnames(restab) <- gsub("enth", "Entropy", colnames(restab))
+colnames(restab) <- gsub("cith", "CI", colnames(restab))
+colnames(restab) <- gsub("comth", "Compression", colnames(restab))
 
 if("tsat" %in% whatToOutput){
 	write.csv(restab, file = "saturation.test.results.csv")
@@ -78,7 +76,33 @@ if("satPlots" %in% whatToOutput){
 }
 
 if("multiSatPlots" %in% whatToOutput){
-	
+	pdf("multilocus.plots.pdf", height = 7, width = 7, useDingbats = F)
+	if(input$dataTreatment == "codonpos") colsplot <- c("red", "purple") else colsplot <- "black"
+	if("t_Entropy" %in% colnames(restab)){
+	      pchsplot <- restab[,"Risk_Entropy"]
+	      pchsplot[which(pchsplot == "LOW")] <- 16
+	      pchsplot[which(pchsplot == "MEDIUM")] <- 17
+	      pchsplot[which(pchsplot == "HIGH")] <- 18
+	      plot(restab[,"N_sites"], restab[,"t_Entropy"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nEntropy statistic", xlab = "N sites", ylab = "t (entropy statistic)")
+	      legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3"), col = c(rep("black", 5), "red", "purple"))
+	}
+	if("t_CI" %in% colnames(restab)){
+              pchsplot <- restab[,"Risk_CI"]
+              pchsplot[which(pchsplot == "LOW")] <- 16
+              pchsplot[which(pchsplot == "MEDIUM")] <- 17
+              pchsplot[which(pchsplot == "HIGH")] <- 18
+              plot(restab[,"N_sites"], restab[,"t_CI"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nConsistency Index", xlab = "N sites", ylab = "t (consistency index)")
+              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3"), col = c(rep("black", 5), "red", "purple"))
+        }
+	if("t_Compression" %in% colnames(restab)){
+              pchsplot <- restab[,"Risk_Compression"]
+              pchsplot[which(pchsplot == "LOW")] <- 16
+              pchsplot[which(pchsplot == "MEDIUM")] <- 17
+              pchsplot[which(pchsplot == "HIGH")] <- 18
+              plot(restab[,"N_sites"], restab[,"t_Compression"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nCompression statistic", xlab = "N sites", ylab = "t (compression statistic)")
+              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3"), col = c(rep("black", 5), "red", "purple"))
+        }
+	dev.off()
 }
 
 setwd(initial.dir)
