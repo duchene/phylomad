@@ -20,56 +20,66 @@ test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para
 	     
 	     for(i in 1:length(genebin)){
 	     
+		if("cith" %in% stats | "comth" %in% stats){
+			dist.tn93 <- dist.dna(genebin[[i]], model = "TN93", pairwise.deletion = T)
+			tree <- njs(dist.tn93)
+		}
+		
+                if(plotdat){
+                        dist.raw <- dist.dna(genebin[[i]], model = "raw", pairwise.deletion = T)
+                        if(!"cith" %in% stats | !"comth" %in% stats) dist.tn93 <- dist.dna(genebin[[i]], model = "TN93", pairwise.deletion = T)
+                        distdat[[i]] <- list(dist.raw, dist.tn93)
+		}
+
 		#### TESTS OF SATURATION ####
 		
 		satres <- list()
 		
-		if("cith" %in% stats | "comth" %in% stats){
-			  tempalname <- paste(sample(letters, 5), collapse = "")
-			  phymlres <- runPhyML(genebin[[i]], format = "bin", aadata = aadata, temp_name = tempalname, phymlPath = phymlPath, model = "GTR+G")
-			  system(paste("rm", tempalname))
-		}
+#		if("cith" %in% stats | "comth" %in% stats){
+#			  tempalname <- paste(sample(letters, 5), collapse = "")
+#			  phymlres <- runPhyML(genebin[[i]], format = "bin", aadata = aadata, temp_name = tempalname, phymlPath = phymlPath, model = "GTR+G")
+#			  system(paste("rm", tempalname))
+#			  tree <- phymlres$tree
+#		}
+		
+		Nsites <- ncol(genebin[[i]])
+		Ntax <- nrow(genebin[[i]])
 		
         	if("enth" %in% stats){
                 	  satres$enres <- vector()
 			  satres$enres[1] <- get.entropy.test(genebin[[i]])$t
-			  satres$enres[2] <- getSatThreshold(ncol(genebin[[i]]), nrow(genebin[[i]]), satfunclist[["th1entsqrt"]])
-			  satres$enres[3] <- getSatThreshold(ncol(genebin[[i]]), nrow(genebin[[i]]), satfunclist[["th2entsqrt"]])
+			  satres$enres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[["th1entsqrt"]])
+			  satres$enres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[["th2entsqrt"]])
 			  satres$enres <- round(satres$enres, 2)
 		}
         	if("cith" %in% stats){
 			  satres$cires <- vector()
-			  satres$cires[1] <- get.ci.test(phymlres$tree, genebin[[i]])$t * (-1)
-			  satres$cires[2] <- getSatThreshold(ncol(genebin[[i]]), nrow(genebin[[i]]), satfunclist[["th1cisqrt"]])
-                          satres$cires[3] <- getSatThreshold(ncol(genebin[[i]]), nrow(genebin[[i]]), satfunclist[["th2cisqrt"]])
+			  satres$cires[1] <- get.ci.test(tree, genebin[[i]])$t * (-1)
+			  satres$cires[2] <- getSatThreshold(Nsites, Ntax, satfunclist[["th1cisqrt"]])
+                          satres$cires[3] <- getSatThreshold(Nsites, Ntax, satfunclist[["th2cisqrt"]])
 			  satres$cires <- round(satres$cires, 2)
         	}
         	if("comth" %in% stats){
 			   satres$comres <- vector()
-                	   satres$comres[1] <- get.comp.test(phymlres$tree, genebin[[i]])$t * (-1)
-			   satres$comres[2] <- getSatThreshold(ncol(genebin[[i]]), nrow(genebin[[i]]), satfunclist[["th1comsqrt"]])
-                           satres$comres[3] <- getSatThreshold(ncol(genebin[[i]]), nrow(genebin[[i]]), satfunclist[["th2comsqrt"]])
+                	   satres$comres[1] <- get.comp.test(tree, genebin[[i]])$t * (-1)
+			   satres$comres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[["th1comsqrt"]])
+                           satres$comres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[["th2comsqrt"]])
 			   satres$comres <- round(satres$comres, 2)
         	}
 		
 		for(j in 1:length(satres)) if(satres[[j]][1] > satres[[j]][2]) satres[[j]][4] <- "LOW" else if(satres[[j]][1] < satres[[j]][3]) satres[[j]][4] <- "HIGH" else satres[[j]][4] <- "MEDIUM"
 
-		genesres[[i]] <- do.call(c, satres)
-		names(genesres[[i]]) <- as.character(sapply(stats, function(x) paste(c("t", "t_moderate_risk_threshold", "t_high_risk_threshold", "Risk"), x, sep = "_")))
+		genesres[[i]] <- c(Nsites, Ntax, do.call(c, satres))
+		names(genesres[[i]]) <- c("N_sites", "N_taxa", as.character(sapply(stats, function(x) paste(c("t", "t_moderate_risk_threshold", "t_high_risk_threshold", "Risk"), x, sep = "_"))))
 		
 		###########################################
-	     	
-		if(plotdat){
-			dist.raw <- dist.dna(genebin[[i]], model = "raw", pairwise.deletion = T)
-	     		dist.tn93 <- dist.dna(genebin[[i]], model = "TN93", pairwise.deletion = T)
-	     		distdat[[i]] <- list(dist.raw, dist.tn93)
-	     	}
+
 	     }
 	     
 	     if(length(genesres) > 1){
 	     		genesrestab <- do.call(rbind, genesres)
 	     } else {
-			genesrestab <- matrix(genesres[[1]], 1, length(satres)*4)
+			genesrestab <- matrix(genesres[[1]], 1, 2+(length(satres)*4))
 			colnames(genesrestab) <- names(genesres[[1]])
 	     }
 	     

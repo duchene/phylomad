@@ -49,14 +49,12 @@ calculate_estimated_entropy <- function(site_wise_info, mat){
 
 ### Functions needed created. Statstic calculated below ###
 
-  mat <- as.character(al)
+  mat <- tolower(as.character(al))
   
-  base_counts <- as.vector(table(mat))
-  base_freqs <- base_counts / prod(dim(mat))
-  base_freqs #observed base frequencies #
+  base_freqs <- base.freq(al) #observed base frequencies #
   
-  n <- dim(mat)[1] # the number of taxa# 
-  num_seqs <- dim(mat)[2] #number of sites#
+  n <- dim(al)[1] # the number of taxa# 
+  num_seqs <- dim(al)[2] #number of sites#
   
   null_entropy <- multinomial_entropy(n, base_freqs)  #the entropy expected under saturation#
   
