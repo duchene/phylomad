@@ -9,7 +9,7 @@ calc_term <- function(n, p_i){
 
   res = c()
   for(i in seq(1,n,1)){
-    res[i] = choose(n,i)*p_i^(i)*((1-p_i)^(n -i))*log(factorial(i))
+    res[i] = choose(n,i)*p_i^(i)*((1-p_i)^(n -i))*lfactorial(i)
   }
   
   return(sum(res))
@@ -18,7 +18,7 @@ calc_term <- function(n, p_i){
 multinomial_entropy <- function(n, p){
   
   term_3 = sum(sapply(p, FUN = calc_term, n = n))
-  calc <- -log(factorial(n)) - n*sum(p*log(p)) + term_3
+  calc <- -lfactorial(n) - n*sum(p*log(p)) + term_3
     
   return(calc)
 }

@@ -38,17 +38,20 @@ geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format 
 
 locinames <- as.character(input$dataPath[, 1])
 
-if("tsat" %in% whatToOutput){
-	
-	if(length(geneResults) > 1){
-		restabs <- lapply(geneResults, function(x) x[[1]])
-		restab <- do.call(rbind, restabs)
-	} else {
-	        restab <- geneResults[[1]][[1]]
-	}
 
-        if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- locinames
 	
+if(length(geneResults) > 1){
+	restabs <- lapply(geneResults, function(x) x[[1]])
+	restab <- do.call(rbind, restabs)
+} else {
+        restab <- geneResults[[1]][[1]]
+}
+if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- locinames
+rownames(restab) <- gsub("enth", "Entropy", rownames(restab))
+rownames(restab) <- gsub("cith", "CI", rownames(restab))
+rownames(restab) <- gsub("comth", "Compression", rownames(restab))
+
+if("tsat" %in% whatToOutput){
 	write.csv(restab, file = "saturation.test.results.csv")
 }
 
