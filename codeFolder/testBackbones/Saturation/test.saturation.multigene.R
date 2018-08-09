@@ -77,30 +77,52 @@ if("satPlots" %in% whatToOutput){
 
 if("multiSatPlots" %in% whatToOutput){
 	pdf("multilocus.plots.pdf", height = 7, width = 7, useDingbats = F)
-	if(input$dataTreatment == "codonpos") colsplot <- c("red", "purple") else colsplot <- "black"
+	if(input$dataTreatment == "codonpos"){
+	      colsplot <- c("red", "purple")
+	      risklegend <- c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3")
+	      risklegcol <- c(rep("black", 5), "red", "purple")
+	} else {
+	      colsplot <- rep("black", nrow(restab))
+	      risklegend <- c("Risk", "Low", "Medium", "High")
+	      risklegcol <- c("black", "blue", "black", "red")
+	}
 	if("t_Entropy" %in% colnames(restab)){
+	      if(input$dataTreatment != "codonpos"){
+	      		colsplot[which(restab[, "Risk_Entropy"] == "HIGH")] <- "red"
+			colsplot[which(restab[, "Risk_Entropy"] == "LOW")] <- "blue"
+	      }
 	      pchsplot <- restab[,"Risk_Entropy"]
 	      pchsplot[which(pchsplot == "LOW")] <- 16
 	      pchsplot[which(pchsplot == "MEDIUM")] <- 17
 	      pchsplot[which(pchsplot == "HIGH")] <- 18
-	      plot(restab[,"N_sites"], restab[,"t_Entropy"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nEntropy statistic", xlab = "N sites", ylab = "t (entropy statistic)")
-	      legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3"), col = c(rep("black", 5), "red", "purple"))
+	      plot(restab[, "N_sites"], restab[, "t_Entropy"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nEntropy statistic", xlab = "N sites", ylab = "t (entropy statistic)")
+	      legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = risklegend, col = risklegcol)
 	}
 	if("t_CI" %in% colnames(restab)){
-              pchsplot <- restab[,"Risk_CI"]
+	      if(input$dataTreatment != "codonpos"){
+	      		colsplot <- rep("black", nrow(restab))
+			colsplot[which(restab[, "Risk_CI"] == "HIGH")] <- "red"
+			colsplot[which(restab[, "Risk_CI"] == "LOW")] <- "blue"
+              }
+              pchsplot <- restab[, "Risk_CI"]
               pchsplot[which(pchsplot == "LOW")] <- 16
               pchsplot[which(pchsplot == "MEDIUM")] <- 17
               pchsplot[which(pchsplot == "HIGH")] <- 18
-              plot(restab[,"N_sites"], restab[,"t_CI"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nConsistency Index", xlab = "N sites", ylab = "t (consistency index)")
-              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3"), col = c(rep("black", 5), "red", "purple"))
+              plot(restab[, "N_sites"], restab[, "t_CI"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nConsistency Index", xlab = "N sites", ylab = "t (consistency index)")
+              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = risklegend, col = risklegcol)
         }
 	if("t_Compression" %in% colnames(restab)){
+	      if(input$dataTreatment != "codonpos"){
+	      		colsplot <- rep("black", nrow(restab))
+              		colsplot[which(restab[, "Risk_Compression"] == "HIGH")] <- "red"
+            		colsplot[which(restab[, "Risk_Compression"] == "LOW")] <- "blue"
+              }
               pchsplot <- restab[,"Risk_Compression"]
               pchsplot[which(pchsplot == "LOW")] <- 16
               pchsplot[which(pchsplot == "MEDIUM")] <- 17
               pchsplot[which(pchsplot == "HIGH")] <- 18
-              plot(restab[,"N_sites"], restab[,"t_Compression"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nCompression statistic", xlab = "N sites", ylab = "t (compression statistic)")
-              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3"), col = c(rep("black", 5), "red", "purple"))
+              plot(restab[, "N_sites"], restab[, "t_Compression"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nCompression statistic", xlab = "N sites", ylab = "t (compression statistic)")
+              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = risklegend, col = risklegcol)
         }
 	dev.off()
 }
