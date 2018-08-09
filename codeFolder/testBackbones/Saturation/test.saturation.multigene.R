@@ -76,7 +76,7 @@ if("satPlots" %in% whatToOutput){
 }
 
 if("multiSatPlots" %in% whatToOutput){
-	pdf("multilocus.plots.pdf", height = 7, width = 7, useDingbats = F)
+	pdf("multilocus.plots.pdf", height = 5, width = 5, useDingbats = F)
 	if(input$dataTreatment == "codonpos"){
 	      colsplot <- c("red", "purple")
 	      risklegend <- c("Risk", "Low", "Medium", "High", "Codon position", "1+2", "3")
