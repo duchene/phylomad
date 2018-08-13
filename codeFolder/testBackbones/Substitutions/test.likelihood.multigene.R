@@ -154,7 +154,7 @@ if(nrow(input$dataPath) > 1 && "pvals" %in% whatToOutput || "simple" %in% whatTo
 if("multiTestPlots" %in% whatToOutput){
 	pdf("multi.locus.results.plots.pdf", height = 4, width = 4, useDingbats = F)
 	if("chisq" %in% selectedStats && !any(allOutput[,"chisq.stdev.from.pred.dist"] == Inf) && !any(is.na(allOutput[,"chisq.stdev.from.pred.dist"]))){ 
-		plot(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"]), locilengths, main = "Chi-squared statistic", xlab = "Standard deviations from mean\nof predictive distribution (SDPD)", ylab = "Locus length (number of sites)", pch = 19, xlim = c(if(min(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"])) < 0) min(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"])) else 0, max(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"]))), ylim = c(0, if(max(locilengths) < 500) 500 else if(max(locilengths) < 5000) 5000 else max(locilengths)))
+		plot(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"]), log(locilengths), main = "Chi-squared statistic", xlab = "Standard deviations from mean\nof predictive distribution (SDPD)", ylab = "Log locus length (number of sites)", pch = 19, xlim = c(if(min(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"])) < 0) min(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"])) else 0, max(as.numeric(allOutput[,"chisq.stdev.from.pred.dist"]))), ylim = c(0, if(max(locilengths) < 500) 500 else if(max(locilengths) < 5000) 5000 else max(locilengths)))
 		abline(lm(biasrisk[[2]][,"seqlen.chisq"] ~ biasrisk[[2]][,"minD.chisq"]), lwd = 2, col = "orange")
 		abline(lm(biasrisk[[2]][,"seqlen.chisq"] ~ biasrisk[[2]][,"maxD.chisq"]), lwd = 2, col = "red")
 		points(biasrisk[[2]][,"minD.chisq"], biasrisk[[2]][,"seqlen.chisq"], pch = 19, col = "orange")
