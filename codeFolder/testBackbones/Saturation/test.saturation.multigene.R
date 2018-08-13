@@ -87,11 +87,11 @@ if("multiSatPlots" %in% whatToOutput){
 	}
 	if("t_Entropy" %in% colnames(restab)){
 	      resprops <- c(length(which(restab[, "Risk_Entropy"] == "LOW")), length(which(restab[, "Risk_Entropy"] == "MEDIUM")), length(which(restab[, "Risk_Entropy"] == "HIGH")))/nrow(restab)
-	      risklegendent <- paste0(risklegend, " (", as.character(resprops), ")")
+	      risklegendent <- paste0(risklegend, " (", as.character(round(resprops, 2)), ")")
 	      if(input$dataTreatment == "codonpos"){
-	      		risklegendent <- c("Risk", risklegendent, "Codon position", "1+2", "3")
+	      		risklegendent <- c("Risk (prop. loci)", risklegendent, "Codon position", "1+2", "3")
 	      } else {
-	      		risklegendent <- c("Risk", risklegendent)
+	      		risklegendent <- c("Risk (prop. loci)", risklegendent)
 			colsplot[which(restab[, "Risk_Entropy"] == "HIGH")] <- "red"
 			colsplot[which(restab[, "Risk_Entropy"] == "LOW")] <- "blue"
 	      }
@@ -104,11 +104,11 @@ if("multiSatPlots" %in% whatToOutput){
 	}
 	if("t_CI" %in% colnames(restab)){
 	      resprops <- c(length(which(restab[, "Risk_CI"] == "LOW")), length(which(restab[, "Risk_CI"] == "MEDIUM")), length(which(restab[, "Risk_CI"] == "HIGH")))/nrow(restab)
-	      risklegendci <- paste0(risklegend, " (", as.character(resprops), ")")
+	      risklegendci <- paste0(risklegend, " (", as.character(round(resprops, 2)), ")")
               if(input$dataTreatment == "codonpos"){
-                        risklegendci <- c("Risk", risklegendci, "Codon position", "1+2", "3")
+                        risklegendci <- c("Risk (prop. loci)", risklegendci, "Codon position", "1+2", "3")
               } else {
-			risklegendci <- c("Risk", risklegendci)
+			risklegendci <- c("Risk (prop. loci)", risklegendci)
 	      		colsplot <- rep("black", nrow(restab))
 			colsplot[which(restab[, "Risk_CI"] == "HIGH")] <- "red"
 			colsplot[which(restab[, "Risk_CI"] == "LOW")] <- "blue"
@@ -122,11 +122,11 @@ if("multiSatPlots" %in% whatToOutput){
         }
 	if("t_Compression" %in% colnames(restab)){
 	      resprops <- c(length(which(restab[, "Risk_Compression"] == "LOW")), length(which(restab[, "Risk_Compression"] == "MEDIUM")), length(which(restab[, "Risk_Compression"] == "HIGH")))/nrow(restab)
-	      risklegendcomp <- paste0(risklegend, " (", as.character(resprops), ")")
+	      risklegendcomp <- paste0(risklegend, " (", as.character(round(resprops, 2)), ")")
               if(input$dataTreatment == "codonpos"){
-                        risklegendcomp <- c("Risk", risklegendcomp, "Codon position", "1+2", "3")
+                        risklegendcomp <- c("Risk (prop. loci)", risklegendcomp, "Codon position", "1+2", "3")
               } else {
-			risklegendcomp <- c("Risk", risklegendcomp)
+			risklegendcomp <- c("Risk (prop. loci)", risklegendcomp)
 	      		colsplot <- rep("black", nrow(restab))
               		colsplot[which(restab[, "Risk_Compression"] == "HIGH")] <- "red"
             		colsplot[which(restab[, "Risk_Compression"] == "LOW")] <- "blue"
