@@ -4,7 +4,7 @@ clean.gene <- function(sdata, format = "phylip", aadata = F, clean = T){
            } else if(format == "fasta"){
                   if(aadata) data <- read.aa(sdata, format = "fasta") else data <- read.dna(sdata, format = "fasta")
            } else if(format == "nexus"){
-		  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.DNAbin(read.nexus.data(sdata))
+		  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.matrix(as.DNAbin(read.nexus.data(sdata)))
 	   }
 	   
 	   if(!clean) return(data)
