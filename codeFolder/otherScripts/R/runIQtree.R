@@ -19,8 +19,6 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
         fileName = sdata
     }
     print(paste("Locus", fileName, "was read successfully."))
-    
-    # Check dayhoff and JTT and LG settings in iqtree
 
     if(is.null(tree)){
         iqtreeCommand = paste0(iqtreePath, " -s ", fileName, " -m ", model, " -bb 1000")
@@ -36,7 +34,7 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
     
     allout <- readLines(paste0(fileName, ".iqtree"))
 
-    system(paste0("rm ", fileName, ".ckp.gz ", fileName, ".bionj ", fileName, ".log ", fileName, ".mldist ", fileName, ".treefile ", fileName, ".contree ", fileName, ".splits.nex ", fileName, ".iqtree"))
+    system(paste0("rm ", fileName, ".ckp.gz ", fileName, ".bionj ", fileName, ".log ", fileName, ".mldist ", fileName, ".treefile ", fileName, ".contree ", fileName, ".splits.nex "))#, fileName, ".iqtree"))
        
        res <- list()
        
@@ -50,7 +48,29 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
        trlen <- grep("Total tree length", allout, value = T)
        res$treeLength <- as.numeric(gsub(".* ", "", trlen))
 
-       # Add here the model p
+       if(length(grep("HKY|GTR", model))==1){
+        	piLocation <- grep('State frequencies', allout)+2
+        	piParams <- as.numeric(gsub('.* ', '', allout[(piLocation):(piLocation+3)]))
+        	res$piParams <-  piParams
+       }
+
+       if(length(grep("[+]G", model))==1){
+        	alphaLocation <- grep('Gamma shape alpha', allout)
+        	alphaParam <- as.numeric(gsub(".* ", "", allout[alphaLocation]))
+       		res$alphaParam <- alphaParam
+       }
+
+       if(length(grep("GTR", model))==1){
+        	gtrLocation <- grep('Rate parameter R', allout)+2
+        	gtrMatrix <- as.numeric(gsub('.* ', '',  allout[(gtrLocation):(gtrLocation+5)]))
+        	res$gtrMatrix <-  gtrMatrix
+       }
+
+       if(length(grep("HKY", model))==1){
+        	trtvLocation <- grep('A-G:', allout)
+        	trtvRatio <- as.numeric(gsub(".* ", "", allout[trtvLocation]))
+        	res$trtvRatio <-  trtvRatio
+       }
 
        likse <- grep("Log-likelihood of the tree:", allout, value = T)
        res$likelihood <- as.numeric(gsub(".*:|[(].*| ", "", likse))
