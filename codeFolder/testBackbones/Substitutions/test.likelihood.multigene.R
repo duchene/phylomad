@@ -1,6 +1,6 @@
 source("otherScripts/R/run.gene.R")
 source("otherScripts/R/get.test.statistics.R")
-source("otherScripts/R/runPhyML.R")
+source("otherScripts/R/runIQtree.R")
 source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/get.model.R")
 source("testStatistics/get.chisqstat.R")
@@ -60,7 +60,7 @@ if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".
 
 whatToOutput <- unlist(input$whatToOutput)
 
-geneResults <- run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, phymlPath = phymlPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
+geneResults <- run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
 if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 	geneResMat <- matrix(NA, nrow = 3, ncol = length(selectedStats))
 	

@@ -8,11 +8,11 @@ print(paste("The number of loci in this assessment was", ngene))
 
 if(input$framework == "likelihood"){
 	if(machine == "Darwin"){
-		   phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_macOS-MountainLion")
+		   iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 	} else if(machine == "Windows"){
-		   phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_win32.exe")
+		   iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 	} else if(machine == "Linux"){
-	           phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_linux64")
+	           iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 	}
 
 	print(paste("Analysis was performed in the", input$framework, "statistical framework and the machine type is", if(machine == "Darwin") "mac" else machine))

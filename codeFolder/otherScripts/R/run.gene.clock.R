@@ -1,4 +1,4 @@
-run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format = "phylip", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("imbal", "stemmystat", "df", "trlen"), returnSimPhylo = F, returnSimDat = F){
+run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format = "phylip", iqtreePath, Nsims = 100, para = F, ncore = 1, testStats = c("imbal", "stemmystat", "df", "trlen"), returnSimPhylo = F, returnSimDat = F){
 	 
 	 # Load data
 	 
@@ -96,7 +96,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	 # Get test statistics for empirical data
 	 
 	 
-	 empstats <- get.test.statistics(data, format = "bin", geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	 empstats <- get.test.statistics(data, format = "bin", geneName = "empirical.alignment.phy", iqtreePath = iqtreePath, model = model, stats = testStats, tree = trees[[i]])
          system("rm empirical.alignment.phy")
 
 	 # Get test statistics for simulations
@@ -105,7 +105,7 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]]$alignment, format = "bin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]]$alignment, format = "bin", geneName = paste0("sim.data.", i), iqtreePath = iqtreePath, model = model, stats = testStats, tree = trees[[i]])
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   
@@ -116,13 +116,13 @@ run.gene.clock <- function(sdata, treesFile, logFile, burninpercentage, format =
 	   require(doParallel)
 		
 	   runSim <- function(i){
-	     tRep <- get.test.statistics(sim[[i]]$alignment, format = "bin", geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = trees[[i]])
+	     tRep <- get.test.statistics(sim[[i]]$alignment, format = "bin", geneName = paste0("sim.data.", i), iqtreePath = iqtreePath, model = model, stats = testStats, tree = trees[[i]])
              system(paste0("rm ", paste0("sim.data.", i)))
 	     return(tRep)		
 	   }	  
 	   cl <- makeCluster(ncore)
 	   registerDoParallel(cl)
-	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape', 'apTreeshape'), .export = c('get.test.statistics', 'runPhyML', 'get.df', 'stemmy')) %dopar% runSim(x)
+	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape', 'apTreeshape'), .export = c('get.test.statistics', 'runIQtree', 'get.df', 'stemmy')) %dopar% runSim(x)
 	   sim.stats <- simReps 
 	   stopCluster(cl)
 	   print("Parallel computing ended successfully")

@@ -43,7 +43,7 @@ shinyServer(function(input, output, session) {
 				title = "Are you sure?",
 				h5("This will start model assessment."),
 				h5("Progress will be shown in the terminal window (mac), or in the log file saved in the main PhyloMAd folder (windows)."),
-				h6("License statement. Copyright (C) 2017 Authors. PhyloMAd is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version. This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License found in the folder codeFolder or see www.gnu.org/licenses/ for more details. Users must cite PhyML when using PhyloMAd as indicated in the manual."),
+				h6("License statement. Copyright (C) 2017 Authors. PhyloMAd is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version. This program is distributed in the hope that it will be useful but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License found in the folder codeFolder or see www.gnu.org/licenses/ for more details. Users must cite IQtree when using PhyloMAd as indicated in the manual."),
 				easyClose = F,
 				footer = tagList(
 				       modalButton("Cancel"),

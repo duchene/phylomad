@@ -1,9 +1,9 @@
 
-test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para = parallelise, ncore = 1, clean = "cleandata", stats = stats, plotdat = F, linmods = funclist){
+test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, para = parallelise, ncore = 1, clean = "cleandata", stats = stats, plotdat = F, linmods = funclist){
 	 
 	 aadata <- F
 	 
-	 runLoc <- function(loc, format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat, satfunclist = linmods){
+	 runLoc <- function(loc, format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods){
              if(clean == "cleandata") cleanlogical <- T else cleanlogical <- F
 	     genebin <- list(clean.gene(sdata = loc, format = format, aadata = aadata, clean = cleanlogical))
 	     
@@ -37,9 +37,9 @@ test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para
 		
 #		if("cith" %in% stats | "comth" %in% stats){
 #			  tempalname <- paste(sample(letters, 5), collapse = "")
-#			  phymlres <- runPhyML(genebin[[i]], format = "bin", aadata = aadata, temp_name = tempalname, phymlPath = phymlPath, model = "GTR+G")
+#			  iqtreeres <- runIQtree(genebin[[i]], format = "bin", aadata = aadata, temp_name = tempalname, iqtreePath = iqtreePath, model = "GTR+G")
 #			  system(paste("rm", tempalname))
-#			  tree <- phymlres$tree
+#			  tree <- iqtreeres$tree
 #		}
 		
 		Nsites <- ncol(genebin[[i]])
@@ -93,7 +93,7 @@ test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para
          if(!para){
 
            for(i in 1:length(loci)){
-	       reslist[[i]] <- runLoc(loci[i], format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat, satfunclist = linmods)
+	       reslist[[i]] <- runLoc(loci[i], format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods)
            }
 
          } else {
@@ -104,7 +104,7 @@ test.saturation <- function(loci, format = "phylip", phymlPath = phymlPath, para
            require(doParallel)
            cl <- makeCluster(ncore)
            registerDoParallel(cl)
-           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runPhyML', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% runLoc(x, format = format, aadata = aadata, clean = clean, stats = stats, phymlPath = phymlPath, plotdat = plotdat, satfunclist = linmods)
+           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runIQtree', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% runLoc(x, format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods)
            stopCluster(cl)
            print("Parallel computing ended successfully")
            ### END PARALLEL COMPUTING

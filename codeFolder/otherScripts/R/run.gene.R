@@ -1,4 +1,4 @@
-run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phymlPath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F, tree = NULL){
+run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", iqtreePath, Nsims = 100, para = F, ncore = 1, testStats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "CIbrsup", "trlen", "maha"), returnSimPhylo = F, returnSimDat = F, tree = NULL){
 	 
 	 # Get test statistics
 	 
@@ -12,7 +12,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phym
 	   	  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = "bin", aadata = aadata, geneName = "empirical.alignment.phy", phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	 empstats <- get.test.statistics(data, format = "bin", aadata = aadata, geneName = "empirical.alignment.phy", iqtreePath = iqtreePath, model = model, stats = testStats, tree = tree)
 	 system("rm empirical.alignment.phy")
 
 	 # Simulate data sets.
@@ -60,7 +60,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phym
 	   sim.stats <- list()
 	 
 	   for(i in 1:Nsims){	       
-	       sim.stats[[i]] <- get.test.statistics(sim[[i]], format = "bin", aadata = aadata, geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	       sim.stats[[i]] <- get.test.statistics(sim[[i]], format = "bin", aadata = aadata, geneName = paste0("sim.data.", i), iqtreePath = iqtreePath, model = model, stats = testStats, tree = tree)
 	       system(paste0("rm ", paste0("sim.data.", i)))
 	   }
 	   
@@ -71,13 +71,13 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", phym
 	   require(doParallel)
 		
 	   runSim <- function(i){
-	     tRep <- get.test.statistics(sim[[i]], format = "bin", aadata = aadata, geneName = paste0("sim.data.", i), phymlPath = phymlPath, model = model, stats = testStats, tree = tree)
+	     tRep <- get.test.statistics(sim[[i]], format = "bin", aadata = aadata, geneName = paste0("sim.data.", i), iqtreePath = iqtreePath, model = model, stats = testStats, tree = tree)
              system(paste0("rm ", paste0("sim.data.", i)))
 	     return(tRep)		
 	   }	  
 	   cl <- makeCluster(ncore)
 	   registerDoParallel(cl)
-	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runPhyML', 'get.chisqstat', 'get.biodivstat')) %dopar% runSim(x)
+	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runIQtree', 'get.chisqstat', 'get.biodivstat')) %dopar% runSim(x)
 	   sim.stats <- simReps 
 	   stopCluster(cl)
 	   print("Parallel computing ended successfully")
