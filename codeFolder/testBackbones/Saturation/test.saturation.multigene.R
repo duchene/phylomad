@@ -1,6 +1,6 @@
 source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/test.saturation.R")
-source("otherScripts/R/runPhyML.R")
+source("otherScripts/R/runIQtree.R")
 source("testStatistics/get.entropy.test.R")
 source("testStatistics/get.ci.test.R")
 source("testStatistics/get.comp.test.R")
@@ -32,7 +32,7 @@ if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 if("satPlots" %in% whatToOutput | "multiSatPlots" %in% whatToOutput) plotdat <- T else plotdat <- F
 
-geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, phymlPath = phymlPath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, linmods = funclist)
+geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, iqtreePath = iqtreePath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, linmods = funclist)
 
 #### Output missing
 

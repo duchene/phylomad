@@ -8,13 +8,11 @@ ngene <- nrow(input$dataPath)
 print(paste("The number of loci in this assessment was", ngene))
 
 if(machine == "Darwin"){
-	phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_macOS-MountainLion")
+	iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 } else if(machine == "Windows"){
-	phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_win32.exe")
+	iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 } else if(machine == "Linux"){
-	phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_linux64")
+	iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 }
-
-print(paste("The machine type was identified as", if(machine == "Darwin") "mac" else machine))
 
 source("testBackbones/Clock/test.clock.multigene.R", local = T)

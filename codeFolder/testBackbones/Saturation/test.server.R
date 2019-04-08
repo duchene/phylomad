@@ -3,13 +3,12 @@ library(phangorn)
 machine <- Sys.info()[["sysname"]]
 
 if(machine == "Darwin"){
-                   phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_macOS-MountainLion")
+                   iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 } else if(machine == "Windows"){
-                   phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_win32.exe")
+                   iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 } else if(machine == "Linux"){
-                   phymlPath <- paste0(getwd(), "/otherScripts/PhyML-3.1/PhyML-3.1_linux64")
+                   iqtreePath <- paste0(getwd(), "/otherScripts/iqtree")
 }
-
 
 ngene <- nrow(input$dataPath)
 
