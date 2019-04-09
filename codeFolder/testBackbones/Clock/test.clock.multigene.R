@@ -35,7 +35,11 @@ if(nrow(input$posteriorPath) == 1) postPath <- as.character(input$posteriorPath[
 
 if(input$dataFormat == "NEXUS") input$dataFormat <- "nexus"
 
-geneResults <- run.gene.clock(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, treesFile = treesPath, logFile = postPath, burninpercentage = input$burnin, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnSimPhylo = T, returnSimDat = T)
+geneResults <- try(run.gene.clock(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, treesFile = treesPath, logFile = postPath, burninpercentage = input$burnin, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnSimPhylo = T, returnSimDat = T))
+if(class(geneResults) == "try-error"){
+	print(paste("Analysis of locus", as.character(input$dataPath[j, 1]), "failed"))
+	next
+}
 
 if("pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToOutput)){
 	geneResMat <- matrix(NA, nrow = 3, ncol = length(selectedStats))

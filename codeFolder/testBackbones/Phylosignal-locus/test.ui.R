@@ -1,0 +1,93 @@
+tabsetPanel(
+	tabPanel("Data",
+                       fluidRow(
+		       column(1),
+                       column(10,
+		       h4("Select the nucleotide or amino acid alignment(s) for which the substitution model will be assessed"),
+                       fileInput("dataPath", label = h5("Alignments selected must come from the same folder"), multiple = T),
+		       br(),
+		       h4("Select the format of your data"),
+		       radioButtons("dataFormat", label = "",
+                       choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
+		       br(),
+		       checkboxInput("cleanOrNot", label = tags$span(h5("Remove sites with missing data from each alignment"), tipify(bsButton("pB1", "?", style = "inverse", size = "extra-small"), placement = "right", "Removing sites with missing data is important for accurate estimation of test statistics. Only uncheck this box if the alignments only have a negligible amount of missing data.")), value = TRUE),
+			   br(),
+		       h4("Select any input tree(s) (or leave blank)"),
+		       fileInput("treesPath", label = "", multiple = T),
+		       br(),
+		       h4("Select the format of your tree(s)"),
+                       radioButtons("treesFormat", label = "",
+                       choices = list("No input tree" = "none", "NEXUS" = "nexus", "NEWICK" = "newick"), selected = "none")
+		       ),
+		       column(1))
+        ),
+	tabPanel("Model",
+		       fluidRow(
+		       column(1),
+		       column(10,
+		       h4("Select the substitution model that will be assessed"),
+		       selectInput("model", label = "",
+		       choices = list("Nucleotide - GTR" = "GTR", "Nucleotide - HKY" = "HKY", " Nucleotide - JC" = "JC", "Automatic nucleotide model selection (BIC)" = "autoModel", "Amino acid - JTT" = "JTT", "Amino acid - LG" = "LG", "Amino acid - WAG" = "WAG", "Amino acid - Dayhoff" = "Dayhoff")),
+		       br(),
+		       h4("Select the model of rates across sites"),
+		       radioButtons("RASmodel", label = "",
+                       choices = list("Gamma-distributed" = "+G", "Equal across sites" = ""), selected = "+G")
+		       ),
+		       column(1))
+	),
+	tabPanel("Test statistics",
+		       fluidRow(
+		       column(1),
+		       column(10,
+		       tags$span(h4("Select test statistics for assessment"), tipify(bsButton("pB2", "?", style = "inverse", size = "extra-small"), placement = "right", "Test statistics are metrics used to compare empirical data with those generated under the model. They form the core of model assessment.")),
+		       checkboxGroupInput("testStats", label = "",
+		       choices = list("χ2 statistic  " = "chisq", "Multinomial statistic  " = "multlik", "Biochemical diversity  " = "biochemdiv", "Consistency index  " = "consind", "δ statistic  " = "delta", "Branch support  " = "brsup", "Branch support 95% interval  " = "CIbrsup", "Tree length  " = "trlen", "Squared Mahalanobis distance  " = "maha"), selected = c("chisq", "multlik", "biochemdiv", "consind", "maha")),
+		       makeCheckboxTooltip(checkboxValue = "chisq", buttonLabel = "?", Tooltip = "This statistic is calculated for a table of the frequencies of each of the bases, for each of the taxa in the alignment. It can be used to assess whether the analysis is in risk of joining taxa due to convergence in base composition."),
+		       makeCheckboxTooltip(checkboxValue = "multlik", buttonLabel = "?", Tooltip = "This statistic is the likelihood of the data under a model that only describes the most general of the assumptions in the majority of substitution models: that substitution events are independent and identically distributed. Provides an overall assessment of model fit."),
+		       makeCheckboxTooltip(checkboxValue = "delta", buttonLabel = "?", Tooltip = "This statistic is the difference between the multinomial likelihood and the maximum likelihood under the model being assessed, such as those of the GTR family. Provides an overall assessment of model fit."),
+		       makeCheckboxTooltip(checkboxValue = "biochemdiv", buttonLabel = "?", Tooltip = "This statistic is the mean number of distinct bases that occur at each site in the alignment (Lartillot et al. 2007). Assesses whether the model can account for the base composition across sites in the data."),
+		       makeCheckboxTooltip(checkboxValue = "consind", buttonLabel = "?", Tooltip = "The consistency index provides a measure of homoplasy in the alignment given an estimate of the tree topology. Quantifying homoplasy can be used to assess whether the model can recover the number of substitution events and amount of phylogenetic information in the data."),
+		       makeCheckboxTooltip(checkboxValue = "brsup", buttonLabel = "?", Tooltip = "The mean node support across the inferred tree. It was initially proposed as a test statistic for assessing substitution models in a Bayesian framework. Assesses whether the amount of statistical support for a given tree is plausible in data generated by the model and inferred parameters."),
+		       makeCheckboxTooltip(checkboxValue = "CIbrsup", buttonLabel = "?", Tooltip = "This statistic is based on the range of node support values across the tree. It can reject the model if some taxa in the alignment have amounts of phylogenetic information that are implausible under the model."),
+		       makeCheckboxTooltip(checkboxValue = "trlen", buttonLabel = "?", Tooltip = "The sum of estimated branch lengths, or total tree length. Assesses whether the total amount of molecular evolution inferred using the empirical data is plausible under the model."),
+		       makeCheckboxTooltip(checkboxValue = "maha", buttonLabel = "?", Tooltip = "This statistic summarizes multiple test statistics. Provides a summary of the tests from a group of other test statistics. For this reason, it should only be selected if more than one other statistic has also been selected.")
+		       ),
+		       column(1))
+	),
+	tabPanel("Output",
+		       fluidRow(
+                       column(1),
+                       column(10,
+		       h4("Select the output desired"),
+		       checkboxGroupInput("whatToOutput", label = "",
+                       choices = list("Metrics of adequacy for individual loci" = "pvals", "Test plots" = "testPlots", "Multi-locus tests plots" = "multiTestPlots", "Only overall summary file (overrides other options)" = "simple", "Tree estimated from empirical data" = "phyloempres", "Simulated data" = "simdat", "Trees estimated from simulated data" = "phylosimres"), selected = c("pvals", "testPlots")),
+		       br(),
+		       h4("Select the format of the output data"),
+		       radioButtons("outputFormat", label = "",
+                       choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
+		       br(),
+		       h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"),
+		       textInput("outputFolder", label = "", value = paste0(getwd(), "/../outputFolder/"))
+		       ),
+		       column(1))
+	),
+	tabPanel("Other options and START",
+		       fluidRow(
+                       column(1),
+                       column(10,
+		       h4("Select the number of simulations to be made"),
+		       numericInput("Nsims", label = "",
+                       value = 100),
+		       br(),
+		       h4("Select the number of computer cores to be used"),
+		       numericInput("Ncores", label = h5("Multi-core assessments can only be aborted at the completion of a locus assessment"),
+                       value = 1),
+		       br(),
+		       checkboxInput("overwrite", label = h5("Overwrite previous analyses"), value = FALSE),
+		       br(),
+		       actionButton("startAnalysis", label = "START ASSESSMENT")
+		       ),
+		       column(1))
+	)
+	
+)

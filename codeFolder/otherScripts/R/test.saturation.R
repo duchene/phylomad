@@ -1,4 +1,3 @@
-
 test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, para = parallelise, ncore = 1, clean = "cleandata", stats = stats, plotdat = F, linmods = funclist){
 	 
 	 aadata <- F
@@ -48,29 +47,32 @@ test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, pa
         	if("enth" %in% stats){
                 	  satres$enres <- vector()
 			  satres$enres[1] <- get.entropy.test(genebin[[i]])$t
-			  satres$enres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[["th1entsqrt"]])
-			  satres$enres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[["th2entsqrt"]])
+			  satres$enres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[1]])
+			  satres$enres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[4]])
+			  satres$enres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[7]])
 			  satres$enres <- round(satres$enres, 2)
 		}
         	if("cith" %in% stats){
 			  satres$cires <- vector()
 			  satres$cires[1] <- get.ci.test(tree, genebin[[i]])$t * (-1)
-			  satres$cires[2] <- getSatThreshold(Nsites, Ntax, satfunclist[["th1cisqrt"]])
-                          satres$cires[3] <- getSatThreshold(Nsites, Ntax, satfunclist[["th2cisqrt"]])
+			  satres$cires[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[2]])
+                          satres$cires[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[5]])
+			  satres$cires[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[8]])
 			  satres$cires <- round(satres$cires, 2)
         	}
         	if("comth" %in% stats){
 			   satres$comres <- vector()
                 	   satres$comres[1] <- get.comp.test(tree, genebin[[i]])$t * (-1)
-			   satres$comres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[["th1comsqrt"]])
-                           satres$comres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[["th2comsqrt"]])
+			   satres$comres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[3]])
+                           satres$comres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[6]])
+			   satres$comres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[9]])
 			   satres$comres <- round(satres$comres, 2)
         	}
 		
-		for(j in 1:length(satres)) if(satres[[j]][1] > satres[[j]][2]) satres[[j]][4] <- "LOW" else if(satres[[j]][1] < satres[[j]][3]) satres[[j]][4] <- "HIGH" else satres[[j]][4] <- "MEDIUM"
+		for(j in 1:length(satres)) if(satres[[j]][1] > satres[[j]][2]) satres[[j]][5] <- "low.risk" else satres[[j]][5] <- "high.risk"
 
 		genesres[[i]] <- c(Nsites, Ntax, do.call(c, satres))
-		names(genesres[[i]]) <- c("N_sites", "N_taxa", as.character(sapply(stats, function(x) paste(c("t", "t_moderate_risk_threshold", "t_high_risk_threshold", "Risk"), x, sep = "_"))))
+		names(genesres[[i]]) <- c("N_sites", "N_taxa", as.character(sapply(stats, function(x) paste(c("t", "t_predicted_threshold", "t_predicted_TPR", "t_predicted_FPR", "Risk"), x, sep = "_"))))
 		
 		###########################################
 
@@ -79,7 +81,7 @@ test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, pa
 	     if(length(genesres) > 1){
 	     		genesrestab <- do.call(rbind, genesres)
 	     } else {
-			genesrestab <- matrix(genesres[[1]], 1, 2+(length(satres)*4))
+			genesrestab <- matrix(genesres[[1]], 1, 2+(length(satres)*5))
 			colnames(genesrestab) <- names(genesres[[1]])
 	     }
 	     
@@ -93,7 +95,8 @@ test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, pa
          if(!para){
 
            for(i in 1:length(loci)){
-	       reslist[[i]] <- runLoc(loci[i], format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods)
+	       reslist[[i]] <- try(runLoc(loci[i], format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods))
+	       if(class(reslist[[i]]) == "try-error") next
            }
 
          } else {

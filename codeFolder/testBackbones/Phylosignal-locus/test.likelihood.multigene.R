@@ -41,11 +41,7 @@ if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j,
 
 print("Model to be assessed was identified")
 
-genebin <- try(clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata, clean = input$cleanOrNot))
-if(class(genebin) == "try-error"){
-	print(paste("Reading of locus", as.character(input$dataPath[j, 1]), "failed"))
-	next
-}
+genebin <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata, clean = input$cleanOrNot)
 
 print("Locus was cleaned successfully")
 
@@ -64,12 +60,7 @@ if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".
 
 whatToOutput <- unlist(input$whatToOutput)
 
-geneResults <- try(run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T))
-if(class(geneResults) == "try-error"){
-	print(paste("Analisis of locus", as.character(input$dataPath[j, 1]), "failed"))
-	next
-}
-
+geneResults <- run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T)
 if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 	geneResMat <- matrix(NA, nrow = 3, ncol = length(selectedStats))
 	
@@ -77,9 +68,9 @@ if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
                geneResMat[1, i] <- geneResults[[paste0(selectedStats[i], ".tailp")]]
                geneResMat[2, i] <- geneResults[[paste0("emp.", selectedStats[i])]]
                geneResMat[3, i] <- geneResults[[paste0(selectedStats[i], ".sdpd")]]
-	}
+        }
         outs[[j]] <- geneResMat
-
+	
 	if(length(outs[[j]]) == 0){
 	       print("P-values cannot be returned because no test statistics were calculated.")
 	} else {

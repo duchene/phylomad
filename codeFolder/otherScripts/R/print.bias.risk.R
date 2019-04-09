@@ -1,4 +1,3 @@
-	
 print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
 
 	outs <- vector()
@@ -10,8 +9,12 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
 	consthresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(-0.6097077, -1.250933, -2.509672), maxD = c(-2.21697, -3.555679, -5.434672))
 	mahathresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(6.012026, 17.662311, 26.279046))
 	
-	thresholds <- do.call("cbind", list(chisqthresholds, multthresholds, biochthresholds[,2:3], consthresholds[,2:3], mahathresholds[,2]))
-	colnames(thresholds) <- c("seqlen.chisq", "minD.chisq", "maxD.chisq", "seqlen", "minD.multlik", "maxD.multlik", "minD.biochemdiv", "maxD.biochemdiv", "minD.consind", "maxD.consind", "minD.maha")
+	basicthresholds <- do.call("cbind", list(chisqthresholds, multthresholds, biochthresholds[,2:3], consthresholds[,2:3], mahathresholds[,2]))
+	colnames(basicthresholds) <- c("seqlen.chisq", "minD.chisq", "maxD.chisq", "seqlen", "minD.multlik", "maxD.multlik", "minD.biochemdiv", "maxD.biochemdiv", "minD.consind", "maxD.consind", "minD.maha")
+	
+	thresholds <- matrix(NA, nrow = 2, ncol = length(selectedStats))
+	rownames(thresholds) <- c("mid.risk.threshold", "high.risk.threshold")
+	colnames(thresholds) <- selectedStats
 
 	if("chisq" %in% selectedStats){
                thresholdMidRisk <- predict(lm(minD ~ seqlen, data = chisqthresholds), data.frame(seqlen = Nsites))
@@ -30,6 +33,8 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
                         outs <- c(outs, "low.risk")
                }
                names(outs)[length(outs)] <- "chi.squared.assessment"
+	       thresholds[1,"chisq"] <- thresholdMidRisk
+	       thresholds[2,"chisq"] <-	thresholdHighRisk	       
     }
 
 	if("multlik" %in% selectedStats){
@@ -49,6 +54,8 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
                         outs <- c(outs, "low.risk")
 	       }
 	       names(outs)[length(outs)] <- "multinomial.likelihood.assessment"
+	       		thresholds[1,"multlik"] <- thresholdMidRisk
+		        thresholds[2,"multlik"] <- thresholdHighRisk
 	}
 
 	if("biochemdiv" %in% selectedStats){
@@ -68,6 +75,8 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
                         outs <- c(outs, "low.risk")
                }
 	       names(outs)[length(outs)] <- "biochemical.diversity.assessment"
+	       thresholds[1,"biochemdiv"] <- thresholdMidRisk
+	       thresholds[2,"biochemdiv"] <- thresholdHighRisk
 	}
 
 	if("consind" %in% selectedStats){
@@ -87,6 +96,8 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
                         outs <- c(outs, "low.risk")
                }
 	       names(outs)[length(outs)] <- "consistency.index.assessment"
+	       thresholds[1,"consind"] <- thresholdMidRisk
+               thresholds[2,"consind"] <- thresholdHighRisk
 	}
 
 	if("maha" %in% selectedStats){
@@ -102,12 +113,14 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
                         outs <- c(outs, "low.risk")
                }
 	       names(outs)[length(outs)] <- "mahalanobis.assessment"
+	       thresholds[1,"maha"] <- thresholdMidRisk
 	}
 	
 	risktext <- c(risktext, "This advice is based on simulations in the following studies:", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534.", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (in prep). New Statistical Criteria Detect Biased Inferences From Phylogenomic Data. ")
 	
+	thresholds <- thresholds[, selectedStats]
 	writeLines(risktext, con = "bias.risk.report.txt")
-	outs <- list(reccommendation = matrix(outs, nrow = 1, dimnames = list("", names(outs))), thresholds = thresholds)
+	outs <- list(reccommendation = matrix(c(thresholds[1,], thresholds[2,], outs), nrow = 1, dimnames = list("", c(paste0(selectedStats, ".mid.risk.threshold"), paste0(selectedStats, ".high.risk.threshold"), names(outs)))), thresholds = basicthresholds)
 	return(outs)
 
 }

@@ -14,8 +14,6 @@ outs <- list()
 
 locilengths <- vector()
 
-print("Locus was cleaned successfully")
-
 if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 setwd(input$outputFolder)
@@ -32,7 +30,12 @@ if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 if("satPlots" %in% whatToOutput | "multiSatPlots" %in% whatToOutput) plotdat <- T else plotdat <- F
 
-geneResults <- test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, iqtreePath = iqtreePath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, linmods = funclist)
+geneResults <- try(test.saturation(loci = as.character(input$dataPath[, 4]), format = input$dataFormat, iqtreePath = iqtreePath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, linmods = funclist))
+failedLoci <- which(sapply(geneResults, class) == "try-error")
+if(length(failedLoci) > 0){
+	geneResults <- geneResults[-failedLoci]
+	print(paste("Analysis of locus", failedLoci, "failed"))
+}
 
 #### Output missing
 
@@ -58,19 +61,22 @@ if("satPlots" %in% whatToOutput){
 	for(i in 1:length(locinames)){
 		if(input$dataTreatment == "codonpos"){
 			plot(geneResults[[i]][[2]][[2]][[1]] ~ geneResults[[i]][[2]][[2]][[2]], pch = 20, col = "purple", ylab = "Uncorrected pairwise genetic distances", xlab = "Pairwise distances including the ratio\nof transitions to transversions (Tamura and Nei 1993)", main = paste0("Saturation plot for\n", locinames[i]))
-			abline(lm(geneResults[[i]][[2]][[2]][[1]] ~ 0 + geneResults[[i]][[2]][[2]][[2]]), lwd=2, col = "purple")
+			lm12 <- lm(geneResults[[i]][[2]][[2]][[1]] ~ geneResults[[i]][[2]][[2]][[2]])
+			abline(lm12, lwd=2, col = "purple")
 			points(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]], pch = 20, col = "red")
-			abline(lm(geneResults[[i]][[2]][[1]][[1]] ~ 0 + geneResults[[i]][[2]][[1]][[2]]), lwd=2, col = "red")
+			lm3 <- lm(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]])
+			abline(lm3, lwd=2, col = "red")
 			cor12 <- round(cor.test(geneResults[[i]][[2]][[1]][[1]], geneResults[[i]][[2]][[1]][[2]])$estimate, 3)
 			cor3 <- round(cor.test(geneResults[[i]][[2]][[2]][[1]], geneResults[[i]][[2]][[2]][[2]])$estimate, 3)
-			legend("bottomright", legend = c(paste0("1st and 2nd positions, cor = ", cor12), paste0("3rd position, cor = ", cor3)), lty = 1, lwd = 2, col = c("red", "purple"), cex = 0.7)
+			legend("bottomright", legend = c(paste0("Pos 1+2, cor = ", cor12, ", slope = ", round(coef(lm12)[2], 3)), paste0("Pos 3, cor = ", cor3, ", slope = ", round(coef(lm3)[2], 3))), lty = 1, lwd = 2, col = c("red", "purple"), cex = 0.7)
 		} else {
 			plot(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]], pch = 20, col = "red", ylab = "Uncorrected pairwise genetic distances", xlab = "Pairwise distances including the ratio\nof transitions to transversions (Tamura and Nei 1993)", main = paste0("Saturation plot for\n", locinames[i]))
-			abline(lm(geneResults[[i]][[2]][[1]][[1]] ~ 0 + geneResults[[i]][[2]][[1]][[2]]), lwd=2, col = "red")
+			lmdat <- lm(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]])
+			abline(lmdat, lwd=2, col = "red")
 			corlocus <- round(cor.test(geneResults[[i]][[2]][[1]][[1]], geneResults[[i]][[2]][[1]][[2]])$estimate, 3)
-			legend("bottomright", legend = paste0("cor = ", corlocus), cex = 0.7)
+			legend("bottomright", legend = paste0("cor = ", corlocus, ", slope = ", round(coef(lmdat)[2], 3)), cex = 0.7)
 		}
-		abline(0,1, lty=2)
+		abline(0, 1, lty=2)
 	}
 	dev.off()
 }

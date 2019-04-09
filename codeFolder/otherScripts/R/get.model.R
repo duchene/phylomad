@@ -1,4 +1,4 @@
-get.model <- function(sdata, format = "phyllip"){
+get.model <- function(sdata, format = "phylip"){
 	  
 	 candidates <- c("GTR+G", "GTR", "HKY+G", "HKY", "JC+G", "JC")
 
