@@ -3,9 +3,9 @@ Developed by Bui Quang Minh, Nguyen Lam Tung, Olga Chernomor,
 Heiko Schmidt, Dominik Schrempf, Michael Woodhams.
 
 Host:    rsb0001700.uds.anu.edu.au (AVX512, FMA3, 64 GB RAM)
-Command: ../otherScripts/iqtree -t example.null.1.nex.treefile -s example.null.1.nex --scf 100 --prefix concord
-Seed:    459564 (Using SPRNG - Scalable Parallel Random Number Generator)
-Time:    Thu Apr  4 17:11:18 2019
+Command: ../otherScripts/iqtree -t example.null.test.tre -s example.null.1.nex --scf 100 --prefix concord -redo
+Seed:    774594 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Wed Apr 10 13:04:15 2019
 Kernel:  AVX+FMA - 1 threads (16 CPU cores detected)
 
 HINT: Use -nt option to specify number of threads because your CPU has 16 cores!
@@ -49,11 +49,11 @@ Alignment has 32 sequences with 200 columns, 175 distinct patterns
   31  t31    0.00%    passed     63.09%
   32  t32    0.00%    passed     61.59%
 ****  TOTAL    0.00%  0 sequences failed composition chi2 test (p-value<5%; df=3)
-Reading tree example.null.1.nex.treefile ...
+Reading tree example.null.test.tre ...
 un-rooted tree with 32 taxa and 61 branches
 Computing site concordance factor...
-0.005 sec
+0.006 sec
 Tree with concordance factors written to concord.cf.tree
 Tree with branch IDs written to concord.cf.branch
 Concordance factors per branch printed to concord.cf.stat
-Date and Time: Thu Apr  4 17:11:18 2019
+Date and Time: Wed Apr 10 13:04:15 2019

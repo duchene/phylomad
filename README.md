@@ -3,9 +3,9 @@
 
 ## Introduction
 
-This repository contains PhyloMAd, a software for easily-accessible assessment of phylogenetic model adequacy. Briefly, an assessment of model adequacy provides an independent account of the power of a model for describing the empirical data. This is different to model selection, where a set of candidate models are compared to each other, under the assumption that at least the best-fitting model is an adequate description of the data.
+This repository contains PhyloMAd, a software for assessing several components of phylogenetic analysis. Briefly, these methods of assessment provide an independent account of the power of a phylogenetic model and sequence data for describing the evolutionary process. These methods of assessment are different from model selection, where a set of candidate models are compared to each other, under the assumption that at least the best-fitting model is an adequate description of the data.
 
-Substitution models supported by PhyloMAd inlcude the JC, HKY, and GTR models, including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
+PhyloMAd supportes several of the most common nucleotide and amino-acid substitution models (e.g., JC, HKY, and GTR), including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
 
 ## Download and package installation
 
@@ -25,7 +25,7 @@ git clone https://github.com/duchene/phylomad.git
 
 The rest of this tutorial focuses on the Graphical User Interface. Refer to the manual for information about running PhyloMAd through the command-line.
 
-Double-click the PhyloMAd file according to the platform (runMac.command or runWin.vbs). Opening the package for the first time might take several minutes and will require internet connection if any R dependencies are not yet installed.
+Double-click the PhyloMAd file runMac.command. Opening the package for the first time might take several minutes and will require internet connection to install R dependencies.
 
 If you have difficulty opening the program, you might want to try opening it directly through R. By typing the following in the R command line:
 
@@ -34,14 +34,14 @@ setwd("pathToPhyloMAd")
 source("phylomad.Rscript")
 ```
 
-Similarly, if you have access to a bash shell, set your directory to the PhyloMAd folder and execute the R script by hand.
+Similarly, if you have access to a bash shell, you can set your directory to the PhyloMAd folder and execute the R script by hand.
 
 ```coffee
 cd pathToPhyloMAd
 Rscript phylomad.Rscript
 ```
 
-In mac machines, PhyloMAd will open a terminal window when opened and log the progress. In windows, a log file with the progress will be saved in the main PhyloMAd folder. This log file is mainly useful for debugging or monitoring progress, so it is safe to delete it when the program is closed.
+PhyloMAd will open a terminal window when opened and log the progress, which is useful for debugging or monitoring progress.
 
 ## Brief tutorial
 
