@@ -37,7 +37,8 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 system(paste0(iqtreePath, " -t empirical.empty.tre -s empirical.phy --", conctype, " 100 --prefix emp.conc"))
 	 conctab <- read.table('emp.conc.cf.stat', header=TRUE, sep = "\t")[,-7]
 	 colnames(conctab)[6] <- "emp.brsup"
-	 concidtr <- read.tree("emp.conc.cf.branch")
+	 concidtr <- readLines("emp.conc.cf.branch")
+	 concidtr <- read.tree(text = gsub(")", "):", concidtr))
 	 
 	 system("rm empirical.empty.phy emp.conc.cf.tree emp.conc.log emp.conc.cf.branch emp.conc.cf.stat")
 	 
@@ -54,6 +55,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 ## Simulate data sets (alignments or genomes)
 	 
      sim <- list()
+     simidtrs <- list()
 	 for(i in 1:Nsims){
 	 	   if(testType == "locus"){
 	       	   l <- ncol(data)
@@ -93,6 +95,8 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
                sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")[,-7]
                colnames(sim[[i]])[2:4] <- paste0(colnames(sim[[i]])[2:4], ".sim.", i)
 	       colnames(sim[[i]])[6] <- paste0("sim.", i, ".brsup")
+	       simidtrs[[i]] <- readLines(paste0("sim.conc.", i, ".cf.branch"))
+	       simidtrs[[i]] <- read.tree(text = gsub(")", "):", simidtrs[[i]]))
 	       system(paste0("rm sim.alignment.", i".phy sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))
 	       
 	 } else if(testType == "genome"){
@@ -116,7 +120,14 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
      }
 	 
 	 ## Get P-values for test statistics
-	 
-	 
-	 
+	
+	for(i in 1:length(testStats)){
+	      stattab <- conctab[,grep(testStats[i], colnames(conctab))]
+	      conctab[,paste0(testStats[i], ".p.value")] <- apply(stattab, 1, function(x) length(which(x[-1] > x[1]))/(length(x[-1])))
+	      conctab[,paste0(testStats[i], ".sdpd")] <- apply(stattab, 1, function(x) (x[1] - mean(x[-1])) / sd(x[-1]))
+	}
+	
+	write.tree(simidtrs, file = "sim.id.trs.forchecking.tre")
+	if(!returnAllDat) conctab[,-grep("ID|sCF|sDF|sN|gCF|gDF|gN", colnames(conctab))]
+	return(conctab)
 }
