@@ -47,9 +47,9 @@ whatToOutput <- unlist(input$whatToOutput)
 geneResults <- test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else input$dataFormat, testType = input$testType, aadata = F, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnEstPhylo = "phyloempres" %in% whatToOutput, returnSimulations = "simdat" %in% whatToOutput)
 
 if("testPlots" %in% whatToOutput){
-	empstats <- unlist(geneResults[grep("emp[.]", names(geneResults))])
-        simstats <- do.call(cbind, geneResults[grep("sim[.]", names(geneResults))])
-	statsmat <- rbind(empstats, simstats)
+	histplotdat <- colMeans(geneResults[[1]], na.rm = T)
+	names(histplotdat) <- colnames(geneResults[[1]])
+	histplotdat <- histplotdat[-grep("ID|sDF|sN|gDF|gN|value|sdpd", names(histplotdat))]
 	statlabels <- vector()
 	if("dnet" %in% selectedStats) statlabels <- c(statlabels, "Distance to network")
 	if("dtree" %in% selectedStats) statlabels <- c(statlabels, "Distance to tree")
@@ -64,30 +64,33 @@ if("testPlots" %in% whatToOutput){
 		print("Test plots cannot be returned because no test statistics were calculated.")
 	} else {
 	        pdf("tests.histograms.pdf", useDingbats = F, height = 5)
-		for(i in 1:length(empstats)){
-		      sdstat <- sd(statsmat[2:nrow(statsmat), i])
-		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i], na.rm = T) - sdstat, max(statsmat[, i], na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of predictive simulations", main = "")
-		      abline(v = empstats[i], col = "red", lwd = 3)
+		for(i in 1:length(selectedStats)){
+		      statdat <- histplotdat[grep(selectedStats[i], names(histplotdat))]
+		      sdstat <- sd(statdat[2:length(statsmat)])
+		      hist(statdat[2:length(statdat)], xlim = c(min(statdat, na.rm = T) - sdstat, max(statdat, na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of simulations", main = "")
+		      abline(v = statdat[1], col = "red", lwd = 3)
 		}
 		dev.off()
 		
-		pdf("tests.summary.tree.pdf", useDingbats = F, height = 5)
-		for(i in 1:length(empstats)){
-		      sdstat <- sd(statsmat[2:nrow(statsmat), i])
-		      hist(statsmat[2:nrow(statsmat), i], xlim = c(min(statsmat[, i], na.rm = T) - sdstat, max(statsmat[, i], na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of predictive simulations", main = "")
-		      abline(v = empstats[i], col = "red", lwd = 3)
+		pdf("tests.summary.tree.pdf", useDingbats = F)
+		for(i in 1:length(selectedStats)){
+		      tr <- geneResults[[2]]
+		      tr$edge.length <- NULL
+		      # place the statistics per branch as values!
+		      plotBranchbyTrait(geneResults[[2]], rnorm(20), mode = "edges", palette = "heat.colors", title = statlabels[i], type = "fan")
+		      plotBranchbyTrait(tr, rnorm(20), mode = "edges", palette = "heat.colors", legend = F, type = "fan")
+		      
 		}
 		dev.off()
 		
 		
 	}
 	
-	if("allqp" %in% whatToOutput){
-	write.csv(geneResults[[1]], file = "full.results.csv")
+	if("allqp" %in% whatToOutput) write.csv(geneResults[[1]], file = "full.results.csv")
 
 if("pvals" %in% whatToOutput){
 	rownames(geneResults[[1]]) <- geneResults[[1]][,1]
-	restab <- geneResults[[1]][,-grep("ID|sCF|sDF|sN|gCF|gDF|gN", colnames(geneResults[[1]]))]
+	restab <- geneResults[[1]][,-grep("ID|sDF|sN|gDF|gN", colnames(geneResults[[1]]))]
 	restab <- rbind(restab, colMeans(restab))
 	rownames(restab)[nrow(restab)] <- "mean"
 	write.csv(restab, file = "results.summary.csv")
