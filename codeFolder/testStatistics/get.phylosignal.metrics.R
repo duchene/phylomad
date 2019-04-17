@@ -10,24 +10,38 @@ get.internode.cert <- function(qp){
 
 get.dist2net <- function(qp){
 	concfactmat <- matrix(c(sort(qp, decreasing = T), 0.499,0.499,0.002), 2, byrow=T)
-	ait <- as.numeric(dist(concfactmat, method = "aitchison"))
+	#ait <- as.numeric(dist(concfactmat, method = "aitchison"))
 	euc <- as.numeric(dist(concfactmat, method = "euclidean"))
-	chi <- as.numeric(chisq.test(matrix(c(sort(qp, decreasing = T), 0.5,0.5,0), 2, byrow=T))$statistic)
-	dists2net <- c(aitchinson = ait, euclidean = euc, chisq = chi)
+	chi <- as.numeric(suppressWarnings(chisq.test(matrix(c(sort(qp, decreasing = T), 0.5,0.5,0), 2, byrow=T)))$statistic)
+	dists2net <- c(aitchinson = NA, euclidean = euc, chisq = chi)
 	return(dists2net)
 }
 
 get.dist2tr <- function(qp){
 	concfactmat <- matrix(c(sort(qp, decreasing = T), 0.999,0.0005,0.0005), 2, byrow=T)
-        ait <- as.numeric(dist(concfactmat, method = "aitchison"))
+        #ait <- as.numeric(dist(concfactmat, method = "aitchison"))
        	euc <- as.numeric(dist(concfactmat, method = "euclidean"))
-        chi <- as.numeric(chisq.test(matrix(c(sort(qp, decreasing = T), 1,0,0), 2, byrow=T))$statistic)
-	dists2tr <- c(aitchinson = ait, euclidean = euc, chisq = chi)
-        return(dists2tr)
+        chi <- as.numeric(suppressWarnings(chisq.test(matrix(c(sort(qp, decreasing = T), 1,0,0), 2, byrow=T)))$statistic)
+	dists2tr <- c(aitchinson = NA, euclidean = euc, chisq = chi)
+	return(dists2tr)
 }
 
 get.binom.p <- function(qpNtrials){
 	bipartsuccs <- sort(qpNtrials[1:3]*qpNtrials[4], decreasing = T)
-	pval <- binom.test(round(bipartsuccs[1]), ntrials, 1/3)$p.value
+	pval <- binom.test(round(bipartsuccs[1]), round(qpNtrials[4]), 1/3, alternative = "greater")$p.value
 	return(pval)
+}
+
+get.dstat <- function(qp){
+        dat <- sort(qp, decreasing = T)
+        if(dat[2] == dat[3]) return(NA)
+        dstat <- (dat[2] - dat[3]) / (dat[2] + dat[3])
+        return(dstat)
+}
+
+get.kcstat <- function(qp){
+        dat <- sort(qp, decreasing = T)
+        if(dat[2] == dat[3]) return(NA)
+        kcstat <- (dat[1] - dat[3]) / (dat[2] - dat[3])
+        return(kcstat)
 }

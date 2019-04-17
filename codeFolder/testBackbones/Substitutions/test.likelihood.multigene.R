@@ -37,7 +37,7 @@ locilengths <- vector()
 
 for(j in 1:nrow(input$dataPath)){
 
-if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j, 4]))
+if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j, 4]), format = input$dataFormat)
 
 print("Model to be assessed was identified")
 
