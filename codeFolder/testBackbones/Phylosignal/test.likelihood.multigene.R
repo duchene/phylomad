@@ -75,11 +75,19 @@ if("testPlots" %in% whatToOutput){
 		pdf("tests.summary.tree.pdf", useDingbats = F)
 		for(i in 1:length(selectedStats)){
 		      tr <- geneResults[[2]]
-		      tr$edge.length <- NULL
+		      tr$edge.length <- rep(1, length(geneResults[[2]]$edge.length))
 		      # place the statistics per branch as values!
-		      plotBranchbyTrait(geneResults[[2]], rnorm(20), mode = "edges", palette = "heat.colors", title = statlabels[i], type = "fan")
-		      plotBranchbyTrait(tr, rnorm(20), mode = "edges", palette = "heat.colors", legend = F, type = "fan")
-		      
+		      brpvalue <- round(geneResults[[1]][,paste0(selectedStats[i], ".p.value")])
+		      brsdpd <- round(geneResults[[1]][,paste0(selectedStats[i], ".sdpd")])
+		      names(brpvalue) <- names(brsdpd) <- geneResults[,1]
+		      brpvalue <- brpvalue[as.character(geneResults[[3]]$edge.length)]
+		      brsdpd <- brsdpd[as.character(geneResults[[3]]$edge.length)]
+		      brpvalue[is.na(brpvalue)] <- mean(brpvalue, na.rm = T)
+		      brsdpd[is.na(brsdpd)] <- mean(brsdpd, na.rm = T)
+		      plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "heat.colors", title = paste0(statlabels[i], "\nP-value"), type = "fan")
+		      plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "heat.colors", legend = F, type = "fan")
+		      plotBranchbyTrait(geneResults[[2]], brsdpd, mode = "edges", palette = "heat.colors", title = paste0(statlabels[i], "\nz-score"), type = "fan")
+                      plotBranchbyTrait(tr, brsdpd, mode = "edges", palette = "heat.colors", legend = F, type = "fan")
 		}
 		dev.off()
 		

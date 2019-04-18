@@ -137,7 +137,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 }
 	
 	 #if(!returnAllDat) conctab[,-grep("ID|sCF|sDF|sN|gCF|gDF|gN", colnames(conctab))]
-	 results <- list(testsTable = conctab, treeEstimate = emptre)
+	 results <- list(testsTable = conctab, treeEstimate = emptre, IDtree = concidtr)
 	 system("rm empirical.empty.tre")
 	 if(testType == "locus" & returnEstPhylo) write.tree(emptre, file = "empirical.estimated.tre")
 	 return(results)
