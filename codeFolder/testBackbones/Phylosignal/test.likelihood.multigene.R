@@ -60,34 +60,37 @@ if("testPlots" %in% whatToOutput){
 	if("dstat" %in% selectedStats) statlabels <- c(statlabels, "D-statistic")
 	if("kcstat" %in% selectedStats) statlabels <- c(statlabels, "Chifman-Kubatko statistic")
 	
-	if(length(empstats) == 0){
+	if(length(selectedStats) == 0){
 		print("Test plots cannot be returned because no test statistics were calculated.")
 	} else {
 	        pdf("tests.histograms.pdf", useDingbats = F, height = 5)
 		for(i in 1:length(selectedStats)){
 		      statdat <- histplotdat[grep(selectedStats[i], names(histplotdat))]
-		      sdstat <- sd(statdat[2:length(statsmat)])
+		      sdstat <- sd(statdat[2:length(statdat)])
 		      hist(statdat[2:length(statdat)], xlim = c(min(statdat, na.rm = T) - sdstat, max(statdat, na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of simulations", main = "")
 		      abline(v = statdat[1], col = "red", lwd = 3)
 		}
 		dev.off()
 		
-		pdf("tests.summary.tree.pdf", useDingbats = F)
+		pdf("tests.summary.tree.pdf", useDingbats = F, height = if(length(geneResults[[2]]$edge.length) < 50) 15 else 30, width = if(length(geneResults[[2]]$edge.length) < 50) 30 else 60)
+		par(mfrow = c(1,2))
 		for(i in 1:length(selectedStats)){
+		      
 		      tr <- geneResults[[2]]
 		      tr$edge.length <- rep(1, length(geneResults[[2]]$edge.length))
-		      # place the statistics per branch as values!
-		      brpvalue <- round(geneResults[[1]][,paste0(selectedStats[i], ".p.value")])
-		      brsdpd <- round(geneResults[[1]][,paste0(selectedStats[i], ".sdpd")])
-		      names(brpvalue) <- names(brsdpd) <- geneResults[,1]
+		      brpvalue <- round(geneResults[[1]][, paste0(selectedStats[i], ".p.value")], 1)
+		      brsdpd <- round(geneResults[[1]][, paste0(selectedStats[i], ".sdpd")], 1)
+		      names(brpvalue) <- names(brsdpd) <- geneResults[[1]][,1]
+		      
 		      brpvalue <- brpvalue[as.character(geneResults[[3]]$edge.length)]
 		      brsdpd <- brsdpd[as.character(geneResults[[3]]$edge.length)]
 		      brpvalue[is.na(brpvalue)] <- mean(brpvalue, na.rm = T)
 		      brsdpd[is.na(brsdpd)] <- mean(brsdpd, na.rm = T)
-		      plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "heat.colors", title = paste0(statlabels[i], "\nP-value"), type = "fan")
-		      plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "heat.colors", legend = F, type = "fan")
-		      plotBranchbyTrait(geneResults[[2]], brsdpd, mode = "edges", palette = "heat.colors", title = paste0(statlabels[i], "\nz-score"), type = "fan")
-                      plotBranchbyTrait(tr, brsdpd, mode = "edges", palette = "heat.colors", legend = F, type = "fan")
+
+		      plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "heat.colors", type = "fan", legend = F)
+		      plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "heat.colors", type = "fan", title = paste0(statlabels[i], "\nP-value\n"))
+		      plotBranchbyTrait(geneResults[[2]], brsdpd, mode = "edges", palette = "heat.colors", type = "fan", legend = F)
+                      plotBranchbyTrait(tr, brsdpd, mode = "edges", palette = "heat.colors", type = "fan", title = paste0(statlabels[i], "\nz-score\n"))
 		}
 		dev.off()
 		

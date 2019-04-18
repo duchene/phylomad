@@ -1,11 +1,21 @@
 ![software logo](codeFolder/www/phylomad.temp.png)
 
 
+## Basic features
+
+- Assessment of phylogenetic substitution model adequacy. For assessment, PhyloMAd uses maximum likelihood phylogenetic inference (IQtree), parametric bootstrap simulations, and several common test statistics. Diagnostics of risk of biased inferences are provided based on previous extensive simulation studies.
+
+- Assessment of substitution saturation using measures of entropy. Diagnostics of risk due to excessive saturation are provided based on an extensive simulations study.
+
+- Assessment of the type of the strength and number of phylogenetic tree topology signals in a locus or a set of gene trees. Signal is defined as the support that appears in the data for a given species or gene tree, while the null is the signal of trees that can emerge from the model used for inference.
+
+- Assessment of phylogenetic clock model adequacy. This assess the expectation that the number of substitutions along branches as expressed by a clock model (times and molecular rates) is consistent with the substitutions observed when using clock-free estimation.
+
 ## Introduction
 
-This repository contains PhyloMAd, a software for assessing several components of phylogenetic analysis. Briefly, these methods of assessment provide an independent account of the power of a phylogenetic model and sequence data for describing the evolutionary process. These methods of assessment are different from model selection, where a set of candidate models are compared to each other, under the assumption that at least the best-fitting model is an adequate description of the data.
+This repository contains PhyloMAd, a software for assessing several components of phylogenetic analysis. Briefly, these methods of assessment provide an independent account of the power of a phylogenetic model and sequence data for describing the evolutionary process. These methods of assessment are different from model selection, where a set of candidate models are compared to each other under the assumption that at least the best-fitting model is an adequate description of the data.
 
-PhyloMAd supportes several of the most common nucleotide and amino-acid substitution models (e.g., JC, HKY, and GTR), including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
+PhyloMAd supports several of the most common nucleotide and amino-acid substitution models (e.g., JC, HKY, and GTR), including gamma-distributed rates across sites with 4 discrete categories. Clock models supported include those implemented in BEAST 2.
 
 ## Download and package installation
 
