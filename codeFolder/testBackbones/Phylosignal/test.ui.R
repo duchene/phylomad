@@ -10,9 +10,7 @@ tabsetPanel(
 		       h4("Select the data set(s)"),
                        fileInput("dataPath", label = h5("Data sets must come from the same folder and be one or several alignments or trees files"), multiple = T),
 		       br(),
-		       h4("Select the format of your data"),
-		       radioButtons("dataFormat", label = "",
-                       choices = list("NEXUS" = "nexus", "NEWICK" = "newick", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus")
+		       checkboxInput("dataType", label = "Amino acid data", value = FALSE)
 		       ),
 		       column(1))
         ),
@@ -54,10 +52,6 @@ tabsetPanel(
 		       h4("Select the number of simulations to be made"),
 		       numericInput("Nsims", label = "",
                        value = 100),
-		       br(),
-		       h4("Select the number of computer cores to be used"),
-		       numericInput("Ncores", label = h5("Multi-core assessments can only be aborted at the completion of a locus assessment"),
-                       value = 1),
 		       br(),
 		       checkboxInput("overwrite", label = h5("Overwrite previous analyses"), value = FALSE),
 		       br(),

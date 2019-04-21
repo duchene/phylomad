@@ -6,17 +6,17 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
 
     if(format == 'fasta'){
         if(aadata) d <- read.aa(sdata, format = 'fasta') else d <- read.dna(sdata, format = 'fasta')
-        fileName = gsub('fasta', 'phy', sdata)
+        fileName <- gsub('fasta', 'phy', sdata)
         write.dna(d, file = fileName)
     } else if(format == 'bin'){
-        write.dna(sdata, temp_name)
-        fileName = temp_name
+        write.dna(sdata, file = temp_name)
+        fileName <- temp_name
     } else if(format == "nexus"){
         if(aadata) d <- as.AAbin(read.nexus.data(sdata)) else d <- as.DNAbin(read.nexus.data(sdata))
-        fileName = gsub('nexus', 'phy', sdata)
+        fileName <- gsub('nexus', 'phy', sdata)
         write.dna(d, file = fileName)
     } else {
-        fileName = sdata
+        fileName <- sdata
     }
     print(paste("Locus", fileName, "was read successfully."))
 

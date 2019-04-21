@@ -7,9 +7,10 @@ clean.gene <- function(sdata, format = "phylip", aadata = F, clean = T){
 		  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.matrix(as.DNAbin(read.nexus.data(sdata)))
 	   }
 	   
-	   if(!clean) return(data)
-
+	   
 	   gene <- as.character(as.matrix(data))
+	   if(!clean & aadata) return(as.AAbin(gene)) else if(!clean) return(as.DNAbin(gene))
+	   
 	   goodcols <- vector()
 	   if(aadata){
 		for(i in 1:ncol(gene)) if(length(grep("c|d|s|q|k|i|p|t|f|n|g|h|l|r|w|a|v|e|y|m|C|D|S|Q|K|I|P|T|F|N|G|H|L|R|W|A|V|E|Y|M", gene[, i])) == nrow(gene)) goodcols <- c(goodcols, i)

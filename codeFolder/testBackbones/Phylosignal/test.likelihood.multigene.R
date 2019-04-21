@@ -19,17 +19,16 @@ locilengths <- vector()
 
 for(j in 1:nrow(input$dataPath)){
 
-# FIND WAY TO DETERMINE THE TYPE OF DATA (DNA OR AA), AND SELECT MODEL WHEN DATA ARE AA
+firstLine <- readLines(as.character(input$dataPath[j, 4]), n = 1)
+if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nexus", firstLine)) dataFormat <- "nexus" else if(grepl("[(]", firstLine)) dataFormat <- "newick" else dataFormat <- "phylip"
 
-if(input$testType == "locus") model <- get.model(as.character(input$dataPath[j, 4]), format = input$dataFormat)
+if(input$testType == "locus" & !input$dataType) model <- get.model(as.character(input$dataPath[j, 4]), format = dataFormat) else if(input$testType == "locus" & input$dataType) model <- "WAG+G"
 
 print("Model to be assessed was identified")
 
-if(input$testType == "locus") analysisdata <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = F, clean = input$cleanOrNot) else analysisdata <- as.character(input$dataPath[j, 4])
+if(input$testType == "locus") analysisdata <- clean.gene(sdata = as.character(input$dataPath[j, 4]), format = dataFormat, aadata = input$dataType, clean = F) else analysisdata <- as.character(input$dataPath[j, 4])
 
 print("Locus was cleaned successfully")
-
-if(input$Ncores > 1) parallelise <- T else parallelise <- F
 
 setwd(input$outputFolder)
 
@@ -44,7 +43,7 @@ if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".
 
 whatToOutput <- unlist(input$whatToOutput)
 
-geneResults <- test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else input$dataFormat, testType = input$testType, aadata = F, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnEstPhylo = "phyloempres" %in% whatToOutput, returnSimulations = "simdat" %in% whatToOutput)
+geneResults <- test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else dataFormat, testType = input$testType, aadata = input$dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, testStats = selectedStats, returnEstPhylo = "phyloempres" %in% whatToOutput, returnSimulations = "simdat" %in% whatToOutput)
 
 if("testPlots" %in% whatToOutput){
 	histplotdat <- colMeans(geneResults[[1]], na.rm = T)
