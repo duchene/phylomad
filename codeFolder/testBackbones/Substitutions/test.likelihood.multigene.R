@@ -11,19 +11,24 @@ initial.dir <- getwd()
 
 print("Functions required were loaded successfully")
 
-if(input$treesFormat == "newick"){ trees <- read.tree(as.character(input$treesPath[1, 4])) } else if(input$treesFormat == "nexus"){ trees <- read.nexus(as.character(input$treesPath[1, 4])) } else { trees <- NULL }
+firstLine <- ""
 
-if(input$treesFormat != "none" & class(trees) == "phylo"){ 
+if(length(input$treesPath[1, 4]) == 0) treesFormat <- "none" else firstLine <- readLines(as.character(input$treesPath[1, 4]), n = 1)
+if(grepl("[#]NEXUS|[#]nexus", firstLine)) treesFormat <- "nexus" else if(grepl("[(]", firstLine)) treesFormat <- "newick"
+
+if(treesFormat == "newick"){ trees <- read.tree(as.character(input$treesPath[1, 4])) } else if(treesFormat == "nexus"){ trees <- read.nexus(as.character(input$treesPath[1, 4])) } else { trees <- NULL }
+
+if(treesFormat != "none" & class(trees) == "phylo"){ 
 	trees <- list(trees)
 	print("One tree was found as input")
 }
 
-if(input$treesFormat != "none" & length(trees) < nrow(input$dataPath)){
+if(treesFormat != "none" & (length(trees) < nrow(input$dataPath))){
 	trees <- rep(trees[1], nrow(input$dataPath))
 	print("Since there are less trees than loci, the first tree was used for all locus analysis")
 }
 
-if(input$treesFormat != "none") class(trees) <- "multiPhylo"
+if(treesFormat != "none") class(trees) <- "multiPhylo"
 
 selectedStats <- unlist(input$testStats)
 
@@ -37,11 +42,14 @@ locilengths <- vector()
 
 for(j in 1:nrow(input$dataPath)){
 
-if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j, 4]), format = input$dataFormat)
+firstLine <- readLines(as.character(input$dataPath[j, 4]), n = 1)
+if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nexus", firstLine)) dataFormat <- "nexus" else if(grepl("[(]", firstLine)) dataFormat <- "newick" else dataFormat <- "phylip"
+
+if(input$model == "autoModel") model <- get.model(as.character(input$dataPath[j, 4]), format = dataFormat)
 
 print("Model to be assessed was identified")
 
-genebin <- try(clean.gene(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, aadata = aadata, clean = input$cleanOrNot))
+genebin <- try(clean.gene(sdata = as.character(input$dataPath[j, 4]), format = dataFormat, aadata = aadata, clean = input$cleanOrNot))
 if(class(genebin) == "try-error"){
 	print(paste("Reading of locus", as.character(input$dataPath[j, 1]), "failed"))
 	next
@@ -64,7 +72,7 @@ if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".
 
 whatToOutput <- unlist(input$whatToOutput)
 
-geneResults <- try(run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = trees[j], returnSimPhylo = T, returnSimDat = T))
+geneResults <- try(run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = if(is.null(trees)) NULL else trees[j], returnSimPhylo = T, returnSimDat = T))
 if(class(geneResults) == "try-error"){
 	print(paste("Analisis of locus", as.character(input$dataPath[j, 1]), "failed"))
 	next

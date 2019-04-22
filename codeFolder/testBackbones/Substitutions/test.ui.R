@@ -6,18 +6,10 @@ tabsetPanel(
 		       h4("Select the nucleotide or amino acid alignment(s) for which the substitution model will be assessed"),
                        fileInput("dataPath", label = h5("Alignments selected must come from the same folder"), multiple = T),
 		       br(),
-		       h4("Select the format of your data"),
-		       radioButtons("dataFormat", label = "",
-                       choices = list("NEXUS" = "nexus", "Phylip" = "phylip", "FASTA" = "fasta"), selected = "nexus"),
-		       br(),
 		       checkboxInput("cleanOrNot", label = tags$span(h5("Remove sites with missing data from each alignment"), tipify(bsButton("pB1", "?", style = "inverse", size = "extra-small"), placement = "right", "Removing sites with missing data is important for accurate estimation of test statistics. Only uncheck this box if the alignments only have a negligible amount of missing data.")), value = TRUE),
 			   br(),
 		       h4("Select any input tree(s) (or leave blank)"),
-		       fileInput("treesPath", label = "", multiple = T),
-		       br(),
-		       h4("Select the format of your tree(s)"),
-                       radioButtons("treesFormat", label = "",
-                       choices = list("No input tree" = "none", "NEXUS" = "nexus", "NEWICK" = "newick"), selected = "none")
+		       fileInput("treesPath", label = "", multiple = T)
 		       ),
 		       column(1))
         ),

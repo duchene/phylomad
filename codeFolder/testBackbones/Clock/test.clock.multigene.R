@@ -33,9 +33,10 @@ if(input$overwrite == F && file.exists(paste0(as.character(input$dataPath[j, 1])
 if(nrow(input$treesPath) == 1) treesPath <- as.character(input$treesPath[1, 4]) else treesPath <- as.character(input$treesPath[j, 4])
 if(nrow(input$posteriorPath) == 1) postPath <- as.character(input$posteriorPath[1, 4]) else postPath <- as.character(input$posteriorPath[j, 4])
 
-if(input$dataFormat == "NEXUS") input$dataFormat <- "nexus"
+firstLine <- readLines(as.character(input$dataPath[j, 4]), n = 1)
+if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nexus", firstLine)) dataFormat <- "nexus" else dataFormat <- "phylip"
 
-geneResults <- try(run.gene.clock(sdata = as.character(input$dataPath[j, 4]), format = input$dataFormat, treesFile = treesPath, logFile = postPath, burninpercentage = input$burnin, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnSimPhylo = T, returnSimDat = T))
+geneResults <- try(run.gene.clock(sdata = as.character(input$dataPath[j, 4]), format = dataFormat, treesFile = treesPath, logFile = postPath, burninpercentage = input$burnin, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnSimPhylo = T, returnSimDat = T))
 if(class(geneResults) == "try-error"){
 	print(paste("Analysis of locus", as.character(input$dataPath[j, 1]), "failed"))
 	next

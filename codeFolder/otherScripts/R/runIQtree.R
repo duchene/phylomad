@@ -26,7 +26,7 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
         treenumber <- round(runif(1, min = 1000, max = 9999))
 	treefile <- paste0("temp.", treenumber, ".tre")
         write.tree(tree, file = treefile)
-        iqtreeCommand = paste0(iqtreePath, "-s ", fileName, " -m ", model, " -g ", treefile, " -alrt 1000")
+        iqtreeCommand = paste0(iqtreePath, " -s ", fileName, " -m ", model, " -g ", treefile, " -alrt 1000")
     }
 
     system(iqtreeCommand)
@@ -34,7 +34,9 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
     
     allout <- readLines(paste0(fileName, ".iqtree"))
 
-    system(paste0("rm ", fileName, ".ckp.gz ", fileName, ".bionj ", fileName, ".log ", fileName, ".mldist ", fileName, ".treefile ", fileName, ".contree ", fileName, ".splits.nex ", fileName, ".iqtree"))
+	torm <- grep(paste0(fileName, c(".ckp.gz", ".bionj", ".log", ".mldist", ".treefile", ".contree", ".splits.nex", ".iqtree", ".parstree"), collapse = "|"), dir(), value = T)
+	
+	for(i in torm) system(paste0("rm ", i))
        
        res <- list()
        

@@ -1,10 +1,14 @@
-test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, para = parallelise, ncore = 1, clean = "cleandata", stats = stats, plotdat = F, linmods = funclist){
+test.saturation <- function(loci, iqtreePath = iqtreePath, para = parallelise, ncore = 1, clean = "cleandata", stats = stats, plotdat = F, linmods = funclist){
 	 
 	 aadata <- F
 	 
-	 runLoc <- function(loc, format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods){
+	 runLoc <- function(loc, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods){
              if(clean == "cleandata") cleanlogical <- T else cleanlogical <- F
-	     genebin <- list(clean.gene(sdata = loc, format = format, aadata = aadata, clean = cleanlogical))
+	     
+	     firstLine <- readLines(loc, n = 1)
+if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nexus", firstLine)) dataFormat <- "nexus" else dataFormat <- "phylip"
+	     
+	     genebin <- list(clean.gene(sdata = loc, format = dataFormat, aadata = aadata, clean = cleanlogical))
 	     
 	     if(clean == "codonpos") genebin <- list(pos1and2 = genebin[[1]][,c(T,T,F)], pos3 = genebin[[1]][,c(F,F,T)])
 	     
@@ -95,7 +99,7 @@ test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, pa
          if(!para){
 
            for(i in 1:length(loci)){
-	       reslist[[i]] <- try(runLoc(loci[i], format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods))
+	       reslist[[i]] <- try(runLoc(loci[i], aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods))
 	       if(class(reslist[[i]]) == "try-error") next
            }
 
@@ -107,7 +111,7 @@ test.saturation <- function(loci, format = "phylip", iqtreePath = iqtreePath, pa
            require(doParallel)
            cl <- makeCluster(ncore)
            registerDoParallel(cl)
-           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runIQtree', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% runLoc(x, format = format, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods)
+           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runIQtree', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% runLoc(x, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods)
            stopCluster(cl)
            print("Parallel computing ended successfully")
            ### END PARALLEL COMPUTING
