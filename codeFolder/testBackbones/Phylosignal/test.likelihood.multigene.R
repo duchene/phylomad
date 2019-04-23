@@ -45,6 +45,19 @@ whatToOutput <- unlist(input$whatToOutput)
 
 geneResults <- test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else dataFormat, testType = input$testType, aadata = input$dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, testStats = selectedStats, returnEstPhylo = "phyloempres" %in% whatToOutput, returnSimulations = "simdat" %in% whatToOutput)
 
+rownames(geneResults[[1]]) <- geneResults[[1]][,1]
+colnames(geneResults[[1]]) <- gsub("Label", "br.length", colnames(geneResults[[1]]))
+geneResults[[1]] <- round(geneResults[[1]], 3)
+
+	if("allqp" %in% whatToOutput) write.csv(t(geneResults[[1]]), file = "full.results.csv")
+
+if("pvals" %in% whatToOutput){
+	restab <- geneResults[[1]][,-grep("ID|sDF|sN|gDF|gN", colnames(geneResults[[1]]))]
+	restab <- rbind(restab, round(colMeans(restab, na.rm = T), 3))
+	rownames(restab)[nrow(restab)] <- "mean"
+	write.csv(t(restab), file = "results.summary.csv")
+}
+
 if("testPlots" %in% whatToOutput){
 	histplotdat <- colMeans(geneResults[[1]], na.rm = T)
 	names(histplotdat) <- colnames(geneResults[[1]])
@@ -66,6 +79,10 @@ if("testPlots" %in% whatToOutput){
 		for(i in 1:length(selectedStats)){
 		      statdat <- histplotdat[grep(selectedStats[i], names(histplotdat))]
 		      sdstat <- sd(statdat[2:length(statdat)])
+		      if(any(statdat[2:length(statdat)] == -Inf)){
+		      	print(paste0("Histogram of ", statlabels[i], "cannot be plotted."))
+		      	next
+		      }
 		      hist(statdat[2:length(statdat)], xlim = c(min(statdat, na.rm = T) - sdstat, max(statdat, na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of simulations", main = "")
 		      abline(v = statdat[1], col = "red", lwd = 3)
 		}
@@ -74,7 +91,6 @@ if("testPlots" %in% whatToOutput){
 		pdf("tests.summary.tree.pdf", useDingbats = F, height = if(length(geneResults[[2]]$edge.length) < 50) 15 else 30, width = if(length(geneResults[[2]]$edge.length) < 50) 30 else 60)
 		par(mfrow = c(1,2))
 		for(i in 1:length(selectedStats)){
-		      
 		      tr <- geneResults[[2]]
 		      tr$edge.length <- rep(1, length(geneResults[[2]]$edge.length))
 		      brpvalue <- round(geneResults[[1]][, paste0(selectedStats[i], ".p.value")], 1)
@@ -85,6 +101,11 @@ if("testPlots" %in% whatToOutput){
 		      brsdpd <- brsdpd[as.character(geneResults[[3]]$edge.length)]
 		      brpvalue[is.na(brpvalue)] <- mean(brpvalue, na.rm = T)
 		      brsdpd[is.na(brsdpd)] <- mean(brsdpd, na.rm = T)
+		      writeLines(statlabels[i], con = "test.txt")
+		      if(any(brpvalue == Inf) | any(brpvalue == -Inf) | any(brsdpd == Inf) | any(brsdpd == -Inf)){
+		      	print(paste0("Tree depicting ", statlabels[i], " statistic cannot be ploted."))
+			next
+		      }
 
 		      plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "heat.colors", type = "fan", legend = F)
 		      plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "heat.colors", type = "fan", title = paste0(statlabels[i], "\nP-value\n"))
@@ -96,15 +117,7 @@ if("testPlots" %in% whatToOutput){
 		
 	}
 	
-	if("allqp" %in% whatToOutput) write.csv(geneResults[[1]], file = "full.results.csv")
 
-if("pvals" %in% whatToOutput){
-	rownames(geneResults[[1]]) <- geneResults[[1]][,1]
-	restab <- geneResults[[1]][,-grep("ID|sDF|sN|gDF|gN", colnames(geneResults[[1]]))]
-	restab <- rbind(restab, colMeans(restab))
-	rownames(restab)[nrow(restab)] <- "mean"
-	write.csv(restab, file = "results.summary.csv")
-}
 }
 
 setwd("..")

@@ -55,7 +55,7 @@ if("pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToO
 	} else {
 	       colnames(outs[[j]]) <- unlist(input$testStats)
 	       rownames(outs[[j]]) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
-	       write.csv(outs[[j]], file = "output.pvals.PhyloMAd.csv")
+	       write.csv(t(outs[[j]]), file = "output.pvals.PhyloMAd.csv")
 	}
 	resvector <- matrix(as.vector(t(outs[[j]])), nrow = 1)
         rownames(resvector) <- as.character(input$dataPath[j, 1])
@@ -83,9 +83,7 @@ if("simdat" %in% unlist(input$whatToOutput)){
 	}
 }
 
-if("phylosimres" %in% unlist(input$whatToOutput)){
-	write.tree(geneResults$simPhylos, file = "estimate.predictive.data.tre")
-}
+if("phylosimres" %in% unlist(input$whatToOutput)) write.tree(geneResults$simPhylos, file = "estimate.predictive.data.tre")
 
 if("testPlots" %in% unlist(input$whatToOutput)){
 	empstats <- unlist(geneResults[grep("emp[.]", names(geneResults))])
@@ -135,7 +133,7 @@ if("simple" %in% unlist(input$whatToOutput)) system(paste0("rm -r ", as.characte
 
 if(nrow(input$dataPath) > 1 && "pvals" %in% unlist(input$whatToOutput) || "simple" %in% unlist(input$whatToOutput)){
         allOutput <- do.call("rbind", outs)
-        write.csv(allOutput, file = "output.all.loci.clock.PhyloMAd.csv")
+        write.csv(t(allOutput), file = "output.all.loci.clock.PhyloMAd.csv")
 }
 
 setwd(initial.dir)

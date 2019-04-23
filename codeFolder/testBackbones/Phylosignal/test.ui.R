@@ -9,7 +9,6 @@ tabsetPanel(
 		       br(),
 		       h4("Select the data set(s)"),
                        fileInput("dataPath", label = h5("Data sets must come from the same folder and be one or several alignments or trees files"), multiple = T),
-		       br(),
 		       checkboxInput("dataType", label = "Amino acid data", value = FALSE)
 		       ),
 		       column(1))

@@ -109,7 +109,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 		   system(paste0(iqtreePath, " -t empirical.empty.tre --gcf sim.genetrees.", i, ".phy --prefix sim.conc.", i))
 		   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")[,-7]
 		   colnames(sim[[i]])[2:4] <- paste0(colnames(sim[[i]])[2:4], ".sim.", i)
-               	   system(paste0("rm sim.genetrees.", i, ".phy sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))
+               	   system(paste0("rm sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))
 		   if(!returnSimulations) system(paste0("rm sim.genetrees.", i, ".phy"))
 	 }
      

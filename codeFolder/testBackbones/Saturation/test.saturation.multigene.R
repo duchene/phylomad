@@ -53,7 +53,7 @@ colnames(restab) <- gsub("cith", "CI", colnames(restab))
 colnames(restab) <- gsub("comth", "Compression", colnames(restab))
 
 if("tsat" %in% whatToOutput){
-	write.csv(restab, file = "saturation.test.results.csv")
+	write.csv(t(restab), file = "saturation.test.results.csv")
 }
 
 if("satPlots" %in% whatToOutput){

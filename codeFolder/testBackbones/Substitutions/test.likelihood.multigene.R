@@ -93,7 +93,7 @@ if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 	} else {
 	       colnames(outs[[j]]) <- unlist(input$testStats)
 	       rownames(outs[[j]]) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
-	       write.csv(outs[[j]], file = "output.pvals.PhyloMAd.csv")
+	       write.csv(t(outs[[j]]), file = "output.pvals.PhyloMAd.csv")
 	}
 	resvector <- matrix(as.vector(t(outs[[j]])), nrow = 1)
 	rownames(resvector) <- as.character(input$dataPath[j, 1])
@@ -105,12 +105,9 @@ if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 		biasrisk <- print.bias.risk(selectedStats, geneResults, locilengths[j])
 		outs[[j]] <- cbind(outs[[j]], biasrisk[[1]])
 	}
-
 }
 
-if("phyloempres" %in% whatToOutput){
-	write.tree(geneResults$empirical.tree, file = "estimate.empirical.data.tre")
-}
+if("phyloempres" %in% whatToOutput) write.tree(geneResults$empirical.tree, file = "estimate.empirical.data.tre")
 
 if("simdat" %in% whatToOutput){
 	if(input$outputFormat == "phylip"){
@@ -126,9 +123,7 @@ if("simdat" %in% whatToOutput){
 	}
 }
 
-if("phylosimres" %in% whatToOutput){
-	write.tree(geneResults$simPhylos, file = "estimate.predictive.data.tre")
-}
+if("phylosimres" %in% whatToOutput) write.tree(geneResults$simPhylos, file = "estimate.predictive.data.tre")
 
 if("testPlots" %in% whatToOutput){
 	empstats <- unlist(geneResults[grep("emp[.]", names(geneResults))])
@@ -165,7 +160,7 @@ if("simple" %in% whatToOutput) system(paste0("rm -r ", as.character(input$dataPa
 
 if(nrow(input$dataPath) > 1 && "pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 	allOutput <- do.call("rbind", outs)
-	write.csv(allOutput, file = "output.all.loci.PhyloMAd.csv")
+	write.csv(t(allOutput), file = "output.all.loci.PhyloMAd.csv")
 }
 
 if("multiTestPlots" %in% whatToOutput){
