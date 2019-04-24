@@ -34,7 +34,7 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
     
     allout <- readLines(paste0(fileName, ".iqtree"))
 
-	torm <- grep(paste0(fileName, c(".ckp.gz", ".bionj", ".log", ".mldist", ".treefile", ".contree", ".splits.nex", ".iqtree", ".parstree"), collapse = "|"), dir(), value = T)
+	torm <- grep(paste0(fileName, c(".ckp.gz", ".bionj", ".log", ".mldist", ".treefile", ".uniqueseq.", ".contree", ".splits.nex", ".iqtree", ".parstree"), collapse = "|"), dir(), value = T)
 	
 	for(i in torm) system(paste0("rm ", i))
        

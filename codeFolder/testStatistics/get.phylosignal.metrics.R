@@ -27,6 +27,7 @@ get.dist2tr <- function(qp){
 }
 
 get.binom.p <- function(qpNtrials){
+	if(round(qpNtrials[4]) == 0) return(NA)
 	bipartsuccs <- sort(qpNtrials[1:3]*qpNtrials[4], decreasing = T)
 	pval <- binom.test(round(bipartsuccs[1]), round(qpNtrials[4]), 1/3, alternative = "greater")$p.value
 	return(pval)

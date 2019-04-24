@@ -19,6 +19,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 if(testType == "locus"){
 	 	  iqtreeres.emp <- runIQtree(data, format = 'bin', aadata = aadata, temp_name = "empirical", iqtreePath = iqtreePath, model = model)
 		  emptre <- iqtreeres.emp$tree
+		  data <- data[emptre$tip.label,]
 		  write.dna(data, file = "empirical.phy")
 	 } else {
 	   	  ## Run ASTRAL
@@ -119,7 +120,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
      	 if("dtree" %in% testStats) sim[[i]][,paste0("sim.", i, ".dtree")] <- apply(sim[[i]][,2:4]/100, 1, function(x) get.dist2tr(x)[3])
      	 if("entrop" %in% testStats) sim[[i]][,paste0("sim.", i, ".entrop")] <- apply(sim[[i]][,2:4]/100, 1, get.quartet.entropy)
      	 if("icert" %in% testStats) sim[[i]][,paste0("sim.", i, ".icert")] <- apply(sim[[i]][,2:4]/100, 1, get.internode.cert)
-     	 if("binp" %in% testStats) sim[[i]][,paste0("sim.", i, ".binp")] <- apply(cbind(sim[[i]][,2:4]/100, sim[[i]][,5]), 1, get.binom.p)    
+     	 if("binp" %in% testStats) sim[[i]][,paste0("sim.", i, ".binp")] <- apply(cbind(sim[[i]][,2:4]/100, sim[[i]][,5]), 1, get.binom.p)
      	 if("dstat" %in% testStats) sim[[i]][,paste0("sim.", i, ".dstat")] <- apply(sim[[i]][,2:4]/100, 1, get.dstat)
      	 if("kcstat" %in% testStats) sim[[i]][,paste0("sim.", i, ".kcstat")] <- apply(sim[[i]][,2:4]/100, 1, get.kcstat)
      

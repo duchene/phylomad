@@ -47,7 +47,7 @@ geneResults <- test.phylosignal(sdata = analysisdata, format = if(input$testType
 
 rownames(geneResults[[1]]) <- geneResults[[1]][,1]
 colnames(geneResults[[1]]) <- gsub("Label", "br.length", colnames(geneResults[[1]]))
-geneResults[[1]] <- round(geneResults[[1]], 3)
+geneResults[[1]] <- round(as.data.frame(apply(geneResults[[1]], 2, as.numeric)), 3)
 
 	if("allqp" %in% whatToOutput) write.csv(t(geneResults[[1]]), file = "full.results.csv")
 
@@ -78,11 +78,11 @@ if("testPlots" %in% whatToOutput){
 	        pdf("tests.histograms.pdf", useDingbats = F, height = 5)
 		for(i in 1:length(selectedStats)){
 		      statdat <- histplotdat[grep(selectedStats[i], names(histplotdat))]
-		      sdstat <- sd(statdat[2:length(statdat)])
-		      if(any(statdat[2:length(statdat)] == -Inf)){
+		      if(is.na(statdat[1]) || is.nan(statdat[1]) || any(is.infinite(statdat)) || all(is.na(statdat)) || all(is.nan(statdat))){
 		      	print(paste0("Histogram of ", statlabels[i], "cannot be plotted."))
 		      	next
 		      }
+		      sdstat <- sd(statdat[2:length(statdat)], na.rm = T)
 		      hist(statdat[2:length(statdat)], xlim = c(min(statdat, na.rm = T) - sdstat, max(statdat, na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of simulations", main = "")
 		      abline(v = statdat[1], col = "red", lwd = 3)
 		}
@@ -101,8 +101,8 @@ if("testPlots" %in% whatToOutput){
 		      brsdpd <- brsdpd[as.character(geneResults[[3]]$edge.length)]
 		      brpvalue[is.na(brpvalue)] <- mean(brpvalue, na.rm = T)
 		      brsdpd[is.na(brsdpd)] <- mean(brsdpd, na.rm = T)
-		      writeLines(statlabels[i], con = "test.txt")
-		      if(any(brpvalue == Inf) | any(brpvalue == -Inf) | any(brsdpd == Inf) | any(brsdpd == -Inf)){
+		      save(brpvalue, brsdpd, file = "test.Rdata")
+		      if(all(is.na(brpvalue)) || all(is.nan(brpvalue)) || any(is.infinite(brpvalue)) || all(is.na(brsdpd)) || all(is.nan(brsdpd)) || any(is.infinite(brsdpd))){
 		      	print(paste0("Tree depicting ", statlabels[i], " statistic cannot be ploted."))
 			next
 		      }
