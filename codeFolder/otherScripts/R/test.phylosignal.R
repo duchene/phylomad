@@ -27,7 +27,6 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 		  emptre <- read.tree("species.tre")
 		  write.tree(data, file = "empirical.phy")
 	 }
-	 if(returnEstPhylo) write.tree(emptre, file = "empirical.tre")
 	 
 	 # Use IQtree to calculate bipartition probabilities per branch THIS CURRENTLY ASSUMES THAT --scf and --gcf produce identical results
 	 
