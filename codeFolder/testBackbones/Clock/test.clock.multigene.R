@@ -38,6 +38,8 @@ if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nex
 
 geneResults <- try(run.gene.clock(sdata = as.character(input$dataPath[j, 4]), format = dataFormat, treesFile = treesPath, logFile = postPath, burninpercentage = input$burnin, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, returnSimPhylo = T, returnSimDat = T))
 if(class(geneResults) == "try-error"){
+	setwd("..")
+	system(paste0("rm -r ", as.character(input$dataPath[j, 1]), ".phylomad.clock"))
 	print(paste("Analysis of locus", as.character(input$dataPath[j, 1]), "failed"))
 	next
 }

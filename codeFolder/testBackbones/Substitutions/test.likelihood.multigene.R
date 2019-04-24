@@ -66,14 +66,16 @@ print("Output folder was identified successfully")
 if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))){
        stop("Exisitng files will not be overwritten. Aborting.")
 } else {
-       system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad"))
-       setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
+       system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.subst"))
+       setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad.subst"))
 }
 
 whatToOutput <- unlist(input$whatToOutput)
 
 geneResults <- try(run.gene(sdata = genebin, format = "bin", aadata = aadata, model = model, iqtreePath = iqtreePath, Nsims = input$Nsims, para = parallelise, ncore = input$Ncores, testStats = selectedStats, tree = if(is.null(trees)) NULL else trees[j], returnSimPhylo = T, returnSimDat = T))
 if(class(geneResults) == "try-error"){
+	setwd("..")
+	system(paste0("rm -r ", as.character(input$dataPath[j, 1]), ".phylomad.subst"))
 	print(paste("Analisis of locus", as.character(input$dataPath[j, 1]), "failed"))
 	next
 }

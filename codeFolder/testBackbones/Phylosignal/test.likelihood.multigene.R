@@ -37,24 +37,32 @@ print("Output folder was identified successfully")
 if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))){
        stop("Exisitng files will not be overwritten. Aborting.")
 } else {
-       system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad"))
-       setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))
+       system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.phylosig"))
+       setwd(paste0(as.character(input$dataPath[j, 1]), ".phylomad.phylosig"))
 }
 
 whatToOutput <- unlist(input$whatToOutput)
 
-geneResults <- test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else dataFormat, testType = input$testType, aadata = input$dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, testStats = selectedStats, returnEstPhylo = "phyloempres" %in% whatToOutput, returnSimulations = "simdat" %in% whatToOutput)
+geneResults <- try(test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else dataFormat, testType = input$testType, aadata = input$dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, testStats = selectedStats, returnEstPhylo = "phyloempres" %in% whatToOutput, returnSimulations = "simdat" %in% whatToOutput))
+if(class(geneResults) == "try-error"){
+       setwd("..")
+       system(paste0("rm -r ", as.character(input$dataPath[j, 1]), ".phylomad.phylosig"))
+       print(paste0("Assessment of ", as.character(input$dataPath[j, 1]), " failed"))
+       next
+}
 
 rownames(geneResults[[1]]) <- geneResults[[1]][,1]
 colnames(geneResults[[1]]) <- gsub("Label", "br.length", colnames(geneResults[[1]]))
 geneResults[[1]] <- round(as.data.frame(apply(geneResults[[1]], 2, as.numeric)), 3)
+geneResults[[1]] <- rbind(geneResults[[1]], round(colMeans(geneResults[[1]], na.rm = T), 3))
+rownames(geneResults[[1]])[nrow(geneResults[[1]])] <- "mean"
 
-	if("allqp" %in% whatToOutput) write.csv(t(geneResults[[1]]), file = "full.results.csv")
+if("allqp" %in% whatToOutput){
+	write.csv(t(geneResults[[1]]), file = "full.results.csv")
+}
 
 if("pvals" %in% whatToOutput){
 	restab <- geneResults[[1]][,-grep("ID|sDF|sN|gDF|gN", colnames(geneResults[[1]]))]
-	restab <- rbind(restab, round(colMeans(restab, na.rm = T), 3))
-	rownames(restab)[nrow(restab)] <- "mean"
 	write.csv(t(restab), file = "results.summary.csv")
 }
 
