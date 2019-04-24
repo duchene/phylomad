@@ -37,9 +37,7 @@ if(length(failedLoci) > 0){
 	print(paste("Analysis of locus", failedLoci, "failed"))
 }
 
-#### Output missing
-
-locinames <- as.character(input$dataPath[, 1])
+locinames <- as.character(input$dataPath[, 1])[-failedLoci]
 	
 if(length(geneResults) > 1){
 	restabs <- lapply(geneResults, function(x) x[[1]])
@@ -47,6 +45,7 @@ if(length(geneResults) > 1){
 } else {
         restab <- geneResults[[1]][[1]]
 }
+
 if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- locinames
 colnames(restab) <- gsub("enth", "Entropy", colnames(restab))
 colnames(restab) <- gsub("cith", "CI", colnames(restab))
