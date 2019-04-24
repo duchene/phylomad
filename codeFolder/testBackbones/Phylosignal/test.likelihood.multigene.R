@@ -101,7 +101,6 @@ if("testPlots" %in% whatToOutput){
 		      brsdpd <- brsdpd[as.character(geneResults[[3]]$edge.length)]
 		      brpvalue[is.na(brpvalue)] <- mean(brpvalue, na.rm = T)
 		      brsdpd[is.na(brsdpd)] <- mean(brsdpd, na.rm = T)
-		      save(brpvalue, brsdpd, file = "test.Rdata")
 		      if(all(is.na(brpvalue)) || all(is.nan(brpvalue)) || any(is.infinite(brpvalue)) || all(is.na(brsdpd)) || all(is.nan(brsdpd)) || any(is.infinite(brsdpd))){
 		      	print(paste0("Tree depicting ", statlabels[i], " statistic cannot be ploted."))
 			next
