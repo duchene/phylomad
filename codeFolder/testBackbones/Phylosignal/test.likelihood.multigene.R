@@ -1,3 +1,5 @@
+processTime <- proc.time()[3]
+
 initial.dir <- getwd()
 
 source("otherScripts/R/test.phylosignal.R")
@@ -138,4 +140,4 @@ if(nrow(input$dataPath) > 1 & "pvals" %in% whatToOutput){
 
 setwd(initial.dir)
 
-print("Assessment completed successfully.")
+print(paste0("Assessment completed successfully in ", round(proc.time()[3] - processTime, 3), " seconds."))

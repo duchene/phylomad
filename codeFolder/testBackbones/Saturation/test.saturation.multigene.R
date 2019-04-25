@@ -1,3 +1,4 @@
+processTime <- proc.time()[3]
 source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/test.saturation.R")
 source("otherScripts/R/runIQtree.R")
@@ -32,13 +33,15 @@ if("satPlots" %in% whatToOutput | "multiSatPlots" %in% whatToOutput) plotdat <- 
 
 geneResults <- try(test.saturation(loci = as.character(input$dataPath[, 4]), iqtreePath = iqtreePath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, linmods = funclist))
 failedLoci <- which(sapply(geneResults, class) == "try-error")
+
+locinames <- as.character(input$dataPath[, 1])
+
 if(length(failedLoci) > 0){
 	geneResults <- geneResults[-failedLoci]
+	locinames <- locinames[-failedLoci]
 	print(paste("Analysis of locus", failedLoci, "failed"))
 }
 
-locinames <- as.character(input$dataPath[, 1])[-failedLoci]
-	
 if(length(geneResults) > 1){
 	restabs <- lapply(geneResults, function(x) x[[1]])
 	restab <- do.call(rbind, restabs)
@@ -148,4 +151,4 @@ if("multiSatPlots" %in% whatToOutput){
 
 setwd(initial.dir)
 
-print("Assessment completed successfully.")
+print(paste0("Assessment completed successfully in ", round(proc.time()[3] - processTime, 3), " seconds."))

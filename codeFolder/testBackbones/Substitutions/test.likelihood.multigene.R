@@ -1,3 +1,4 @@
+processTime <- proc.time()[3]
 source("otherScripts/R/run.gene.R")
 source("otherScripts/R/get.test.statistics.R")
 source("otherScripts/R/runIQtree.R")
@@ -205,4 +206,4 @@ if("multiTestPlots" %in% whatToOutput){
 
 setwd(initial.dir)
 
-print("Assessment completed successfully.")
+print(paste0("Assessment completed successfully in ", round(proc.time()[3] - processTime, 3), " seconds."))
