@@ -125,7 +125,7 @@ if("testPlots" %in% whatToOutput){
 		}
 		dev.off()
 		
-		#finish up and add custom legend?
+		#finish up and add custom legend? Add two ternary plots one with all the simulated branches, and one of the mean cfs for each data set, put both in one page with grid.arrange
 		#pdf("ternary.pdf")
 		#terndat <- geneResults[[1]][-c("mean"),c("sCF", "sDF1", "sDF2")]
 		#nbranch <- nrow(terndat)
