@@ -68,8 +68,10 @@ if("pvals" %in% whatToOutput){
 	write.csv(t(restab), file = "results.summary.csv")
 }
 
+# fix bug with p-values!! either the table or the histogram has them wrong!
+
 if("testPlots" %in% whatToOutput){
-	histplotdat <- colMeans(geneResults[[1]], na.rm = T)
+	histplotdat <- as.numeric(geneResults[[1]]["mean",])
 	names(histplotdat) <- colnames(geneResults[[1]])
 	histplotdat <- histplotdat[-grep("ID|sDF|sN|gDF|gN|value|sdpd", names(histplotdat))]
 	statlabels <- vector()
@@ -123,6 +125,14 @@ if("testPlots" %in% whatToOutput){
 		}
 		dev.off()
 		
+		#finish up and add custom legend?
+		#pdf("ternary.pdf")
+		#terndat <- geneResults[[1]][-c("mean"),c("sCF", "sDF1", "sDF2")]
+		#nbranch <- nrow(terndat)
+		#nsimbranch <- nbranch * nsim
+		#for(i in 1:nsim) terndat <- rbind(resdat[,c(paste0("sCF.sim.", i), paste0("sDF1.sim.", i), paste0("sDF2.sim.", i))], terndat)
+		#ggtern(data=as.data.frame(terndat),aes(x=sCF,y=sDF1,z=sDF2),aes(x,y,z)) + geom_point(aes(fill=c(rep(2,nsimbranch), rep(1,nbranch))), alpha = c(rep(0.5,nsimbranch), rep(1,nbranch)), stroke=0,size=2,shape=c(rep(21,nsimbranch), rep(23,nbranch))) + theme(legend.position = "none")
+		#dev.off()
 		
 	}
 	
