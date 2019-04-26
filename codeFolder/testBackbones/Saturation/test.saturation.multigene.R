@@ -54,9 +54,7 @@ colnames(restab) <- gsub("enth", "Entropy", colnames(restab))
 colnames(restab) <- gsub("cith", "CI", colnames(restab))
 colnames(restab) <- gsub("comth", "Compression", colnames(restab))
 
-if("tsat" %in% whatToOutput){
-	write.csv(t(restab), file = "saturation.test.results.csv")
-}
+if("tsat" %in% whatToOutput) write.csv(restab, file = "saturation.test.results.csv")
 
 if("satPlots" %in% whatToOutput){
 	pdf("saturation.plots.pdf", height = 5, width = 5, useDingbats = F)
