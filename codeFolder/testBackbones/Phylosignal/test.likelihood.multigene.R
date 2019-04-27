@@ -68,8 +68,6 @@ if("pvals" %in% whatToOutput){
 	write.csv(t(restab), file = "results.summary.csv")
 }
 
-# fix bug with p-values!! either the table or the histogram has them wrong!
-
 if("testPlots" %in% whatToOutput){
 	histplotdat <- as.numeric(geneResults[[1]]["mean",])
 	names(histplotdat) <- colnames(geneResults[[1]])
@@ -87,16 +85,45 @@ if("testPlots" %in% whatToOutput){
 	if(length(selectedStats) == 0){
 		print("Test plots cannot be returned because no test statistics were calculated.")
 	} else {
-	        pdf("tests.histograms.pdf", useDingbats = F, height = 5)
+	        geneResults[[1]] <- as.matrix(geneResults[[1]])
+		pdf("tests.density.plots.pdf", useDingbats = F, height = 4, width = 15)
+		par(mfrow = c(1, 3))
 		for(i in 1:length(selectedStats)){
 		      statdat <- histplotdat[grep(selectedStats[i], names(histplotdat))]
 		      if(is.na(statdat[1]) || is.nan(statdat[1]) || any(is.infinite(statdat)) || all(is.na(statdat)) || all(is.nan(statdat))){
-		      	print(paste0("Histogram of ", statlabels[i], "cannot be plotted."))
+		      	print(paste0("Plots of ", statlabels[i], "cannot be created."))
 		      	next
 		      }
-		      sdstat <- sd(statdat[2:length(statdat)], na.rm = T)
-		      hist(statdat[2:length(statdat)], xlim = c(min(statdat, na.rm = T) - sdstat, max(statdat, na.rm = T) + sdstat), xlab = statlabels[i], ylab = "Frequency of simulations", main = "")
-		      abline(v = statdat[1], col = "red", lwd = 3)
+		      
+		      # Plot of all simulated branch values vs. all empirical branch values
+		      statsim <- geneResults[[1]][-nrow(geneResults[[1]]), grep(selectedStats[i], colnames(geneResults[[1]]))]
+		      statsim <- as.numeric(statsim[,2:(input$Nsims+1)])
+		      statemp <- as.numeric(geneResults[[1]][-nrow(geneResults[[1]]), if(selectedStats[i] == "CF") 2 else paste0("emp.", selectedStats[i])])
+		      statsimdens <- try(density(statsim, from = min(statsim, na.rm = T), to = max(statsim, na.rm = T), na.rm = T))
+		      statempdens <- try(density(statemp, from = min(statemp, na.rm = T), to = max(statemp, na.rm = T), na.rm = T))
+		      if(class(statsimdens) != "try-error" & class(statempdens) != "try-error"){
+		      		plot(statsimdens, xlim = range(c(statsim, statemp), na.rm = T), ylim = c(0, max(c(statsimdens$y, statempdens$y), na.rm = T)), xlab = statlabels[i], main = "")
+		      		lines(statempdens, col = "red")
+		      		legend("topright", legend = c("Empirical branches", "Simlulated branches"), col = c("red", "black"), lty = 1)
+		      } else { 
+				frame() 
+		      }
+		      
+		      # Plot of branch-wise p-values
+		      statpvals <- as.numeric(geneResults[[1]][-nrow(geneResults[[1]]), paste0(selectedStats[i], ".p.value")])
+		      pdens <- try(density(statpvals, from = min(statpvals, na.rm = T), to = max(statpvals, na.rm = T), na.rm = T))
+		      if(class(pdens) != "try-error") plot(pdens, main = "", xlab = paste0("Branch P-values\n(", statlabels[i], ")")) else frame()
+		      
+		      # Plot of test of mean across branches
+		      statmeandens <- try(density(statdat[-1], from = min(statdat[-1], na.rm = T), to = max(statdat[-1], na.rm = T), na.rm = T))
+		      if(class(statmeandens) != "try-error"){
+		      		plot(statmeandens, main = "", xlim = range(statdat, na.rm = T), xlab = paste0("Mean ", statlabels[i], " across branches"))
+				abline(v = statdat[1], lwd = 2, col = "red")
+				legend("topright", legend = c("Empirical", "Simulated"), lty = 1, col = c("red", "black"))
+		      } else {
+				frame()
+		      }
+		      
 		}
 		dev.off()
 		
