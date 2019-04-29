@@ -153,26 +153,35 @@ if("testPlots" %in% whatToOutput){
 		dev.off()
 		
 		#finish up and add custom legend? Add two ternary plots one with all the simulated branches, and one of the mean cfs for each data set, put both in one page with grid.arrange
-		#pdf("ternary.pdf")
-		#terndat <- geneResults[[1]][-c("mean"),c("sCF", "sDF1", "sDF2")]
-		#nbranch <- nrow(terndat)
-		#nsimbranch <- nbranch * nsim
-		#for(i in 1:nsim) terndat <- rbind(resdat[,c(paste0("sCF.sim.", i), paste0("sDF1.sim.", i), paste0("sDF2.sim.", i))], terndat)
-		#ggtern(data=as.data.frame(terndat),aes(x=sCF,y=sDF1,z=sDF2),aes(x,y,z)) + geom_point(aes(fill=c(rep(2,nsimbranch), rep(1,nbranch))), alpha = c(rep(0.5,nsimbranch), rep(1,nbranch)), stroke=0,size=2,shape=c(rep(21,nsimbranch), rep(23,nbranch))) + theme(legend.position = "none")
-		#dev.off()
+		pdf("ternary.plots.pdf", height = 4, width = 8)
+		#geneResults[[1]] <- as.data.frame(geneResults[[1]])
+		if(input$testType == "locus") ttyp <- "s" else ttyp <- "g"
+		terndat <- geneResults[[1]][-nrow(geneResults[[1]]), paste0(ttyp, c("CF", "DF1", "DF2"))]
+		ternmeandat <- colMeans(terndat)
+		nbranch <- nrow(terndat)
+		nsimbranch <- nbranch * input$Nsims
+		for(i in 1:input$Nsims){
+		      terndat <- rbind(geneResults[[1]][-nrow(geneResults[[1]]),c(paste0(ttyp, "CF.sim.", i), paste0(ttyp, "DF1.sim.", i), paste0(ttyp, "DF2.sim.", i))], terndat)
+		      ternmeandat <- rbind(geneResults[[1]][nrow(geneResults[[1]]),c(paste0(ttyp, "CF.sim.", i), paste0(ttyp, "DF1.sim.", i), paste0(ttyp, "DF2.sim.", i))], ternmeandat)
+		}
+		colnames(terndat) <- colnames(ternmeandat) <- c("CF", "DF1", "DF2")
+		
+		terndat <- as.data.frame(terndat)
+		terndat$cols <- c(rep(2, nsimbranch), rep(1, nbranch))
+		ternallbrs <- ggtern(data=terndat, aes(x = DF1, y = CF, z = DF2),aes(x, y, z)) + geom_point(aes(fill = cols), alpha = c(rep(0.5, nsimbranch), rep(1, nbranch)), stroke = 0, size = 2, shape = c(rep(21, nsimbranch), rep(23, nbranch))) + theme(legend.position = "none") + ggtitle("All simulated and empirical\nbranches")
+		
+		ternmeandat <- as.data.frame(ternmeandat)
+		ternmeandat$cols <- c(rep(2,input$Nsims), 1)
+		ternmean <- ggtern(data=ternmeandat,aes(x=DF1,y=CF,z=DF2),aes(x,y,z)) + geom_point(aes(fill= cols), alpha = c(rep(0.5,input$Nsims), 1), stroke=0,size=2,shape=c(rep(21,input$Nsims), 23)) + theme(legend.position = "none") + ggtitle("Mean across each simulation\nand empirical tree")
+		
+		grid.arrange(ternallbrs, ternmean, nrow = 1)
+		dev.off()
 		
 	}
-	
-
 }
 
 setwd("..")
 
-}
-
-if(nrow(input$dataPath) > 1 & "pvals" %in% whatToOutput){
-	allOutput <- do.call("rbind", outs)
-	write.csv(allOutput, file = "output.all.loci.PhyloMAd.csv")
 }
 
 setwd(initial.dir)
