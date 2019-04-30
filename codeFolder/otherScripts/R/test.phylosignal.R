@@ -39,7 +39,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	   	  system(paste0(iqtreePath, " -t empirical.empty.tre --gcf empirical.phy --prefix emp.conc"))
 		  emptre$edge.length[is.na(emptre$edge.length)] <- 0
 	 }
-	 conctab <- read.table("emp.conc.cf.stat", header=TRUE, sep = "\t")[,-7]
+	 conctab <- read.table("emp.conc.cf.stat", header=TRUE, sep = "\t")
 	 concidtr <- readLines("emp.conc.cf.branch")
 	 concidtr <- read.tree(text = gsub(")", "):", concidtr))
 	 
@@ -96,7 +96,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
                
 		   write.dna(sim[[i]], file = paste0("sim.alignment.", i, ".phy"))
                	   system(paste0(iqtreePath, " -t empirical.empty.tre -s sim.alignment.", i, ".phy --scf 100 --prefix sim.conc.", i))
-               	   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")[,-7]
+               	   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")
                	   colnames(sim[[i]])[2:4] <- paste0(colnames(sim[[i]])[2:4], ".sim.", i)
 	       	   system(paste0("rm sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))
 		   if(!returnSimulations) system(paste0("rm sim.alignment.", i, ".phy"))
@@ -107,7 +107,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 	   class(sim[[i]]) <- "multiPhylo"
 		   write.tree(sim[[i]], file = paste0("sim.genetrees.", i, ".phy"))
 		   system(paste0(iqtreePath, " -t empirical.empty.tre --gcf sim.genetrees.", i, ".phy --prefix sim.conc.", i))
-		   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")[,-7]
+		   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")
 		   colnames(sim[[i]])[2:4] <- paste0(colnames(sim[[i]])[2:4], ".sim.", i)
                	   system(paste0("rm sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))
 		   if(!returnSimulations) system(paste0("rm sim.genetrees.", i, ".phy"))

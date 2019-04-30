@@ -54,7 +54,8 @@ if(class(geneResults) == "try-error"){
 }
 
 rownames(geneResults[[1]]) <- geneResults[[1]][,1]
-colnames(geneResults[[1]]) <- gsub("Label", "br.length", colnames(geneResults[[1]]))
+colnames(geneResults[[1]]) <- gsub("Length", "br.length", colnames(geneResults[[1]]))
+colnames(geneResults[[1]]) <- gsub("Label", "br.support", colnames(geneResults[[1]]))
 geneResults[[1]] <- round(as.data.frame(apply(geneResults[[1]], 2, as.numeric)), 3)
 geneResults[[1]] <- rbind(geneResults[[1]], round(colMeans(geneResults[[1]], na.rm = T), 3))
 rownames(geneResults[[1]])[nrow(geneResults[[1]])] <- "mean"
@@ -145,10 +146,10 @@ if("testPlots" %in% whatToOutput){
 			next
 		      }
 
-		      plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "heat.colors", type = "fan", legend = F)
-		      plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "heat.colors", type = "fan", title = paste0(statlabels[i], "\nP-value\n"))
-		      plotBranchbyTrait(geneResults[[2]], brsdpd, mode = "edges", palette = "heat.colors", type = "fan", legend = F)
-                      plotBranchbyTrait(tr, brsdpd, mode = "edges", palette = "heat.colors", type = "fan", title = paste0(statlabels[i], "\nz-score\n"))
+		      plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", legend = F)
+		      plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", title = paste0(statlabels[i], "\nP-value\n"))
+		      plotBranchbyTrait(geneResults[[2]], brsdpd, mode = "edges", palette = "rainbow", type = "unrooted", legend = F)
+                      plotBranchbyTrait(tr, brsdpd, mode = "edges", palette = "rainbow", type = "unrooted", title = paste0(statlabels[i], "\nz-score\n"))
 		}
 		dev.off()
 		
@@ -167,8 +168,9 @@ if("testPlots" %in% whatToOutput){
 		colnames(terndat) <- colnames(ternmeandat) <- c("CF", "DF1", "DF2")
 		
 		terndat <- as.data.frame(terndat)
-		terndat$cols <- c(rep(2, nsimbranch), rep(1, nbranch))
-		ternallbrs <- ggtern(data=terndat, aes(x = DF1, y = CF, z = DF2),aes(x, y, z)) + geom_point(aes(fill = cols), alpha = c(rep(0.5, nsimbranch), rep(1, nbranch)), stroke = 0, size = 2, shape = c(rep(21, nsimbranch), rep(23, nbranch))) + theme(legend.position = "none") + ggtitle("All simulated and empirical\nbranches")
+		#terndat$cols <- c(rep(2, nsimbranch), rep(1, nbranch))
+		terndat$cols <- as.factor(rep(1:nbranch, input$Nsims+1))
+		ternallbrs <- ggtern(data=terndat, aes(x = DF1, y = CF, z = DF2),aes(x, y, z)) + geom_point(aes(fill = cols), alpha = c(rep(0.25, nsimbranch), rep(1, nbranch)), stroke = 0, size = 2, shape = c(rep(21, nsimbranch), rep(23, nbranch))) + theme(legend.position = "none") + ggtitle("All simulated and empirical\nbranches")
 		
 		ternmeandat <- as.data.frame(ternmeandat)
 		ternmeandat$cols <- c(rep(2,input$Nsims), 1)
