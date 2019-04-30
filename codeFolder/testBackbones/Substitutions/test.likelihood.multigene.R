@@ -64,7 +64,7 @@ setwd(input$outputFolder)
 
 print("Output folder was identified successfully")
 
-if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))){
+if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad.subst"))){
        stop("Exisitng files will not be overwritten. Aborting.")
 } else {
        system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.subst"))

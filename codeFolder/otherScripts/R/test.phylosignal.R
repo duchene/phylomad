@@ -31,7 +31,6 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 # Use IQtree to calculate bipartition probabilities per branch THIS CURRENTLY ASSUMES THAT --scf and --gcf produce identical results
 	 
 	 emptyemptre <- emptre
-	 emptyemptre$edge.length <- NULL
 	 write.tree(emptyemptre, file = "empirical.empty.tre")
 	 if(testType == "locus"){
 	 	  system(paste0(iqtreePath, " -t empirical.empty.tre -s empirical.phy --scf 100 --prefix emp.conc"))
@@ -40,6 +39,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 		  emptre$edge.length[is.na(emptre$edge.length)] <- 0
 	 }
 	 conctab <- read.table("emp.conc.cf.stat", header=TRUE, sep = "\t")
+	 conctab[,7] <- round(conctab[,7], 5)
 	 concidtr <- readLines("emp.conc.cf.branch")
 	 concidtr <- read.tree(text = gsub(")", "):", concidtr))
 	 
@@ -96,8 +96,8 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
                
 		   write.dna(sim[[i]], file = paste0("sim.alignment.", i, ".phy"))
                	   system(paste0(iqtreePath, " -t empirical.empty.tre -s sim.alignment.", i, ".phy --scf 100 --prefix sim.conc.", i))
-               	   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")
-               	   colnames(sim[[i]])[2:4] <- paste0(colnames(sim[[i]])[2:4], ".sim.", i)
+               	   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")[, -c(1, 6, 7)]
+               	   colnames(sim[[i]]) <- paste0(colnames(sim[[i]]), ".sim.", i)
 	       	   system(paste0("rm sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))
 		   if(!returnSimulations) system(paste0("rm sim.alignment.", i, ".phy"))
 	 } else if(testType == "genome"){
@@ -107,21 +107,21 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 	   class(sim[[i]]) <- "multiPhylo"
 		   write.tree(sim[[i]], file = paste0("sim.genetrees.", i, ".phy"))
 		   system(paste0(iqtreePath, " -t empirical.empty.tre --gcf sim.genetrees.", i, ".phy --prefix sim.conc.", i))
-		   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")
-		   colnames(sim[[i]])[2:4] <- paste0(colnames(sim[[i]])[2:4], ".sim.", i)
+		   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")[,-c(1, 6, 7)]
+		   colnames(sim[[i]]) <- paste0(colnames(sim[[i]]), ".sim.", i)
                	   system(paste0("rm sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))
 		   if(!returnSimulations) system(paste0("rm sim.genetrees.", i, ".phy"))
 	 }
      
 	 ## Calculate test statistics for simulations. CONSIDER REMOVING THE sim LIST ALTOGETHER
      
-	 if("dnet" %in% testStats) sim[[i]][,paste0("sim.", i, ".dnet")] <- apply(sim[[i]][,2:4]/100, 1, function(x) get.dist2net(x)[3])
-     	 if("dtree" %in% testStats) sim[[i]][,paste0("sim.", i, ".dtree")] <- apply(sim[[i]][,2:4]/100, 1, function(x) get.dist2tr(x)[3])
-     	 if("entrop" %in% testStats) sim[[i]][,paste0("sim.", i, ".entrop")] <- apply(sim[[i]][,2:4]/100, 1, get.quartet.entropy)
-     	 if("icert" %in% testStats) sim[[i]][,paste0("sim.", i, ".icert")] <- apply(sim[[i]][,2:4]/100, 1, get.internode.cert)
-     	 if("binp" %in% testStats) sim[[i]][,paste0("sim.", i, ".binp")] <- apply(cbind(sim[[i]][,2:4]/100, sim[[i]][,5]), 1, get.binom.p)
-     	 if("dstat" %in% testStats) sim[[i]][,paste0("sim.", i, ".dstat")] <- apply(sim[[i]][,2:4]/100, 1, get.dstat)
-     	 if("kcstat" %in% testStats) sim[[i]][,paste0("sim.", i, ".kcstat")] <- apply(sim[[i]][,2:4]/100, 1, get.kcstat)
+	 if("dnet" %in% testStats) sim[[i]][,paste0("sim.", i, ".dnet")] <- apply(sim[[i]][,1:3]/100, 1, function(x) get.dist2net(x)[3])
+     	 if("dtree" %in% testStats) sim[[i]][,paste0("sim.", i, ".dtree")] <- apply(sim[[i]][,1:3]/100, 1, function(x) get.dist2tr(x)[3])
+     	 if("entrop" %in% testStats) sim[[i]][,paste0("sim.", i, ".entrop")] <- apply(sim[[i]][,1:3]/100, 1, get.quartet.entropy)
+     	 if("icert" %in% testStats) sim[[i]][,paste0("sim.", i, ".icert")] <- apply(sim[[i]][,1:3]/100, 1, get.internode.cert)
+     	 if("binp" %in% testStats) sim[[i]][,paste0("sim.", i, ".binp")] <- apply(cbind(sim[[i]][,1:3]/100, sim[[i]][,4]), 1, get.binom.p)
+     	 if("dstat" %in% testStats) sim[[i]][,paste0("sim.", i, ".dstat")] <- apply(sim[[i]][,1:3]/100, 1, get.dstat)
+     	 if("kcstat" %in% testStats) sim[[i]][,paste0("sim.", i, ".kcstat")] <- apply(sim[[i]][,1:3]/100, 1, get.kcstat)
      
 	 conctab <- cbind(conctab, sim[[i]])
      

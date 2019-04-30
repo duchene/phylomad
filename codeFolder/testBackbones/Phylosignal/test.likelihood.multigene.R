@@ -36,7 +36,7 @@ setwd(input$outputFolder)
 
 print("Output folder was identified successfully")
 
-if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad"))){
+if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".phylomad.phylosig"))){
        stop("Exisitng files will not be overwritten. Aborting.")
 } else {
        system(paste0("mkdir ", as.character(input$dataPath[j, 1]), ".phylomad.phylosig"))
@@ -92,7 +92,7 @@ if("testPlots" %in% whatToOutput){
 		for(i in 1:length(selectedStats)){
 		      statdat <- histplotdat[grep(selectedStats[i], names(histplotdat))]
 		      if(is.na(statdat[1]) || is.nan(statdat[1]) || any(is.infinite(statdat)) || all(is.na(statdat)) || all(is.nan(statdat))){
-		      	print(paste0("Plots of ", statlabels[i], "cannot be created."))
+		      	print(paste0("Plots of ", statlabels[i], " cannot be created."))
 		      	next
 		      }
 		      
