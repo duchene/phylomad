@@ -128,26 +128,35 @@ if("testPlots" %in% whatToOutput){
 		}
 		dev.off()
 		
-		pdf("tests.summary.tree.pdf", useDingbats = F, height = if(length(geneResults[[2]]$edge.length) < 50) 15 else 30, width = if(length(geneResults[[2]]$edge.length) < 50) 30 else 60)
-		par(mfrow = c(1,2))
+		pdf("tests.summary.tree.pdf", useDingbats = F, height = if(length(geneResults[[2]]$edge.length) < 50) 5 else 10, width = if(length(geneResults[[2]]$edge.length) < 50) 10 else 20)
 		for(i in 1:length(selectedStats)){
+		      par(mfrow = c(1,2))
 		      tr <- geneResults[[2]]
 		      tr$edge.length <- rep(1, length(geneResults[[2]]$edge.length))
-		      brpvalue <- round(geneResults[[1]][, paste0(selectedStats[i], ".p.value")], 1)
+		      brpvalue <- geneResults[[1]][, paste0(selectedStats[i], ".p.value")]
+		      brpvalue[which(brpvalue > 0.01)] <- 1
+		      brpvalue[which(brpvalue <= 0.01)] <- 2
 		      brsdpd <- round(geneResults[[1]][, paste0(selectedStats[i], ".sdpd")], 1)
 		      names(brpvalue) <- names(brsdpd) <- geneResults[[1]][,1]
 		      
 		      brpvalue <- brpvalue[as.character(geneResults[[3]]$edge.length)]
 		      brsdpd <- brsdpd[as.character(geneResults[[3]]$edge.length)]
-		      brpvalue[is.na(brpvalue)] <- mean(brpvalue, na.rm = T)
+		      brpvalue[is.na(brpvalue)] <- 1 # mean(brpvalue, na.rm = T)
 		      brsdpd[is.na(brsdpd)] <- mean(brsdpd, na.rm = T)
 		      if(all(is.na(brpvalue)) || all(is.nan(brpvalue)) || any(is.infinite(brpvalue)) || all(is.na(brsdpd)) || all(is.nan(brsdpd)) || any(is.infinite(brsdpd))){
 		      	print(paste0("Tree depicting ", statlabels[i], " statistic cannot be ploted."))
 			next
 		      }
 
-		      plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", legend = F)
-		      plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", title = paste0(statlabels[i], "\nP-value\n"))
+		      #plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", legend = F)
+		      #plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", title = paste0(statlabels[i], "\nP-value\n"))
+		      plot(geneResults[[2]], edge.color = brpvalue, type = "unrooted", main = paste0(statlabels[i], " P-value < 0.01\n(includes branch lengths)"))
+		      plot(tr, edge.color = brpvalue, type = "unrooted", main = "\n(excludes branch lengths)")
+		      brpvalcols <- brpvalue
+		      brpvalcols[brpvalcols == 1] <- "white"
+		      brpvalcols[brpvalcols == "2"] <- "red"
+		      edgelabels(names(brpvalue), frame = "circle", bg = brpvalcols, cex = 0.7)
+		      
 		      plotBranchbyTrait(geneResults[[2]], brsdpd, mode = "edges", palette = "rainbow", type = "unrooted", legend = F)
                       plotBranchbyTrait(tr, brsdpd, mode = "edges", palette = "rainbow", type = "unrooted", title = paste0(statlabels[i], "\nz-score\n"))
 		}
