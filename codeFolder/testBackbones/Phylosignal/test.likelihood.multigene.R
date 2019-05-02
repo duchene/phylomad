@@ -130,7 +130,7 @@ if("testPlots" %in% whatToOutput){
 		
 		pdf("tests.summary.tree.pdf", useDingbats = F, height = if(length(geneResults[[2]]$edge.length) < 50) 5 else 10, width = if(length(geneResults[[2]]$edge.length) < 50) 10 else 20)
 		for(i in 1:length(selectedStats)){
-		      par(mfrow = c(1,2))
+		      par(mfrow = c(1,2), mar = c(5.1, 4.1, 4.1, 2.1))
 		      tr <- geneResults[[2]]
 		      tr$edge.length <- rep(1, length(geneResults[[2]]$edge.length))
 		      brpvalue <- geneResults[[1]][, paste0(selectedStats[i], ".p.value")]
@@ -150,7 +150,7 @@ if("testPlots" %in% whatToOutput){
 
 		      #plotBranchbyTrait(geneResults[[2]], brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", legend = F)
 		      #plotBranchbyTrait(tr, brpvalue, mode = "edges", palette = "rainbow", type = "unrooted", title = paste0(statlabels[i], "\nP-value\n"))
-		      plot(geneResults[[2]], edge.color = brpvalue, type = "unrooted", main = paste0(statlabels[i], " P-value < 0.01\n(includes branch lengths)"))
+		      plot(geneResults[[2]], edge.color = brpvalue, type = "unrooted", main = paste0(statlabels[i], ". In red P-values < 0.01\n(includes branch lengths)"))
 		      plot(tr, edge.color = brpvalue, type = "unrooted", main = "\n(excludes branch lengths)")
 		      brpvalcols <- brpvalue
 		      brpvalcols[brpvalcols == 1] <- "white"
