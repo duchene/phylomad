@@ -131,9 +131,14 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	
 	 for(i in 1:length(testStats)){
 	      stattab <- conctab[,grep(testStats[i], colnames(conctab))]
-	      if(any(c("dtree", "entrop", "binp", "dstat") == testStats[i])) pvalfunc <- function(x) length(which(x[-1] > x[1]))/(length(x[-1])) else pvalfunc <- function(x) length(which(x[-1] < x[1]))/(length(x[-1]))
+	      if(any(c("dtree", "entrop", "binp", "dstat") == testStats[i])){
+	      		 pvalfunc <- function(x) if(is.na(x[1])) return(NA) else return(length(which(x[-1] > x[1]))/(length(x[-1])))
+			 conctab[,paste0(testStats[i], ".sdpd")] <- apply(stattab, 1, function(x) (x[1] - mean(x[-1], na.rm = T)) / sd(x[-1], na.rm = T))
+	      } else {
+			 pvalfunc <- function(x) if(is.na(x[1])) return(NA) else return(length(which(x[-1] < x[1]))/(length(x[-1])))
+			 conctab[,paste0(testStats[i], ".sdpd")] <- apply(stattab, 1, function(x) (mean(x[-1], na.rm = T) - x[1]) / sd(x[-1], na.rm = T))
+	      }
 	      conctab[,paste0(testStats[i], ".p.value")] <- apply(stattab, 1, pvalfunc)
-	      conctab[,paste0(testStats[i], ".sdpd")] <- apply(stattab, 1, function(x) (x[1] - mean(x[-1], na.rm = T)) / sd(x[-1], na.rm = T))
 	 }
 	
 	 #if(!returnAllDat) conctab[,-grep("ID|sCF|sDF|sN|gCF|gDF|gN", colnames(conctab))]
