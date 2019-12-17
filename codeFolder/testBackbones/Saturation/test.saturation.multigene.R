@@ -68,13 +68,13 @@ if("satPlots" %in% whatToOutput){
 			abline(lm3, lwd=2, col = "red")
 			cor12 <- round(cor.test(geneResults[[i]][[2]][[1]][[1]], geneResults[[i]][[2]][[1]][[2]])$estimate, 3)
 			cor3 <- round(cor.test(geneResults[[i]][[2]][[2]][[1]], geneResults[[i]][[2]][[2]][[2]])$estimate, 3)
-			legend("bottomright", legend = c(paste0("Pos 1+2, cor = ", cor12, ", slope = ", round(coef(lm12)[2], 3)), paste0("Pos 3, cor = ", cor3, ", slope = ", round(coef(lm3)[2], 3))), lty = 1, lwd = 2, col = c("red", "purple"), cex = 0.7)
+			legend("bottomright", legend = c(paste0("Pos 1+2, cor = ", cor12, ", slope = ", round(coef(lm12)[1], 3)), paste0("Pos 3, cor = ", cor3, ", slope = ", round(coef(lm3)[1], 3))), lty = 1, lwd = 2, col = c("red", "purple"), cex = 0.7)
 		} else {
 			plot(geneResults[[i]][[2]][[1]][[1]] ~ geneResults[[i]][[2]][[1]][[2]], pch = 20, col = "red", ylab = "Uncorrected pairwise genetic distances", xlab = "Pairwise distances including the ratio\nof transitions to transversions (Tamura and Nei 1993)", main = paste0("Saturation plot for\n", locinames[i]))
 			lmdat <- lm(geneResults[[i]][[2]][[1]][[1]] ~ 0 + geneResults[[i]][[2]][[1]][[2]])
 			abline(lmdat, lwd=2, col = "red")
 			corlocus <- round(cor.test(geneResults[[i]][[2]][[1]][[1]], geneResults[[i]][[2]][[1]][[2]])$estimate, 3)
-			legend("bottomright", legend = paste0("cor = ", corlocus, ", slope = ", round(coef(lmdat)[2], 3)), cex = 0.7)
+			legend("bottomright", legend = paste0("cor = ", corlocus, ", slope = ", round(coef(lmdat)[1], 3)), cex = 0.7)
 		}
 		abline(0, 1, lty=2)
 	}
