@@ -32,7 +32,7 @@ if(input$Ncores > 1) parallelise <- T else parallelise <- F
 if("satPlots" %in% whatToOutput | "multiSatPlots" %in% whatToOutput) plotdat <- T else plotdat <- F
 
 geneResults <- try(test.saturation(loci = as.character(input$dataPath[, 4]), iqtreePath = iqtreePath, para = parallelise, ncore = input$Ncores, clean = input$dataTreatment, stats = input$saturationStats, plotdat = plotdat, linmods = funclist))
-failedLoci <- which(sapply(geneResults, class) == "try-error")
+failedLoci <- c(which(sapply(geneResults, class) == "try-error"), which(sapply(geneResults, is.null)))
 
 locinames <- as.character(input$dataPath[, 1])
 

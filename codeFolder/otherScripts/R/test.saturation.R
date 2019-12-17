@@ -111,7 +111,7 @@ if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nex
            require(doParallel)
            cl <- makeCluster(ncore)
            registerDoParallel(cl)
-           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runIQtree', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% runLoc(x, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods)
+           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runIQtree', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% tryCatch(runLoc(x, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods), error = function(e) NULL)
            stopCluster(cl)
            print("Parallel computing ended successfully")
            ### END PARALLEL COMPUTING
