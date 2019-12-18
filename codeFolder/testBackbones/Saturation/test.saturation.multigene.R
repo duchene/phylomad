@@ -53,6 +53,8 @@ if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(lo
 colnames(restab) <- gsub("enth", "Entropy", colnames(restab))
 colnames(restab) <- gsub("cith", "CI", colnames(restab))
 colnames(restab) <- gsub("comth", "Compression", colnames(restab))
+for(i in grep("_TPR_", colnames(restab))) restab[which(restab[, i] > 1), i] <- 1
+for(i in grep("_FPR_", colnames(restab))) restab[which(restab[, i] < 0), i] <- 0
 
 if("tsat" %in% whatToOutput) write.csv(restab, file = "saturation.test.results.csv")
 
