@@ -6,6 +6,7 @@ source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/get.model.R")
 source("testStatistics/get.chisqstat.R")
 source("testStatistics/get.biodivstat.R")
+source("testStatistics/get.unconstrained.R")
 source("otherScripts/R/print.bias.risk.R")
 
 initial.dir <- getwd()

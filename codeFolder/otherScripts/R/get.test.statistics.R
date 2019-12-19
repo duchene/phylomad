@@ -1,4 +1,4 @@
-get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName = "empirical", iqtreePath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha"), tree = NULL){
+get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName = "empirical", iqtreePath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha"), tree = NULL, getTreeForced = F){
 
 	# Read DNAbin or file of gene.
 	if(format == "phylip"){
@@ -12,7 +12,7 @@ get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName =
 
 	# Run IQtree and extract the maximum likelihood, tree, and parameter estimates.
 	
-	iqtreeres <- runIQtree(sdata, format = format, aadata = aadata, temp_name = geneName, iqtreePath = iqtreePath, model = model, tree = tree)
+	if(getTreeForced || !all(stats %in% c("chisq", "multlik", "biochemdiv", "maha"))) iqtreeres <- runIQtree(sdata, format = format, aadata = aadata, temp_name = geneName, iqtreePath = iqtreePath, model = model, tree = tree)
 	
 	# Get test statistics.
 	
@@ -23,7 +23,7 @@ get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName =
 	}
 
     if("multlik" %in% stats){
-         results$multlik <- iqtreeres$uncLikelihood
+         results$multlik <- get.unconstrained(data)
     }
 
     if("delta" %in% stats){
@@ -67,6 +67,8 @@ get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName =
     }
 
     # Return test statistics, tree, and parameter estimates.
+    
+    if(getTreeForced || !all(stats %in% c("chisq", "multlik", "biochemdiv", "maha"))){
 	
  	results$outputTree <- iqtreeres$tree
 	
@@ -78,7 +80,8 @@ get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName =
 
 	if(length(grep("HKY", model)) == 1) results$trtvRatio <- iqtreeres$trtvRatio
 	
-	return(results)
-
+    }
+	
+    return(results)
 
 }
