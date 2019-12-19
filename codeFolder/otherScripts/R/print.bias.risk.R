@@ -116,7 +116,7 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
 	       thresholds[1,"maha"] <- thresholdMidRisk
 	}
 	
-	risktext <- c(risktext, "This advice is based on simulations in the following studies:", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534.", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (in prep). New Statistical Criteria Detect Biased Inferences From Phylogenomic Data. ")
+	risktext <- c(risktext, "This advice is based on simulations in the following studies:", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2017). New Statistical Criteria Detect Phylogenetic Bias Caused by Compositional Heterogeneity. Molecular Biology and Evolution, 34(6), 1529-1534.", "Duchêne, D.A., Duchêne, S., & Ho, S.Y.W. (2018). Differences in performance among test statistics for assessing phylogenomic model adequacy. Genome biology and evolution, 10(6), 1375-1388.")
 	
 	thresholds <- thresholds[, selectedStats]
 	writeLines(risktext, con = "bias.risk.report.txt")

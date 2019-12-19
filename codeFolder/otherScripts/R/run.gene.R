@@ -12,7 +12,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", iqtr
 	   	  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = "bin", aadata = aadata, geneName = "empirical.alignment.phy", iqtreePath = iqtreePath, model = model, stats = testStats, tree = tree, getTreeForced = T)
+	 empstats <- get.test.statistics(data, format = "bin", aadata = aadata, geneName = "empirical.alignment.phy", iqtreePath = iqtreePath, model = model, stats = testStats, tree = tree, getTreeForced = T, ncore = ncore)
 	 system("rm empirical.alignment.phy")
 
 	 # Simulate data sets.
@@ -77,7 +77,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", iqtr
 	   }	  
 	   cl <- makeCluster(ncore)
 	   registerDoParallel(cl)
-	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runIQtree', 'get.chisqstat', 'get.biodivstat')) %dopar% runSim(x)
+	   simReps <- foreach(x = 1:Nsims, .packages = c('phangorn', 'ape'), .export = c('get.test.statistics', 'runIQtree', 'get.chisqstat', 'get.biodivstat', 'get.unconstrained')) %dopar% runSim(x)
 	   sim.stats <- simReps 
 	   stopCluster(cl)
 	   print("Parallel computing ended successfully")

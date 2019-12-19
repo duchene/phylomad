@@ -97,7 +97,7 @@ if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 	} else {
 	       colnames(outs[[j]]) <- unlist(input$testStats)
 	       rownames(outs[[j]]) <- c("Tail area probability", "Empirical test statistic", "Standard deviations from simulated distribution")
-	       write.csv(t(outs[[j]]), file = "output.pvals.PhyloMAd.csv")
+#	       write.csv(t(outs[[j]]), file = "output.pvals.PhyloMAd.csv")
 	}
 	resvector <- matrix(as.vector(t(outs[[j]])), nrow = 1)
 	rownames(resvector) <- as.character(input$dataPath[j, 1])
@@ -109,6 +109,7 @@ if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 		biasrisk <- print.bias.risk(selectedStats, geneResults, locilengths[j])
 		outs[[j]] <- cbind(outs[[j]], biasrisk[[1]])
 	}
+	write.csv(t(outs[[j]]), file = "output.pvals.PhyloMAd.csv")
 }
 
 if("phyloempres" %in% whatToOutput) write.tree(geneResults$empirical.tree, file = "estimate.empirical.data.tre")
