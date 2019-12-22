@@ -23,6 +23,9 @@ input$dataFormat <- "NEXUS"
 # The format of trees. Options include "none", "NEXUS", and "newick"
 input$treesFormat <- "NEXUS"
 
+# Choose whether to clean the locus by removing all sites with missing data
+input$cleanOrNot <- F
+
 # The path of trees. When assessing clock models, this is the path for the .trees BEAST output file.
 input$treesPath <- c("~/Desktop/phylomad/codeFolder/exampleData/betgmc1/simulationduchene.trees")
 

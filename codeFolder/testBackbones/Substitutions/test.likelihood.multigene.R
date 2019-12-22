@@ -15,7 +15,7 @@ print("Functions required were loaded successfully")
 
 firstLine <- ""
 
-if(length(input$treesPath[1, 4]) == 0) treesFormat <- "none" else firstLine <- readLines(as.character(input$treesPath[1, 4]), n = 1)
+if(length(input$treesPath[1, 4]) == 0 || is.na(input$treesPath)) treesFormat <- "none" else firstLine <- readLines(as.character(input$treesPath[1, 4]), n = 1)
 if(grepl("[#]NEXUS|[#]nexus", firstLine)) treesFormat <- "nexus" else if(grepl("[(]", firstLine)) treesFormat <- "newick"
 
 if(treesFormat == "newick"){ trees <- read.tree(as.character(input$treesPath[1, 4])) } else if(treesFormat == "nexus"){ trees <- read.nexus(as.character(input$treesPath[1, 4])) } else { trees <- NULL }
