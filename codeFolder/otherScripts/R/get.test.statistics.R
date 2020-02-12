@@ -37,7 +37,7 @@ get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName =
     }
 
     if("consind" %in% stats){
-         if(!aadata) results$consind <- CI(iqtreeres$tree, phyDat(data)) else results$consind <- CI(iqtreeres$tree, phyDat(as.phyDat(data), type = "AA"))
+         if(!aadata) results$consind <- CI(iqtreeres$tree, phyDat(data))*(-1) else results$consind <- CI(iqtreeres$tree, phyDat(as.phyDat(data), type = "AA"))*(-1)
     }
 
     if("brsup" %in% stats){

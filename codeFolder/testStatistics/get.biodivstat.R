@@ -5,6 +5,6 @@ get.biodivstat <- function(al){
 
 	div <- apply(al, 2, unique)
 	div <- unlist(lapply(div, function(x) length(x[x != "-"])))
-	meandiv <- mean(div[div != 0])
+	meandiv <- mean(div[div != 0])*(-1)
 	return(meandiv)
 }

@@ -5,8 +5,8 @@ print.bias.risk <- function(selectedStats, geneResults, Nsites, make.plot = F){
 
 	chisqthresholds <- data.frame(seqlen = c(500, 1000, 5000), minD = c(40, 70, 367), maxD = c(135, 258, 1273))
 	multthresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(42.57623, 80.66334, 141.216), maxD = c(116.3087, 190.2008, 247.9695))
-	biochthresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(-0.9583055, -2.3559903, -6.14660146), maxD = c(-4.262108, -8.001475, -14.573290))
-	consthresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(-0.6097077, -1.250933, -2.509672), maxD = c(-2.21697, -3.555679, -5.434672))
+	biochthresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(0.9583055, 2.3559903, 6.14660146), maxD = c(4.262108, 8.001475, 14.573290))
+	consthresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(0.6097077, 1.250933, 2.509672), maxD = c(2.21697, 3.555679, 5.434672))
 	mahathresholds <- data.frame(seqlen = c(200, 1000, 5000), minD = c(6.012026, 17.662311, 26.279046))
 	
 	basicthresholds <- do.call("cbind", list(chisqthresholds, multthresholds, biochthresholds[,2:3], consthresholds[,2:3], mahathresholds[,2]))
