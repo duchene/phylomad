@@ -1,4 +1,4 @@
-get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName = "empirical", iqtreePath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha"), tree = NULL, getTreeForced = F, ncore = 1){
+get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName = "empirical", iqtreePath, model = "GTR+G", stats = c("chisq", "multlik", "delta", "biochemdiv", "consind", "brsup", "trlen", "maha"), tree = NULL, getTreeForced = F, ncore = 1, symtest = F){
 
 	# Read DNAbin or file of gene.
 	if(format == "phylip"){
@@ -14,7 +14,7 @@ get.test.statistics <- function(sdata, format = "phylip", aadata = F, geneName =
 	
 	if(!getTreeForced) ncore <- "AUTO"
 	
-	if(getTreeForced || !all(stats %in% c("chisq", "multlik", "biochemdiv", "maha"))) iqtreeres <- runIQtree(sdata, format = format, aadata = aadata, temp_name = geneName, iqtreePath = iqtreePath, model = model, tree = tree, ncore = ncore)
+	if(getTreeForced || !all(stats %in% c("chisq", "multlik", "biochemdiv", "maha"))) iqtreeres <- runIQtree(sdata, format = format, aadata = aadata, temp_name = geneName, iqtreePath = iqtreePath, model = model, tree = tree, ncore = ncore, symtest = symtest)
 	
 	# Get test statistics.
 	

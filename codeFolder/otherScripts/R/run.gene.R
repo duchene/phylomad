@@ -12,7 +12,7 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", iqtr
 	   	  if(aadata) data <- as.AAbin(read.nexus.data(sdata)) else data <- as.DNAbin(read.nexus.data(sdata))
 	 }
 	 
-	 empstats <- get.test.statistics(data, format = "bin", aadata = aadata, geneName = "empirical.alignment.phy", iqtreePath = iqtreePath, model = model, stats = testStats, tree = tree, getTreeForced = T, ncore = ncore)
+	 empstats <- get.test.statistics(data, format = "bin", aadata = aadata, geneName = "empirical.alignment.phy", iqtreePath = iqtreePath, model = model, stats = testStats, tree = tree, getTreeForced = T, ncore = ncore, symtest = T)
 	 system("rm empirical.alignment.phy")
 
 	 # Simulate data sets.

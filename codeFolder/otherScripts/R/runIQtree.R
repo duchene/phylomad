@@ -1,6 +1,6 @@
 # This function extracts some of the main results from an IQtree run output file.
 
-runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtreePath = '~/Downloads/iqtree-1.7-beta9-MacOSX/bin/iqtree', model = 'JC', tree = NULL, ncore = 1){
+runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtreePath = '~/Downloads/iqtree-1.7-beta9-MacOSX/bin/iqtree', model = 'JC', tree = NULL, ncore = 1, symtest = F){
        
        require(phangorn)
 
@@ -21,12 +21,12 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
     print(paste("Locus", fileName, "was read successfully."))
 
     if(is.null(tree)){
-        iqtreeCommand = paste0(iqtreePath, if(!aadata) " -st DNA " else " -st AA ", " -s ", fileName, " -m ", model, " -alrt 1000 -nt ", ncore)
+        iqtreeCommand = paste0(iqtreePath, if(!aadata) " -st DNA " else " -st AA ", " -s ", fileName, " -m ", model, " -alrt 1000 -nt ", ncore, if(symtest) " --symtest")
     } else {
         treenumber <- round(runif(1, min = 1000, max = 9999))
 	treefile <- paste0("temp.", treenumber, ".tre")
         write.tree(tree, file = treefile)
-        iqtreeCommand = paste0(iqtreePath, if(!aadata) " -st DNA " else " -st AA ", " -s ", fileName, " -m ", model, " -g ", treefile, " -alrt 1000 -nt ", ncore)
+        iqtreeCommand = paste0(iqtreePath, if(!aadata) " -st DNA " else " -st AA ", " -s ", fileName, " -m ", model, " -g ", treefile, " -alrt 1000 -nt ", ncore, if(symtest) " --symtest")
     }
 
     system(iqtreeCommand)
