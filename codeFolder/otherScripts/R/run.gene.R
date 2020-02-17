@@ -191,6 +191,10 @@ run.gene <- function(sdata, format = "phylip", aadata = F, model = "GTR+G", iqtr
 	 }
 	 if(returnSimDat) results$simDat <- sim
 
+	 results$symtab <- t(read.table("empirical.alignment.phy.symtest.csv", sep = ",", row.names = 1)[2,])
+	 rownames(results$symtab) <- c("symmetry.significant", "symmetry.nonsignificant", "symmetry.pval", "marginal.symmetry.significant", "marginal.symmetry.nonsignificant", "marginal.symmetry.pval", "internal.symmetry.significant", "internal.symmetry.nonsignificant", "internal.symmetry.pval")
+	 system("rm empirical.alignment.phy.symtest.csv")
+
 	 return(results)
 
 }

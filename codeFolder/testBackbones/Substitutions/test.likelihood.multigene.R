@@ -109,7 +109,7 @@ if("pvals" %in% whatToOutput || "simple" %in% whatToOutput){
 		biasrisk <- print.bias.risk(selectedStats, geneResults, locilengths[j])
 		outs[[j]] <- cbind(outs[[j]], biasrisk[[1]])
 	}
-	write.csv(t(outs[[j]]), file = "output.pvals.PhyloMAd.csv")
+	write.csv(rbind(t(outs[[j]]), geneResults$symtab), file = "output.pvals.PhyloMAd.csv")
 }
 
 if("phyloempres" %in% whatToOutput) write.tree(geneResults$empirical.tree, file = "estimate.empirical.data.tre")
