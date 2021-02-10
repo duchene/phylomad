@@ -1,7 +1,7 @@
 require(ape)
 
 
-get.entropy.test <- function(al){
+get.entropy.test <- function(al, only.varsites = F){
 
 ### Create functions needed ###
 
@@ -48,7 +48,12 @@ calculate_estimated_entropy <- function(site_wise_info, mat){
 }
 
 ### Functions needed created. Statstic calculated below ###
-
+  
+  if(only.varsites) al <- al[,seg.sites(al)]
+  if(ncol(al) == 0){
+        res <- list(estent = NA, nullent = NA, p = NA, tstat = NA)
+        return(res)
+  }
   mat <- tolower(as.character(al))
   
   base_freqs <- base.freq(al) #observed base frequencies #
@@ -61,8 +66,12 @@ calculate_estimated_entropy <- function(site_wise_info, mat){
   site_wise_info <- calculate_sitewise_info(mat, base_freqs)
   
   estimated_entropy <- calculate_estimated_entropy(site_wise_info, mat)
-
-  tt <- t.test(site_wise_info, mu = null_entropy, alternative = "two.sided")
+  
+  if(var(site_wise_info) == 0){
+        if(site_wise_info[1] > null_entropy) tt <- list(statistic = NA, p.value = 0)
+  } else {
+    	tt <- t.test(site_wise_info, mu = null_entropy, alternative = "two.sided")
+  }
   
   estent <- estimated_entropy
   nullent <- null_entropy

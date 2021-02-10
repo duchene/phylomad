@@ -22,28 +22,16 @@ if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nex
 	     }
 	     
 	     for(i in 1:length(genebin)){
-	     
-		if("cith" %in% stats | "comth" %in% stats){
-			dist.tn93 <- dist.dna(genebin[[i]], model = "TN93", pairwise.deletion = T)
-			tree <- njs(dist.tn93)
-		}
 		
                 if(plotdat){
                         dist.raw <- dist.dna(genebin[[i]], model = "raw", pairwise.deletion = T)
-                        if(!"cith" %in% stats | !"comth" %in% stats) dist.tn93 <- dist.dna(genebin[[i]], model = "TN93", pairwise.deletion = T)
+              		dist.tn93 <- dist.dna(genebin[[i]], model = "TN93", pairwise.deletion = T)
                         distdat[[i]] <- list(dist.raw, dist.tn93)
 		}
 
 		#### TESTS OF SATURATION ####
 		
 		satres <- list()
-		
-#		if("cith" %in% stats | "comth" %in% stats){
-#			  tempalname <- paste(sample(letters, 5), collapse = "")
-#			  iqtreeres <- runIQtree(genebin[[i]], format = "bin", aadata = aadata, temp_name = tempalname, iqtreePath = iqtreePath, model = "GTR+G")
-#			  system(paste("rm", tempalname))
-#			  tree <- iqtreeres$tree
-#		}
 		
 		Nsites <- ncol(genebin[[i]])
 		Ntax <- nrow(genebin[[i]])
@@ -52,25 +40,17 @@ if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nex
                 	  satres$enres <- vector()
 			  satres$enres[1] <- get.entropy.test(genebin[[i]])$t
 			  satres$enres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[1]])
-			  satres$enres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[4]])
-			  satres$enres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[7]])
+			  satres$enres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[3]])
+			  satres$enres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[5]])
 			  satres$enres <- round(satres$enres, 2)
 		}
-        	if("cith" %in% stats){
-			  satres$cires <- vector()
-			  satres$cires[1] <- get.ci.test(tree, genebin[[i]])$t * (-1)
-			  satres$cires[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[2]])
-                          satres$cires[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[5]])
-			  satres$cires[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[8]])
-			  satres$cires <- round(satres$cires, 2)
-        	}
-        	if("comth" %in% stats){
-			   satres$comres <- vector()
-                	   satres$comres[1] <- get.comp.test(tree, genebin[[i]])$t * (-1)
-			   satres$comres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[3]])
-                           satres$comres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[6]])
-			   satres$comres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[9]])
-			   satres$comres <- round(satres$comres, 2)
+        	if("enthvar" %in% stats){
+			  satres$envarres <- vector()
+			  satres$envarres[1] <- get.entropy.test(genebin[[i]], only.varsites = T)$t
+			  satres$envarres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[2]])
+                          satres$envarres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[4]])
+			  satres$envarres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[6]])
+			  satres$envarres <- round(satres$envarres, 2)
         	}
 		
 		for(j in 1:length(satres)) if(satres[[j]][1] > satres[[j]][2]) satres[[j]][5] <- "low.risk" else satres[[j]][5] <- "high.risk"
@@ -111,7 +91,7 @@ if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nex
            require(doParallel)
            cl <- makeCluster(ncore)
            registerDoParallel(cl)
-           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runIQtree', 'get.entropy.test', 'get.ci.test', 'get.comp.test')) %dopar% tryCatch(runLoc(x, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods), error = function(e) NULL)
+           reslist <- foreach(x = loci, .packages = c('phangorn', 'ape'), .export = c('clean.gene', 'linmods', 'runIQtree', 'get.entropy.test')) %dopar% tryCatch(runLoc(x, aadata = aadata, clean = clean, stats = stats, iqtreePath = iqtreePath, plotdat = plotdat, satfunclist = linmods), error = function(e) NULL)
            stopCluster(cl)
            print("Parallel computing ended successfully")
            ### END PARALLEL COMPUTING

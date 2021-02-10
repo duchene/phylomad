@@ -20,7 +20,7 @@ tabsetPanel(
 		       column(10,
 		       h4("Select saturation statistics"),
                        checkboxGroupInput("saturationStats", label = "",
-                       choices = list("Entropy" = "enth", "Consistency Index" = "cith", "Compression statistic" = "comth"), selected = c("enth")),
+                       choices = list("Entropy of all sites" = "enth", "Entropy of variable sites" = "enthvar"), selected = c("enth", "enthvar")),
                        br(),
 		       h4("Select the output desired"),
                        checkboxGroupInput("whatToOutput", label = "",

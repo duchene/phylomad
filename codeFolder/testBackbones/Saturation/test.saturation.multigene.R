@@ -3,8 +3,6 @@ source("otherScripts/R/clean.gene.R")
 source("otherScripts/R/test.saturation.R")
 source("otherScripts/R/runIQtree.R")
 source("testStatistics/get.entropy.test.R")
-source("testStatistics/get.ci.test.R")
-source("testStatistics/get.comp.test.R")
 load("testStatistics/thresholdFunctions.Rdata")
 
 initial.dir <- getwd()
@@ -51,8 +49,7 @@ if(length(geneResults) > 1){
 
 if(input$dataTreatment == "codonpos") rownames(restab) <- as.character(sapply(locinames, function(x) paste(x, c("pos1and2", "pos3"), sep = "_"))) else rownames(restab) <- locinames
 colnames(restab) <- gsub("enth", "Entropy", colnames(restab))
-colnames(restab) <- gsub("cith", "CI", colnames(restab))
-colnames(restab) <- gsub("comth", "Compression", colnames(restab))
+colnames(restab) <- gsub("enthvar", "EntropyOnVarSites", colnames(restab))
 for(i in grep("_TPR_", colnames(restab))) restab[which(restab[, i] > 1), i] <- 1
 for(i in grep("_FPR_", colnames(restab))) restab[which(restab[, i] < 0), i] <- 0
 
@@ -111,40 +108,22 @@ if("multiSatPlots" %in% whatToOutput){
 	      legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = risklegendent, col = risklegcol)
 	}
 	if("t_CI" %in% colnames(restab)){
-	      resprops <- c(length(which(restab[, "Risk_CI"] == "LOW")), length(which(restab[, "Risk_CI"] == "MEDIUM")), length(which(restab[, "Risk_CI"] == "HIGH")))/nrow(restab)
+	      resprops <- c(length(which(restab[, "Risk_EntropyVarSites"] == "LOW")), length(which(restab[, "Risk_EntropyVarSites"] == "MEDIUM")), length(which(restab[, "Risk_EntropyVarSites"] == "HIGH")))/nrow(restab)
 	      risklegendci <- paste0(risklegend, " (", as.character(round(resprops, 2)), ")")
               if(input$dataTreatment == "codonpos"){
                         risklegendci <- c("Risk (prop. loci)", risklegendci, "Codon position", "1+2", "3")
               } else {
 			risklegendci <- c("Risk (prop. loci)", risklegendci)
 	      		colsplot <- rep("black", nrow(restab))
-			colsplot[which(restab[, "Risk_CI"] == "HIGH")] <- "red"
-			colsplot[which(restab[, "Risk_CI"] == "LOW")] <- "blue"
+			colsplot[which(restab[, "Risk_EntropyVarSites"] == "HIGH")] <- "red"
+			colsplot[which(restab[, "Risk_EntropyVarSites"] == "LOW")] <- "blue"
               }
-              pchsplot <- restab[, "Risk_CI"]
+              pchsplot <- restab[, "Risk_EntropyVarSites"]
               pchsplot[which(pchsplot == "LOW")] <- 16
               pchsplot[which(pchsplot == "MEDIUM")] <- 17
               pchsplot[which(pchsplot == "HIGH")] <- 18
-              plot(restab[, "N_sites"], restab[, "t_CI"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nConsistency Index", xlab = "N sites", ylab = "t (consistency index)")
-              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = risklegendci, col = risklegcol)
-        }
-	if("t_Compression" %in% colnames(restab)){
-	      resprops <- c(length(which(restab[, "Risk_Compression"] == "LOW")), length(which(restab[, "Risk_Compression"] == "MEDIUM")), length(which(restab[, "Risk_Compression"] == "HIGH")))/nrow(restab)
-	      risklegendcomp <- paste0(risklegend, " (", as.character(round(resprops, 2)), ")")
-              if(input$dataTreatment == "codonpos"){
-                        risklegendcomp <- c("Risk (prop. loci)", risklegendcomp, "Codon position", "1+2", "3")
-              } else {
-			risklegendcomp <- c("Risk (prop. loci)", risklegendcomp)
-	      		colsplot <- rep("black", nrow(restab))
-              		colsplot[which(restab[, "Risk_Compression"] == "HIGH")] <- "red"
-            		colsplot[which(restab[, "Risk_Compression"] == "LOW")] <- "blue"
-              }
-              pchsplot <- restab[,"Risk_Compression"]
-              pchsplot[which(pchsplot == "LOW")] <- 16
-              pchsplot[which(pchsplot == "MEDIUM")] <- 17
-              pchsplot[which(pchsplot == "HIGH")] <- 18
-              plot(restab[, "N_sites"], restab[, "t_Compression"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nCompression statistic", xlab = "N sites", ylab = "t (compression statistic)")
-              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = risklegendcomp, col = risklegcol)
+              plot(restab[, "N_sites"], restab[, "t_EntropyVarSites"], col = colsplot, pch = as.numeric(pchsplot), main = "Multilocus saturation test\nEntropy on var sites", xlab = "N sites", ylab = "t (entropy on var sites)")
+              legend("topleft", pch = c(NA, 16:18, NA, 16, 16), legend = risklegendentvar, col = risklegcol)
         }
 	dev.off()
 }

@@ -21,7 +21,7 @@ runIQtree <- function(sdata, format = 'phylip', aadata = aadata, temp_name, iqtr
     print(paste("Locus", fileName, "was read successfully."))
 
     if(is.null(tree)){
-        iqtreeCommand = paste0(iqtreePath, if(!aadata) " -st DNA " else " -st AA ", " -s ", fileName, " -m ", model, " -alrt 1000 -nt ", ncore, if(symtest) " --symtest")
+        iqtreeCommand = paste0(iqtreePath, if(!aadata) " -st DNA " else " -st AA ", " -s ", fileName, " -m ", model, " -alrt 1000 -fast -nt ", ncore, if(symtest) " --symtest")
     } else {
         treenumber <- round(runif(1, min = 1000, max = 9999))
 	treefile <- paste0("temp.", treenumber, ".tre")
