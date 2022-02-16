@@ -116,7 +116,7 @@ This example shows that the multinomial statistic is not available for analysis.
 ## Support and bug reports
 
 For support contact David A. Duchêne:
-david.duchene[at]sydney.edu.au
+david.duchene[at]sund.ku.dk
 
 ## Licence
 
