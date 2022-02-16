@@ -1,5 +1,6 @@
 processTime <- proc.time()[3]
 source("otherScripts/R/clean.gene.R")
+source("otherScripts/R/pis.R")
 source("otherScripts/R/test.saturation.R")
 source("otherScripts/R/runIQtree.R")
 source("testStatistics/get.entropy.test.R")

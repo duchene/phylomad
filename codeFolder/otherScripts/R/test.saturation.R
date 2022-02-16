@@ -34,6 +34,7 @@ if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nex
 		satres <- list()
 		
 		Nsites <- ncol(genebin[[i]])
+		Nvarsites <- length(seg.sites(genebin[[i]]))
 		Ntax <- nrow(genebin[[i]])
 		
         	if("enth" %in% stats){
@@ -43,17 +44,21 @@ if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nex
 			  satres$enres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[3]])
 			  satres$enres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[5]])
 			  satres$enres <- round(satres$enres, 2)
+			  if(!any(is.na(satres$enres)) & any(satres$enres < 0)) satres$enres[which(satres$enres < 0)] <- 0
+			  if(!any(is.na(satres$enres)) & any(satres$enres[3:4] > 1)) satres$enres[3:4][which(satres$enres[3:4] > 1)] <- 1
 		}
         	if("enthvar" %in% stats){
 			  satres$envarres <- vector()
 			  satres$envarres[1] <- get.entropy.test(genebin[[i]], only.varsites = T)$t
-			  satres$envarres[2] <- getSatThreshold(Nsites, Ntax, satfunclist[[2]])
-                          satres$envarres[3] <- getSatThreshold(Nsites, Ntax, satfunclist[[4]])
-			  satres$envarres[4] <- getSatThreshold(Nsites, Ntax, satfunclist[[6]])
+			  satres$envarres[2] <- getSatThreshold(Nvarsites, Ntax, satfunclist[[2]])
+                          satres$envarres[3] <- getSatThreshold(Nvarsites, Ntax, satfunclist[[4]])
+			  satres$envarres[4] <- getSatThreshold(Nvarsites, Ntax, satfunclist[[6]])
 			  satres$envarres <- round(satres$envarres, 2)
+			  if(!any(is.na(satres$envarres)) & any(satres$envarres < 0)) satres$envarres[which(satres$envarres < 0)] <- 0
+			  if(!any(is.na(satres$envarres)) & any(satres$envarres[3:4] > 1)) satres$envarres[3:4][which(satres$envarres[3:4] > 1)] <- 1
         	}
 		
-		for(j in 1:length(satres)) if(satres[[j]][1] > satres[[j]][2]) satres[[j]][5] <- "low.risk" else satres[[j]][5] <- "high.risk"
+		for(j in 1:length(satres)) if(is.na(satres[[j]][1])) satres[[j]][5] <- "low.risk" else if(satres[[j]][1] > satres[[j]][2]) satres[[j]][5] <- "low.risk" else satres[[j]][5] <- "high.risk"
 
 		genesres[[i]] <- c(Nsites, Ntax, do.call(c, satres))
 		names(genesres[[i]]) <- c("N_sites", "N_taxa", as.character(sapply(stats, function(x) paste(c("t", "t_predicted_threshold", "t_predicted_TPR", "t_predicted_FPR", "Risk"), x, sep = "_"))))

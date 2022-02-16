@@ -24,7 +24,7 @@ tabsetPanel(
                        br(),
 		       h4("Select the output desired"),
                        checkboxGroupInput("whatToOutput", label = "",
-                       choices = list("Test of saturation for loci" = "tsat", "Saturation plots" = "satPlots", "Multi-locus saturation plots" = "multiSatPlots"), selected = c("tsat", "satPlots")),
+                       choices = list("Test of saturation for loci" = "tsat", "Saturation plots" = "satPlots", "Multi-locus saturation plots" = "multiSatPlots"), selected = c("tsat")),
                        br(),
                        h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"),
                        textInput("outputFolder", label = "", value = paste0(getwd(), "/../outputFolder/"))

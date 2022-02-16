@@ -35,9 +35,7 @@ multinomial_info <- function(x, p){
 
 calculate_sitewise_info <- function(mat, base_freqs){
   site_wise_counts <- apply(mat, 2, FUN = smart_table)
-  print(site_wise_counts[0])
   site_wise_info <- apply(site_wise_counts, 2, multinomial_info, p = base_freqs)
-  
   return(site_wise_info)
 }
 
@@ -49,14 +47,20 @@ calculate_estimated_entropy <- function(site_wise_info, mat){
 
 ### Functions needed created. Statstic calculated below ###
   
-  if(only.varsites) al <- al[,seg.sites(al)]
-  if(ncol(al) == 0){
+  #if(only.varsites) al <- al[,seg.sites(al)]
+  if(only.varsites) al <- al[,pis(al, "index")]
+  if(ncol(al) < 20){
         res <- list(estent = NA, nullent = NA, p = NA, tstat = NA)
         return(res)
   }
   mat <- tolower(as.character(al))
   
   base_freqs <- base.freq(al) #observed base frequencies #
+  
+  if(any(base_freqs > 0.5)){
+        res <- list(estent = NA, nullent = NA, p = NA, tstat = NA)
+        return(res)
+  }
   
   n <- dim(al)[1] # the number of taxa# 
   num_seqs <- dim(al)[2] #number of sites#
