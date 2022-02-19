@@ -1,4 +1,4 @@
-test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "genome"), aadata = F, model = "GTR+G", iqtreePath, astralPath, Nsims = 100, para = F, ncore = 1, testStats = c("dnet", "dtree", "entrop", "icert", "CF", "binp", "dstat", "kcstat"), returnEstPhylo = F, returnSimulations = F){
+test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "genome"), aadata = F, model = "GTR+G", iqtreePath, astralPath, Nsims = 100, para = F, ncore = 1, testStats = c("dnet", "dtree", "entrop", "icert", "CF", "binp", "dstat", "kcstat"), returnSimulations = F){
 
          if(format == "phylip"){
                   if(aadata) data <- read.aa(sdata) else data <- read.dna(sdata)
@@ -40,8 +40,9 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 }
 	 conctab <- read.table("emp.conc.cf.stat", header=TRUE, sep = "\t")
 	 conctab[,7] <- round(conctab[,7], 5)
-	 concidtr <- readLines("emp.conc.cf.branch")
-	 concidtr <- read.tree(text = gsub(")", "):", concidtr))
+	 concidtr <- read.tree("emp.conc.cf.branch")
+	 concidtr$edge.length <- NULL
+	 concidtr <- read.tree(text = gsub(")", "):", write.tree(concidtr)))
 	 
 	 system("rm empirical empirical.phy emp.conc.cf.tree emp.conc.log emp.conc.cf.branch emp.conc.cf.stat")
 	 
@@ -140,10 +141,8 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	      }
 	      conctab[,paste0(testStats[i], ".p.value")] <- apply(stattab, 1, pvalfunc)
 	 }
-	
-	 #if(!returnAllDat) conctab[,-grep("ID|sCF|sDF|sN|gCF|gDF|gN", colnames(conctab))]
-	 results <- list(testsTable = conctab, treeEstimate = emptre, IDtree = concidtr)
+	 
 	 system("rm empirical.empty.tre")
-	 if(testType == "locus" & returnEstPhylo) write.tree(emptre, file = "empirical.estimated.tre")
+	 results <- list(testsTable = conctab, treeEstimate = emptre, IDtree = concidtr)
 	 return(results)
 }

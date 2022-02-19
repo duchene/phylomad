@@ -37,7 +37,7 @@ tabsetPanel(
                        column(10,
 		       h4("Select the output desired"),
 		       checkboxGroupInput("whatToOutput", label = "",
-                       choices = list("Mean and per-branch P-values" = "pvals", "Test plots" = "testPlots", "Tree estimated from empirical data" = "phyloempres", "Simulated data" = "simdat", "All quartet probabilities" = "allqp"), selected = c("pvals", "testPlots")),
+                       choices = list("Tree with branch statistics" = "phyloempres", "P-values and bootstrap table" = "pvals", "Test plots" = "testPlots", "Simulated sequences" = "simdat", "Discordance factors" = "allqp"), selected = c("phyloempres", "pvals", "testPlots")),
 		       br(),
 		       h4("Optional: Type the path of the output folder. The default is outputFolder in the main sofware folder"),
 		       textInput("outputFolder", label = "", value = paste0(getwd(), "/../outputFolder/"))

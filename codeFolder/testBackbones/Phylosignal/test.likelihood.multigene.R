@@ -45,7 +45,7 @@ if(!input$overwrite && file.exists(paste0(as.character(input$dataPath[j, 1]), ".
 
 whatToOutput <- unlist(input$whatToOutput)
 
-geneResults <- try(test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else dataFormat, testType = input$testType, aadata = input$dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, testStats = selectedStats, returnEstPhylo = "phyloempres" %in% whatToOutput, returnSimulations = "simdat" %in% whatToOutput))
+geneResults <- try(test.phylosignal(sdata = analysisdata, format = if(input$testType == "locus") "bin" else dataFormat, testType = input$testType, aadata = input$dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, testStats = selectedStats, returnSimulations = "simdat" %in% whatToOutput))
 if(class(geneResults) == "try-error"){
        setwd("..")
        system(paste0("rm -r ", as.character(input$dataPath[j, 1]), ".phylomad.phylosig"))
@@ -56,9 +56,36 @@ if(class(geneResults) == "try-error"){
 rownames(geneResults[[1]]) <- geneResults[[1]][,1]
 colnames(geneResults[[1]]) <- gsub("Length", "br.length", colnames(geneResults[[1]]))
 colnames(geneResults[[1]]) <- gsub("Label", "br.support", colnames(geneResults[[1]]))
-geneResults[[1]] <- round(as.data.frame(apply(geneResults[[1]], 2, as.numeric)), 3)
+for(y in 2:ncol(geneResults[[1]])) geneResults[[1]][,y] <- round(as.numeric(geneResults[[1]][,y]), 3)
 geneResults[[1]] <- rbind(geneResults[[1]], round(colMeans(geneResults[[1]], na.rm = T), 3))
 rownames(geneResults[[1]])[nrow(geneResults[[1]])] <- "mean"
+
+## Annotate empirical tree with bootstrap support ranges and p-values
+if(input$testType == "locus" & "phyloempres" %in% whatToOutput){
+	nexhead	<- c("#NEXUS", "begin trees;")
+	antre <- geneResults[[2]]
+	antre$node.label <- vector()
+	for(y in 1:(nrow(geneResults[[1]] - 1))){
+	      annot <- ""
+	      for(z in 1:length(selectedStats)){
+	      	    fullstat <- if(selectedStats[z] == "CF") as.numeric(geneResults[[1]][y, paste0("sCF.sim.", 1:input$Nsims)]) else as.numeric(geneResults[[1]][y, paste0("sim.", 1:input$Nsims, ".", selectedStats[z])])
+	      	    statmed <- round(median(fullstat, na.rm = T), 2)
+		    statran <- round(quantile(fullstat, probs = c(0.025, 0.975), na.rm = T), 2)
+	      	    annot <- c(annot, paste0(selectedStats[z], '=\"', statmed, ' [', statran[1], ", ", statran[2], '] ovcon.p=', geneResults[[1]][y, paste0(selectedStats[z], ".p.value")], '\"'))
+	      }
+	      annot <- paste0("<&!", paste0(annot, collapse = ","), ">")
+	      antre$node.label[antre$edge[which(geneResults[[3]]$edge.length == geneResults[[1]][y, 1]), 2]-Ntip(antre)] <- annot
+	      
+	}
+	antre <- gsub("[_]", " ", write.tree(antre))
+	antre <- gsub("[-]", ",", antre)
+	antre <- gsub("[[]", "(", antre)
+	antre <- gsub("[]]", ")", antre)
+	antre <- gsub("[<]", "[", antre)
+        antre <- gsub("[>]", "]", antre)
+	antre <- c(nexhead, paste0("tree tree_1 = [&R] ", antre), "end;")
+	writeLines(antre, con = "estimated.tree.supports.tre")
+}
 
 if("allqp" %in% whatToOutput){
 	write.csv(t(geneResults[[1]]), file = "full.results.csv")
