@@ -13,7 +13,7 @@ get.model <- function(sdata, format = "phylip"){
 	 ICs <- modelTest(as.phyDat(data), model = c("GTR", "HKY", "JC"), G = T, I = F)
 	 model <- candidates[which(ICs$BIC == min(ICs$BIC))]
 
-	 print(ICs)
+	 print(ICs[,-c(5:7)])
 
 	 return(model)
 	 
