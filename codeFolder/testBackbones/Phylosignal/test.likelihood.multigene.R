@@ -238,6 +238,8 @@ setwd("..")
 
        if(!input$overwrite && file.exists(paste0(as.character(input$sptreePath[1, 1]), ".phylomad.supports.tre"))) stop("Exisitng files will not be overwritten. Aborting.")
 
+	if(input$Ncores == 1){
+
 	for(x in 1:length(allsampquarts)){
 	      allqtax <- sapply(allsampquarts[[x]], function(y) all(y$tip.label %in% rownames(analysisdata)))
               if(!all(allqtax)){
@@ -248,19 +250,71 @@ setwd("..")
 	      	    quartloc <- analysisdata[allsampquarts[[x]][[z]]$tip.label,]
 	      	    geneResult <- try(test.phylosignal(sdata = quartloc, format = "bin", testType = "locus", aadata = input$dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = input$Nsims, testStats = "CF", returnSimulations = F))
 		    fullstat <- as.numeric(geneResult[[1]][1, paste0("sCF.sim.", 1:input$Nsims)])
-                    medmat[z + ((j-1) * input$Nsims), x] <- round(median(fullstat, na.rm = T), 3)
+            medmat[z + ((j-1) * input$Nsims), x] <- round(median(fullstat, na.rm = T), 3)
 		    pvalmat[z + ((j-1) * input$Nsims), x] <- round(geneResult[[1]][1, "CF.p.value"], 3)
-		    presabs[z + ((j-1) * input$Nsims), x] <- (RF.dist(allsampquarts[[x]][[z]], geneResult[[2]]) == 0)
+		    presabs[z + ((j-1) * input$Nsims), x] <- (RF.dist(allsampquarts[[x]][[z]], geneResult[[2]]) != 0)
 	      }
-	      pvalmat[which(allqtax) + ((j-1) * input$Nsims), x] <- round(p.adjust(pvalmat[which(allqtax) + ((j-1) * input$Nsims), x], method = "fdr"), 3)
-	      
-	    if("pvals" %in% whatToOutput){
+	      pvalmat[which(allqtax) + ((j-1) * input$Nsims), x] <- round(p.adjust(pvalmat[which(allqtax) + ((j-1) * input$Nsims), x], method = "fdr"), 3)   
+	}
+	
+	} else {
+	
+		### START PARALLEL COMPUTING
+	   print('Parallel computing started')
+	   system(paste0("mkdir processing.locus.", j))
+	   setwd(paste0("processing.locus.", j))
+	   require(foreach)
+	   require(doParallel)
+	   dataType <- input$dataType
+	   Nsims <- input$Nsims
+	   runSim <- function(x){
+	   		system(paste0("mkdir branchfolder.", x))
+	   		setwd(paste0("branchfolder.", x))
+	   		allqtax <- sapply(allsampquarts[[x]], function(y) all(y$tip.label %in% rownames(analysisdata)))
+              if(!all(allqtax)){
+		print("Quartet missing from tree")
+                next
+              }
+	      medmatdat <- matrix(NA, ncol = 1, nrow = length(allsampquarts[[x]]))
+	      pvalmatdat <- matrix(NA, ncol = 1, nrow = length(allsampquarts[[x]]))
+	      presabsdat <- matrix(NA, ncol = 1, nrow = length(allsampquarts[[x]]))	      
+	      for(z in which(allqtax)){
+	      	    quartloc <- analysisdata[allsampquarts[[x]][[z]]$tip.label,]
+	      	    geneResult <- try(test.phylosignal(sdata = quartloc, format = "bin", testType = "locus", aadata = dataType, model = model, iqtreePath = iqtreePath, astralPath = astralPath, Nsims = Nsims, testStats = "CF", returnSimulations = F))
+		    fullstat <- as.numeric(geneResult[[1]][1, paste0("sCF.sim.", 1:Nsims)])
+            medmatdat[z, 1] <- round(median(fullstat, na.rm = T), 3)
+		    pvalmatdat[z, 1] <- round(geneResult[[1]][1, "CF.p.value"], 3)
+		    presabsdat[z, 1] <- (RF.dist(allsampquarts[[x]][[z]], geneResult[[2]]) != 0)
+	      }
+	      pvalmatdat[which(allqtax), 1] <- round(p.adjust(pvalmatdat[which(allqtax), 1], method = "fdr"), 3)
+	      setwd("..")
+	      system(paste0("rm -r branchfolder.", x))
+	      res <- list(medmatdat, pvalmatdat, presabsdat)
+	      return(res)
+	   }
+	   
+	   cl <- makeCluster(input$Ncores)
+	   registerDoParallel(cl)
+	   simReps <- foreach(x = 1:length(allsampquarts), .packages = c('phangorn', 'ape'), .export = c('test.phylosignal', 'runIQtree')) %dopar% runSim(x)
+	   for(x in 1:length(allsampquarts)){
+	   		medmat[(1:input$Nsims) + ((j-1) * input$Nsims), x] <- simReps[[x]][[1]]
+		    pvalmat[(1:input$Nsims) + ((j-1) * input$Nsims), x] <- simReps[[x]][[2]]
+		    presabs[(1:input$Nsims) + ((j-1) * input$Nsims), x] <- simReps[[x]][[3]]
+	   } 
+	   stopCluster(cl)
+	   setwd("..")
+	   system(paste0("rm -r processing.locus.", j))
+	   print("Parallel computing ended successfully")
+	   ### END PARALLEL COMPUTING
+	   
+	}
+	
+	
+	if("pvals" %in% whatToOutput){
 	    write.csv(medmat, file = paste0(as.character(input$sptreePath[1, 1]), ".phylomad.median.CFs.csv"))
 	    write.csv(pvalmat, file = paste0(as.character(input$sptreePath[1, 1]), ".phylomad.median.pvals.csv"))
 	    write.csv(presabs, file = paste0(as.character(input$sptreePath[1, 1]), ".phylomad.median.presence.csv"))
 		}
-	}
-	
 	if("phyloempres" %in% whatToOutput){
 	nexhead <- c("#NEXUS", "begin trees;")
 	annot <- sapply(1:length(allsampquarts), function(x){

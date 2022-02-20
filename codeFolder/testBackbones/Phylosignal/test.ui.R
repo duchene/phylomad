@@ -59,6 +59,9 @@ tabsetPanel(
 		       numericInput("Nsims", label = "",
                        value = 100),
 		       br(),
+                       h4("Select the number of computer cores to be used"),
+                       numericInput("Ncores", label = h5("Multi-core assessments can only be aborted at the completion of a locus assessment. Only used for computing support metrics for an input species tree."), value = 1),
+		       br(),
 		       checkboxInput("overwrite", label = h5("Overwrite previous analyses"), value = FALSE),
 		       br(),
 		       actionButton("startAnalysis", label = "START ASSESSMENT")
