@@ -29,11 +29,12 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
 	 }
 	 
 	 # Use IQtree to calculate bipartition probabilities per branch THIS CURRENTLY ASSUMES THAT --scf and --gcf produce identical results
-	 
+
+	 ntip <- Ntip(emptre)	 
 	 emptyemptre <- emptre
 	 write.tree(emptyemptre, file = "empirical.empty.tre")
 	 if(testType == "locus"){
-	 	  system(paste0(iqtreePath, " -t empirical.empty.tre -s empirical.phy --scf 100 --prefix emp.conc"))
+	 	  system(paste0(iqtreePath, " -t empirical.empty.tre -s empirical.phy --scf ", if(ntip == 4) "1" else "100", " --prefix emp.conc"))
 	 } else {
 	   	  system(paste0(iqtreePath, " -t empirical.empty.tre --gcf empirical.phy --prefix emp.conc"))
 		  emptre$edge.length[is.na(emptre$edge.length)] <- 0
@@ -96,7 +97,7 @@ test.phylosignal <- function(sdata, format = "phylip", testType = c("locus", "ge
                	   }
                
 		   write.dna(sim[[i]], file = paste0("sim.alignment.", i, ".phy"))
-               	   system(paste0(iqtreePath, " -t empirical.empty.tre -s sim.alignment.", i, ".phy --scf 100 --prefix sim.conc.", i))
+               	   system(paste0(iqtreePath, " -t empirical.empty.tre -s sim.alignment.", i, ".phy --scf ", if(ntip == 4) "1" else "100", " --prefix sim.conc.", i))
                	   sim[[i]] <- read.table(paste0("sim.conc.", i, ".cf.stat"), header=TRUE, sep = "\t")[, -c(1, 6, 7)]
                	   colnames(sim[[i]]) <- paste0(colnames(sim[[i]]), ".sim.", i)
 	       	   system(paste0("rm sim.conc.", i, ".cf.tree sim.conc.", i, ".log sim.conc.", i, ".cf.branch sim.conc.", i, ".cf.stat"))

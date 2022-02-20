@@ -3,13 +3,20 @@ tabsetPanel(
                        fluidRow(
 		       column(1),
                        column(10,
-		       h4("Select the type of signal assessment"),
-		       radioButtons("testType", label = "",
-                       choices = list("Locus (signal in sites)" = "locus", "Genome (signal in gene-trees)" = "genome"), selected = "locus"),
 		       br(),
-		       h4("Select the data set(s)"),
+		       h4("Select the type of assessment"),
+		       radioButtons("testType", label = "",
+		       # Option test gene-trees = "genome" is not currently here, but uses Astral and is meant to assess the assumption of even discordance factors under ILS across gene trees.
+                       choices = list("Loci" = "locus", "Species tree" = "tree"), selected = "locus"),
+		       makeCheckboxTooltip(checkboxValue = "locus", buttonLabel = "?", Tooltip = "Provides statstics on each of a set of loci, and does not require an input species tree."),
+                       makeCheckboxTooltip(checkboxValue = "tree", buttonLabel = "?", Tooltip = "Only provides statistics to an input tree hypothesis, based on an input tree and loci."),
+		       br(),
+		       h4("Select the per-locus data"),
                        fileInput("dataPath", label = h5("Data sets must come from the same folder and be one or several alignments or trees files"), multiple = T),
-		       checkboxInput("dataType", label = "Amino acid data", value = FALSE)
+		       checkboxInput("dataType", label = "Amino acid data", value = FALSE),
+		       br(),
+		       h4("Select tree to be tested"),
+                       fileInput("sptreePath", label = h5("Only required if using the Test tree option"), multiple = T)
 		       ),
 		       column(1))
         ),
