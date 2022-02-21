@@ -328,7 +328,7 @@ setwd("..")
 	      return(ann)
 	})
 	antre <- sptre
-	antre$node.label <- annot[sptre$edge[as.numeric(names(allsampquarts)),2]-Ntip(sptre)]
+	antre$node.label <- c(NA, annot)
 	antre <- gsub("[_]", " ", write.tree(antre))
         antre <- gsub("[-]", ",", antre)
         antre <- gsub("[[]", "(", antre)
