@@ -36,7 +36,9 @@ for(j in 1:nrow(input$dataPath)){
       firstLine <- readLines(as.character(input$dataPath[j, 4]), n = 1)
       if(grepl("[>]", firstLine)) dataFormat <- "fasta" else if(grepl("[#]NEXUS|[#]nexus", firstLine)) dataFormat <- "nexus" else if(grepl("[(]", firstLine)) dataFormat <- "newick" else dataFormat <- "phylip"
 
-      if(input$testType %in% c("locus", "tree") & !input$dataType) model <- get.model(as.character(input$dataPath[j, 4]), format = dataFormat) else if(input$testType %in% c("locus", "tree") & input$dataType) model <- "WAG+G"
+      #if(input$testType %in% c("locus", "tree") & !input$dataType) model <- get.model(as.character(input$dataPath[j, 4]), format = dataFormat) else if(input$testType %in% c("locus", "tree") & input$dataType) model <- "WAG+G"
+      
+      model <- "GTR+G"
 
       print("Model to be assessed was identified")
 
